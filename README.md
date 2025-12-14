@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Prereq Pilot
 
-## Getting Started
+Prereq Pilot is a web application that helps students determine whether they meet prerequisite and GPA requirements for academic programs such as nursing, pre-health, and allied health tracks.
 
-First, run the development server:
+Students enter their academic history once and can instantly evaluate eligibility across multiple institutions and programs.
+
+---
+
+## 🚀 Core Features
+
+### Current / MVP
+- Student authentication
+- Manual entry of coursework and grades
+- Overall GPA calculation
+- Program prerequisite matching
+- Scenario simulation (what-if retakes or grade changes)
+
+### Planned Platform Features
+- Institution admin portal
+- Institution-managed course catalogs
+- Program & prerequisite publishing
+- Program discovery and eligibility search
+- Shareable eligibility reports
+- CSV/PDF exports
+
+---
+
+## 🧩 Tech Stack
+
+- **Next.js** — Full-stack React framework
+- **TypeScript** — Type-safe development
+- **Tailwind CSS** — Utility-first styling
+- **Supabase** — PostgreSQL database, auth, and storage
+- **Vercel** — Hosting and serverless deployment
+
+See `TECH_STACK.md` for detailed architecture and rationale.
+
+---
+
+## 🛠 Getting Started
+
+### 1. Clone the Repository
 
 ```bash
+git clone https://github.com/jamesl1500/prereqpilot.com.git
+cd prereqpilot.com
+npm install
+
+### 3. Configure Environment Variables
+Create a .env.local file in the root directory:
+
+env
+Copy code
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+Environment variables are required for authentication and database access.
+
+### 4. Run the Development Server
+bash
+Copy code
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Visit: http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🗄️ Database & Supabase Setup
+Create a Supabase project
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Run SQL migrations (found in /supabase or provided separately)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Enable Row Level Security (RLS)
 
-## Learn More
+Seed initial institutions and programs (optional)
 
-To learn more about Next.js, take a look at the following resources:
+📁 Project Structure
+csharp
+Copy code
+├─ app/                 # Next.js App Router
+├─ components/          # Reusable UI components
+├─ lib/                 # Utilities (Supabase client, GPA logic)
+├─ supabase/            # SQL migrations & schema
+├─ public/              # Static assets
+├─ styles/              # Global styles
+├─ TECH_STACK.md
+├─ README.md
+└─ package.json
+🧪 Testing (Planned)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Unit tests for GPA and matching logic
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Integration tests for program eligibility flows
 
-## Deploy on Vercel
+End-to-end tests for critical user paths
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🤝 Contributing
+Contributions are welcome.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Fork the repo
+
+Create a feature branch
+
+Commit changes with clear messages
+
+Open a pull request
+
+Please add tests for any core logic changes.
+
+### 📜 License
+MIT License
+
+### 📬 Contact
+Maintained by James Latten
+Use GitHub Issues for bugs, feature requests, or discussions.
+
+yaml
+Copy code
+
+---
+
+### ✅ Next optional files I can generate for you
+- `CONTRIBUTING.md`
+- `ARCHITECTURE.md` (system diagrams + flows)
+- Supabase **RLS policy SQL**
+- API contract / endpoint spec
+- Institution Admin onboarding guide
+
+Just tell me which one you want next.
