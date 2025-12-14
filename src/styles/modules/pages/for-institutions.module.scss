@@ -1,0 +1,354 @@
+@import '../../abstracts/variables';
+@import '../../abstracts/mixins';
+
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.hero {
+  background: $color-white;
+  border-bottom: 4px solid $color-black;
+  padding: 5rem 2rem;
+  text-align: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 4rem 1.5rem;
+  }
+}
+
+.heroContent {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  background: $color-white;
+  color: $color-black;
+  border: 2px solid $color-black;
+  text-decoration: none;
+  margin-bottom: 3rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+  }
+}
+
+.heroTitle {
+  font-family: $font-grotesk;
+  font-size: 3.5rem;
+  font-weight: $font-weight-bold;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    font-size: 2.5rem;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.heroSubtitle {
+  font-family: $font-sans;
+  font-size: 1.25rem;
+  color: $color-text-light;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 1rem;
+  }
+}
+
+.heroCta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.primaryButton {
+  padding: 1.25rem 3rem;
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  background: $color-black;
+  color: $color-white;
+  border: 3px solid $color-black;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $color-white;
+    color: $color-black;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 $color-black;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+.secondaryButton {
+  padding: 1.25rem 3rem;
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  background: $color-white;
+  color: $color-black;
+  border: 3px solid $color-black;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+.stats {
+  background: $color-black;
+  color: $color-white;
+  padding: 4rem 2rem;
+}
+
+.statsContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statValue {
+  font-family: $font-mono;
+  font-size: 3rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  opacity: 0.8;
+  text-transform: uppercase;
+}
+
+.benefits {
+  padding: 5rem 2rem;
+}
+
+.sectionContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-family: $font-grotesk;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 3rem;
+  text-align: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.benefitGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.benefitCard {
+  background: $color-white;
+  border: 3px solid $color-black;
+  padding: 2.5rem;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 $color-black;
+  }
+}
+
+.benefitIcon {
+  width: 80px;
+  height: 80px;
+  background: $color-black;
+  color: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.benefitTitle {
+  font-family: $font-grotesk;
+  font-size: 1.25rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1rem;
+}
+
+.benefitDescription {
+  font-family: $font-sans;
+  font-size: $font-size-base;
+  color: $color-text-light;
+  line-height: 1.6;
+}
+
+.cta {
+  background: $color-black;
+  color: $color-white;
+  padding: 5rem 2rem;
+  text-align: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 4rem 1.5rem;
+  }
+}
+
+.ctaContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-family: $font-grotesk;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.ctaSubtitle {
+  font-family: $font-sans;
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.ctaButton {
+  display: inline-block;
+  padding: 1.25rem 3rem;
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  background: $color-white;
+  color: $color-black;
+  border: 3px solid $color-white;
+  text-decoration: none;
+  transition: all 0.2s;
+  margin-bottom: 1.5rem;
+
+  &:hover {
+    background: transparent;
+    color: $color-white;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 $color-white;
+  }
+}
+
+.ctaNote {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  opacity: 0.8;
+
+  a {
+    color: $color-white;
+    text-decoration: underline;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.footer {
+  background: $color-white;
+  border-top: 4px solid $color-black;
+  padding: 3rem 2rem;
+}
+
+.footerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+
+  a {
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    color: $color-text-light;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+      color: $color-black;
+      border-bottom-color: $color-black;
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-wrap: wrap;
+  }
+}
+
+.copyright {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+}

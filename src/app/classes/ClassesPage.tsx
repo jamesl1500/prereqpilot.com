@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Calendar, BookOpen, GraduationCap, Search, School2, Pen, Pencil } from 'lucide-react';
+import { Calendar, BookOpen, GraduationCap, Search, School2, Pencil } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import CourseModal from '@/components/modals/CourseModal';
@@ -14,6 +14,7 @@ import OnboardingModal from '@/components/onboarding/OnboardingModal';
 import styles from '@/styles/modules/pages/classes.module.scss';
 import type { Course } from '@/types/course';
 import type { Term } from '@/types/term';
+import type { Institution } from '@/types/institution';
 
 interface OnboardingData {
   onboarding_completed: boolean;
@@ -25,10 +26,11 @@ interface ClassesPageProps {
   user: User;
   takenCourses: Course[];
   terms: Term[];
+  institutions: Institution[];
   onboarding: OnboardingData | null;
 }
 
-export default function ClassesPage({ user, takenCourses, terms, onboarding }: ClassesPageProps) {
+export default function ClassesPage({ user, takenCourses, terms, institutions, onboarding }: ClassesPageProps) {
   const router = useRouter();
   const [selectedTerm, setSelectedTerm] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -282,6 +284,7 @@ export default function ClassesPage({ user, takenCourses, terms, onboarding }: C
           onClose={() => setIsModalOpen(false)}
           course={selectedCourse}
           terms={terms}
+          institutions={institutions}
         />
 
         <TermModal

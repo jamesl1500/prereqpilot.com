@@ -1,0 +1,358 @@
+@import '../../abstracts/variables';
+@import '../../abstracts/mixins';
+
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.header {
+  background: $color-white;
+  border-bottom: 4px solid $color-black;
+  padding: 3rem 2rem;
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  background: $color-white;
+  color: $color-black;
+  border: 2px solid $color-black;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+  }
+}
+
+.title {
+  font-family: $font-grotesk;
+  font-size: 3rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.subtitle {
+  font-family: $font-sans;
+  font-size: 1.25rem;
+  color: $color-text-light;
+  max-width: 800px;
+}
+
+.section {
+  padding: 4rem 2rem;
+
+  &:nth-child(even) {
+    background: $color-white;
+    border-top: 4px solid $color-black;
+    border-bottom: 4px solid $color-black;
+  }
+}
+
+.sectionContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-family: $font-grotesk;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 2rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.missionContent {
+  max-width: 900px;
+}
+
+.largeText {
+  font-family: $font-sans;
+  font-size: 1.375rem;
+  line-height: 1.7;
+  color: $color-text-light;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 1.125rem;
+  }
+}
+
+.problemGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.problemCard {
+  background: #f5f5f5;
+  border: 3px solid $color-black;
+  padding: 2rem;
+
+  h3 {
+    font-family: $font-grotesk;
+    font-size: 1.25rem;
+    font-weight: $font-weight-bold;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-family: $font-sans;
+    font-size: $font-size-base;
+    color: $color-text-light;
+    line-height: 1.6;
+  }
+}
+
+.solutionSection {
+  background: $color-black;
+  color: $color-white;
+  padding: 4rem 2rem;
+}
+
+.solutionContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.solutionItem {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+  }
+}
+
+.solutionNumber {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  background: $color-white;
+  color: $color-black;
+  font-family: $font-mono;
+  font-size: 2rem;
+  font-weight: $font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid $color-white;
+}
+
+.solutionText {
+  flex: 1;
+
+  h3 {
+    font-family: $font-grotesk;
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+    margin-bottom: 0.75rem;
+  }
+
+  p {
+    font-family: $font-sans;
+    font-size: $font-size-base;
+    opacity: 0.9;
+    line-height: 1.6;
+  }
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.valueCard {
+  background: $color-white;
+  border: 3px solid $color-black;
+  padding: 2.5rem;
+
+  h3 {
+    font-family: $font-grotesk;
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-family: $font-sans;
+    font-size: $font-size-base;
+    color: $color-text-light;
+    line-height: 1.6;
+  }
+}
+
+.teamSection {
+  background: #f5f5f5;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.teamDescription {
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: $font-sans;
+  font-size: 1.125rem;
+  color: $color-text-light;
+  line-height: 1.7;
+}
+
+.cta {
+  background: $color-black;
+  color: $color-white;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.ctaContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.ctaTitle {
+  font-family: $font-grotesk;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.ctaSubtitle {
+  font-family: $font-sans;
+  font-size: 1.125rem;
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.primaryButton {
+  padding: 1.25rem 3rem;
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  background: $color-white;
+  color: $color-black;
+  border: 3px solid $color-white;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    background: transparent;
+    color: $color-white;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 $color-white;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+.secondaryButton {
+  padding: 1.25rem 3rem;
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  background: transparent;
+  color: $color-white;
+  border: 3px solid $color-white;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $color-white;
+    color: $color-black;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+.footer {
+  background: $color-white;
+  border-top: 4px solid $color-black;
+  padding: 3rem 2rem;
+}
+
+.footerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+
+  a {
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    color: $color-text-light;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+      color: $color-black;
+      border-bottom-color: $color-black;
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-wrap: wrap;
+  }
+}
+
+.copyright {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+}

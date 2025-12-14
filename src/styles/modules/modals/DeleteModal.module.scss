@@ -7,7 +7,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%);
+  background: rgba(0,0,0,0.5);
   @include flex-center;
   z-index: 1000;
   overflow: hidden;

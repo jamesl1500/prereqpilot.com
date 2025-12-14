@@ -27,11 +27,18 @@ export async function createInstitution(
   try {
     const supabase = createRouteHandlerClient(request);
 
+    // Get the authenticated user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
     const institutionData = {
       name: data.name,
       short_code: data.short_code,
       country: data.country || null,
       website: data.website || null,
+      user_id: user.id, // Associate institution with user
     };
 
     const { error } = await supabase
@@ -40,9 +47,6 @@ export async function createInstitution(
 
     if (error) throw error;
 
-    // Mark step as completed in onboarding
-
-    
     return { success: true };
   } catch (error) {
     return {
@@ -63,6 +67,12 @@ export async function updateInstitution(
   try {
     const supabase = createRouteHandlerClient(request);
 
+    // Get the authenticated user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
     const institutionData = {
       name: data.name,
       short_code: data.short_code,
@@ -70,10 +80,12 @@ export async function updateInstitution(
       website: data.website || null,
     };
 
+    // Only allow users to update their own institutions
     const { error } = await supabase
       .from('institutions')
       .update(institutionData)
-      .eq('id', institutionId);
+      .eq('id', institutionId)
+      .eq('user_id', user.id);
 
     if (error) throw error;
 
@@ -96,10 +108,18 @@ export async function deleteInstitution(
   try {
     const supabase = createRouteHandlerClient(request);
 
+    // Get the authenticated user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    // Only allow users to delete their own institutions
     const { error } = await supabase
       .from('institutions')
       .delete()
-      .eq('id', institutionId);
+      .eq('id', institutionId)
+      .eq('user_id', user.id);
 
     if (error) throw error;
 
@@ -113,7 +133,7 @@ export async function deleteInstitution(
 }
 
 /**
- * Get all institutions
+ * Get all institutions (global and user-created)
  */
 export async function getAllInstitutions(
   request: Request
@@ -125,9 +145,14 @@ export async function getAllInstitutions(
   try {
     const supabase = createRouteHandlerClient(request);
 
+    // Get the authenticated user
+    const { data: { user } } = await supabase.auth.getUser();
+
+    // Fetch both global institutions (user_id is null) and user's institutions
     const { data, error } = await supabase
       .from('institutions')
       .select('*')
+      .or(user ? `user_id.is.null,user_id.eq.${user.id}` : 'user_id.is.null')
       .order('name', { ascending: true });
 
     if (error) throw error;

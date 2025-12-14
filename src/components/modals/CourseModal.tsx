@@ -16,12 +16,13 @@ const courseSchema = z.object({
   grade: z.string().optional(),
   grade_value: z.number().min(0).max(4).optional().nullable(),
   term_id: z.string().min(1, 'Term is required'),
+  institution_id: z.string().optional().nullable(),
   notes: z.string().optional(),
 });
 
 type CourseFormData = z.infer<typeof courseSchema>;
 
-export default function CourseModal({ isOpen, onClose, course, terms }: CourseModalProps) {
+export default function CourseModal({ isOpen, onClose, course, terms, institutions }: CourseModalProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -61,6 +62,7 @@ export default function CourseModal({ isOpen, onClose, course, terms }: CourseMo
         grade: course.grade || '',
         grade_value: course.grade_value || undefined,
         term_id: course.term_id || '',
+        institution_id: course.institution_id || null,
         notes: course.notes || '',
       });
     } else {
@@ -70,6 +72,7 @@ export default function CourseModal({ isOpen, onClose, course, terms }: CourseMo
         grade: '',
         grade_value: undefined,
         term_id: '',
+        institution_id: null,
         notes: '',
       });
     }
@@ -86,6 +89,7 @@ export default function CourseModal({ isOpen, onClose, course, terms }: CourseMo
         grade: data.grade || null,
         grade_value: data.grade_value || null,
         term_id: data.term_id,
+        institution_id: data.institution_id || null,
         notes: data.notes || null,
       };
 
@@ -183,6 +187,27 @@ export default function CourseModal({ isOpen, onClose, course, terms }: CourseMo
                 <span className={styles.fieldError}>{errors.term_id.message}</span>
               )}
             </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="institution_id" className={styles.label}>
+              Institution
+            </label>
+            <select 
+              id="institution_id" 
+              {...register('institution_id')} 
+              className={styles.select}
+            >
+              <option value="">Select an institution (optional)</option>
+              {institutions.map((institution) => (
+                <option key={institution.id} value={institution.id}>
+                  {institution.name} ({institution.short_code})
+                </option>
+              ))}
+            </select>
+            <span className={styles.fieldHint}>
+              Associate this course with an institution for your transcript
+            </span>
           </div>
 
           <div className={styles.formRow}>

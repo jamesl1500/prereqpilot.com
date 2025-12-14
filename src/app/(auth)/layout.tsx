@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '@/components/Header';
+import { AuthHeader } from '@/components/AuthHeader';
 import styles from '@/styles/modules/auth/auth.module.scss';
 
 export default function AuthLayout({
@@ -9,7 +9,7 @@ export default function AuthLayout({
 }) {
   return (
     <>
-      <Header />
+      <AuthHeader />
       <div className={styles.authContainer}>
         <div className={styles.backgroundPattern}></div>
         <div className={styles.formCard}>

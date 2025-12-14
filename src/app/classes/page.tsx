@@ -29,6 +29,13 @@ export default async function Classes() {
     .eq('user_id', user.id)
     .order('start_date', { ascending: false });
 
+  // Fetch institutions (both global and user's)
+  const { data: institutions } = await supabase
+    .from('institutions')
+    .select('*')
+    .or(`user_id.is.null,user_id.eq.${user.id}`)
+    .order('name', { ascending: true });
+
   // Fetch onboarding status
   const { data: onboarding } = await supabase
     .from('user_onboarding')
@@ -41,6 +48,7 @@ export default async function Classes() {
       user={user} 
       takenCourses={takenCourses || []}
       terms={terms || []}
+      institutions={institutions || []}
       onboarding={onboarding || null}
     />
   );

@@ -39,11 +39,35 @@ export default async function Dashboard() {
   const terms = termsResult.data || [];
   const latestAudit = auditsResult.data?.[0];
 
+  // Calculate overall GPA from courses
+  const coursesWithGrades = courses.filter(course => 
+    course.grade_value !== null && 
+    course.grade_value !== undefined &&
+    Number(course.credits) > 0
+  );
+
+  let overallGPA: number | null = null;
+  if (coursesWithGrades.length > 0) {
+    const totalGradePoints = coursesWithGrades.reduce((sum, course) => {
+      const credits = Number(course.credits) || 0;
+      const gradeValue = Number(course.grade_value) || 0;
+      return sum + (credits * gradeValue);
+    }, 0);
+
+    const totalCredits = coursesWithGrades.reduce((sum, course) => 
+      sum + (Number(course.credits) || 0), 0
+    );
+
+    if (totalCredits > 0) {
+      overallGPA = totalGradePoints / totalCredits;
+    }
+  }
+
   const stats = {
     totalCourses: courses.length,
     totalCredits: courses.reduce((sum, course) => sum + (Number(course.credits) || 0), 0),
     totalTerms: terms.length,
-    overallGPA: latestAudit?.overall_gpa || null,
+    overallGPA: overallGPA || latestAudit?.overall_gpa || null,
     prereqGPA: latestAudit?.prereq_gpa || null,
   };
 

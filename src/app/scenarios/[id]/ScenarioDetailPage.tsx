@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, TrendingUp, RefreshCw, Plus } from 'lucide-react';
+import { ArrowLeft, TrendingUp, RefreshCw, Plus, Check, X, Link as LinkIcon } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SimulateRetakeModal from '@/components/modals/SimulateRetakeModal';
 import { calculateOverallGPA } from '@/services/course-service';
 import styles from '@/styles/modules/pages/scenario-detail.module.scss';
+import type { ProgramRequirementWithDetails, ProgramRequiredCourse, ProgramCourseMapping } from '@/services/program-requirement-service';
 
 interface TakenCourse {
   id: string;
@@ -50,17 +51,24 @@ interface ScenarioDetailPageProps {
   scenario: Scenario;
   takenCourses: TakenCourse[];
   scenarioCourses: ScenarioCourse[];
+  programs?: ProgramRequirementWithDetails[];
+  mappings?: Record<string, ProgramCourseMapping[]>;
 }
 
 export default function ScenarioDetailPage({ 
   user, 
   scenario, 
   takenCourses, 
-  scenarioCourses 
+  scenarioCourses,
+  programs = [],
+  mappings = {},
 }: ScenarioDetailPageProps) {
   const router = useRouter();
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [isRetakeModalOpen, setIsRetakeModalOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<string>(programs[0]?.id || '');
+  const [showMatchModal, setShowMatchModal] = useState(false);
+  const [selectedRequiredCourse, setSelectedRequiredCourse] = useState<ProgramRequiredCourse | null>(null);
 
   // Create a map of overridden courses
   const overrideMap = new Map(
@@ -242,6 +250,33 @@ export default function ScenarioDetailPage({
             </div>
           )}
         </div>
+
+        {/* Program Requirements Section */}
+        {programs.length > 0 && (
+          <div className={styles.requirementsSection}>
+            <h2 className={styles.sectionTitle}>Program Requirements</h2>
+            
+            {programs.length > 1 && (
+              <div className={styles.programSelector}>
+                <label htmlFor="program">Select Program:</label>
+                <select
+                  id="program"
+                  value={selectedProgram}
+                  onChange={(e) => setSelectedProgram(e.target.value)}
+                  className={styles.programSelect}
+                >
+                  {programs.map((program) => (
+                    <option key={program.id} value={program.id}>
+                      {program.name} {program.institution && `(${program.institution})`}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {renderProgramRequirements()}
+          </div>
+        )}
       </div>
 
       <SimulateRetakeModal
@@ -251,6 +286,256 @@ export default function ScenarioDetailPage({
         courses={getSelectedCoursesData()}
         onSuccess={handleRetakeSuccess}
       />
+
+      {showMatchModal && selectedRequiredCourse && (
+        <MatchCourseModal
+          requiredCourse={selectedRequiredCourse}
+          takenCourses={takenCourses}
+          currentMapping={(mappings[selectedProgram] || []).find(
+            m => m.program_required_course_id === selectedRequiredCourse.id
+          )}
+          onClose={() => {
+            setShowMatchModal(false);
+            setSelectedRequiredCourse(null);
+          }}
+          onSave={handleSaveMapping}
+        />
+      )}
     </DashboardLayout>
+  );
+
+  function renderProgramRequirements() {
+    const currentProgram = programs.find(p => p.id === selectedProgram);
+    if (!currentProgram) return null;
+
+    const currentMappings = mappings[selectedProgram] || [];
+    const totalRequired = currentProgram.required_courses.filter(c => c.is_required).length;
+    const completedRequired = currentMappings.filter(m => {
+      const course = currentProgram.required_courses.find(c => c.id === m.program_required_course_id);
+      return course?.is_required && m.is_completed;
+    }).length;
+    const completionPercentage = totalRequired > 0 ? Math.round((completedRequired / totalRequired) * 100) : 0;
+
+    const coursesByCategory = currentProgram.required_courses.reduce((acc, course) => {
+      const category = course.category || 'Uncategorized';
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(course);
+      return acc;
+    }, {} as Record<string, ProgramRequiredCourse[]>);
+
+    return (
+      <>
+        <div className={styles.progressSection}>
+          <div className={styles.progressHeader}>
+            <span>Completion Progress</span>
+            <span className={styles.progressPercentage}>{completionPercentage}%</span>
+          </div>
+          <div className={styles.progressBar}>
+            <div 
+              className={styles.progressFill} 
+              style={{ width: `${completionPercentage}%` }}
+            />
+          </div>
+          <p className={styles.progressText}>
+            {completedRequired} of {totalRequired} required courses completed
+          </p>
+        </div>
+
+        {Object.entries(coursesByCategory).map(([category, courses]) => (
+          <div key={category} className={styles.categoryBlock}>
+            <h3 className={styles.categoryTitle}>{category}</h3>
+            
+            <div className={styles.requirementsList}>
+              {courses.map((course) => {
+                const mapping = currentMappings.find(
+                  m => m.program_required_course_id === course.id
+                );
+                const matchedCourse = mapping?.taken_course_id
+                  ? takenCourses.find(tc => tc.id === mapping.taken_course_id)
+                  : null;
+
+                return (
+                  <div key={course.id} className={styles.requirementRow}>
+                    <div className={styles.requirementInfo}>
+                      <h4 className={styles.requirementTitle}>
+                        {course.course_title}
+                        {course.course_code && (
+                          <span className={styles.courseCode}> ({course.course_code})</span>
+                        )}
+                      </h4>
+                      <div className={styles.requirementMeta}>
+                        <span>{course.credits} credits</span>
+                        {course.min_grade && <span>Min: {course.min_grade}</span>}
+                        <span className={course.is_required ? styles.requiredBadge : styles.optionalBadge}>
+                          {course.is_required ? 'Required' : 'Optional'}
+                        </span>
+                      </div>
+                      {course.description && (
+                        <p className={styles.requirementDescription}>{course.description}</p>
+                      )}
+                    </div>
+
+                    <div className={styles.requirementStatus}>
+                      {mapping?.is_completed ? (
+                        <div className={styles.completedStatus}>
+                          <Check size={20} className={styles.checkIcon} />
+                          <div className={styles.statusInfo}>
+                            <span>Completed</span>
+                            {matchedCourse && (
+                              <span className={styles.matchedCourse}>
+                                {matchedCourse.course_title}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ) : mapping ? (
+                        <div className={styles.inProgressStatus}>
+                          <X size={20} className={styles.xIcon} />
+                          <span>Not Completed</span>
+                        </div>
+                      ) : null}
+                      
+                      <button
+                        onClick={() => handleMatchCourse(course)}
+                        className={styles.matchButton}
+                      >
+                        <LinkIcon size={16} />
+                        {mapping ? 'Update' : 'Match'}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </>
+    );
+  }
+
+  function handleMatchCourse(requiredCourse: ProgramRequiredCourse) {
+    setSelectedRequiredCourse(requiredCourse);
+    setShowMatchModal(true);
+  }
+
+  async function handleSaveMapping(takenCourseId: string | null, isCompleted: boolean) {
+    if (!selectedRequiredCourse) return;
+
+    try {
+      const response = await fetch(`/api/programs/${selectedProgram}/mappings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          program_required_course_id: selectedRequiredCourse.id,
+          taken_course_id: takenCourseId,
+          is_completed: isCompleted,
+        }),
+      });
+
+      if (response.ok) {
+        router.refresh();
+        setShowMatchModal(false);
+        setSelectedRequiredCourse(null);
+      } else {
+        const error = await response.json();
+        alert(error.error || 'Failed to save mapping');
+      }
+    } catch (error) {
+      alert('Failed to save mapping');
+    }
+  }
+}
+
+// Modal for matching taken courses to required courses
+function MatchCourseModal({
+  requiredCourse,
+  takenCourses,
+  currentMapping,
+  onClose,
+  onSave,
+}: {
+  requiredCourse: ProgramRequiredCourse;
+  takenCourses: TakenCourse[];
+  currentMapping?: ProgramCourseMapping;
+  onClose: () => void;
+  onSave: (takenCourseId: string | null, isCompleted: boolean) => Promise<void>;
+}) {
+  const [selectedCourse, setSelectedCourse] = useState<string>(
+    currentMapping?.taken_course_id || ''
+  );
+  const [isCompleted, setIsCompleted] = useState(currentMapping?.is_completed || false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    await onSave(selectedCourse || null, isCompleted);
+    setIsSubmitting(false);
+  };
+
+  return (
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <h2 className={styles.modalTitle}>Match Course</h2>
+        
+        <div className={styles.requiredCourseInfo}>
+          <h3>{requiredCourse.course_title}</h3>
+          {requiredCourse.course_code && <p>Code: {requiredCourse.course_code}</p>}
+          <p>{requiredCourse.credits} credits required</p>
+          {requiredCourse.min_grade && <p>Minimum grade: {requiredCourse.min_grade}</p>}
+        </div>
+
+        <form onSubmit={handleSubmit} className={styles.modalForm}>
+          <div className={styles.formGroup}>
+            <label htmlFor="takenCourse">Select a course you've taken:</label>
+            <select
+              id="takenCourse"
+              value={selectedCourse}
+              onChange={(e) => setSelectedCourse(e.target.value)}
+              className={styles.courseSelect}
+            >
+              <option value="">-- None / Not taken yet --</option>
+              {takenCourses.map((course) => (
+                <option key={course.id} value={course.id}>
+                  {course.course_title} ({course.credits} credits
+                  {course.grade && `, Grade: ${course.grade}`})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.checkboxLabel}>
+              <input
+                type="checkbox"
+                checked={isCompleted}
+                onChange={(e) => setIsCompleted(e.target.checked)}
+              />
+              <span>Mark as completed</span>
+            </label>
+          </div>
+
+          <div className={styles.modalActions}>
+            <button
+              type="button"
+              onClick={onClose}
+              className={styles.cancelButton}
+              disabled={isSubmitting}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Saving...' : 'Save Match'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 }

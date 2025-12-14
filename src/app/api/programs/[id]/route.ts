@@ -6,6 +6,40 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateProgram, deleteProgram } from '@/services/program-service';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
+import {
+  getProgramRequirement,
+  updateProgramRequirement,
+  deleteProgramRequirement,
+  getProgramWithDetails,
+} from '@/services/program-requirement-service';
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const { searchParams } = new URL(request.url);
+  const includeDetails = searchParams.get('details') === 'true';
+  const type = searchParams.get('type');
+
+  if (type === 'requirement') {
+    const result = includeDetails
+      ? await getProgramWithDetails(id, request)
+      : await getProgramRequirement(id, request);
+
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error },
+        { status: result.error === 'Unauthorized' ? 401 : 404 }
+      );
+    }
+
+    return NextResponse.json(result.data);
+  }
+
+  // Default to program (existing functionality can be added here if needed)
+  return NextResponse.json({ error: 'Not implemented' }, { status: 501 });
+}
 
 export async function PUT(
   request: NextRequest,
@@ -24,6 +58,21 @@ export async function PUT(
     }
 
     const body = await request.json();
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type');
+
+    if (type === 'requirement') {
+      const result = await updateProgramRequirement(id, body, request);
+      if (!result.success) {
+        return NextResponse.json(
+          { error: result.error },
+          { status: result.error === 'Unauthorized' ? 401 : 400 }
+        );
+      }
+      return NextResponse.json(result.data);
+    }
+
+    // Default to program
     const result = await updateProgram(id, user.id, body, request);
 
     if (!result.success) {
@@ -48,6 +97,21 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params;
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type');
+
+    if (type === 'requirement') {
+      const result = await deleteProgramRequirement(id, request);
+      if (!result.success) {
+        return NextResponse.json(
+          { error: result.error },
+          { status: result.error === 'Unauthorized' ? 401 : 400 }
+        );
+      }
+      return NextResponse.json({ success: true });
+    }
+
+    // Default to program
     const result = await deleteProgram(id, request);
 
     if (!result.success) {

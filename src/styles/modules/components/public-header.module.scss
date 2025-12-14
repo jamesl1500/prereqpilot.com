@@ -1,0 +1,304 @@
+@import '../../abstracts/variables';
+@import '../../abstracts/mixins';
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 2px solid $color-black;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0 1.5rem;
+    height: 60px;
+  }
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: $color-black;
+  font-family: $font-mono;
+  font-weight: $font-weight-bold;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  border: 2px solid $color-black;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+
+    svg {
+      stroke: $color-white;
+    }
+  }
+
+  svg {
+    stroke: $color-black;
+    transition: stroke 0.2s;
+  }
+
+  span {
+    text-transform: uppercase;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.75rem;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 1;
+
+  @media (max-width: $breakpoint-tablet) {
+    display: none;
+  }
+}
+
+.navLink {
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  color: $color-black;
+  font-family: $font-mono;
+  font-weight: $font-weight-semibold;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid $color-black;
+  background: $color-white;
+  transition: all 0.2s;
+
+  &:last-of-type {
+    border-right: 2px solid $color-black;
+  }
+
+  &:hover {
+    background: #f5f5f5;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
+    border: 1px solid $color-black;
+    border-right: none;
+    margin-left: -1px;
+  }
+}
+
+.signupButton {
+  padding: 0.75rem 2rem;
+  text-decoration: none;
+  color: $color-white;
+  background: $color-black;
+  font-family: $font-mono;
+  font-weight: $font-weight-bold;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid $color-black;
+  margin-left: -2px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    border: 1px solid $color-black;
+    margin-left: -1px;
+  }
+}
+
+.dashboardButton {
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  color: $color-black;
+  background: $color-white;
+  font-family: $font-mono;
+  font-weight: $font-weight-semibold;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid $color-black;
+  border-right: none;
+  margin-left: -2px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
+    border: 1px solid $color-black;
+    border-right: none;
+    margin-left: -1px;
+  }
+}
+
+.signOutButton {
+  padding: 0.75rem 2rem;
+  text-decoration: none;
+  color: $color-white;
+  background: $color-black;
+  font-family: $font-mono;
+  font-weight: $font-weight-bold;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid $color-black;
+  cursor: pointer;
+  margin-left: -2px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  @media (max-width: $breakpoint-tablet) {
+    padding: 0.5rem 1rem;
+    font-size: 0.7rem;
+    border: 1px solid $color-black;
+    margin-left: -1px
+  }
+}
+
+.signOutButton {
+  padding: 0.75rem 1.5rem;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  background: $color-white;
+  color: $color-black;
+  border: 2px solid $color-black;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.mobileMenuButton {
+  display: none;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  @media (max-width: $breakpoint-tablet) {
+    display: flex;
+  }
+}
+
+.hamburger {
+  width: 24px;
+  height: 3px;
+  background: $color-black;
+  transition: all 0.2s;
+}
+
+.mobileMenu {
+  display: none;
+  background: $color-white;
+  border-top: 2px solid #e5e5e5;
+  padding: 1rem 2rem 2rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+.mobileNavLink {
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $color-text-light;
+  text-decoration: none;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e5e5e5;
+  transition: all 0.2s;
+
+  &:hover {
+    color: $color-black;
+  }
+}
+
+.mobileDivider {
+  height: 2px;
+  background: $color-black;
+  margin: 0.5rem 0;
+}
+
+.mobileSignupButton {
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  background: $color-black;
+  color: $color-white;
+  border: 2px solid $color-black;
+  text-decoration: none;
+  padding: 1rem;
+  text-align: center;
+  margin-top: 0.5rem;
+  transition: all 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.mobileSignOutButton {
+  width: 100%;
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  background: $color-white;
+  color: $color-black;
+  border: 2px solid $color-black;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}

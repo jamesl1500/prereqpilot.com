@@ -23,6 +23,23 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
     redirect('/scenarios');
   }
 
+  // Fetch program requirements
+  const { data: programs } = await supabase
+    .from('program_requirements')
+    .select(`
+      *,
+      required_courses:program_required_courses(*)
+    `)
+    .or(`user_id.is.null,user_id.eq.${user.id}`);
+
+  // Add computed fields to programs
+  const programsWithDetails = (programs || []).map(program => ({
+    ...program,
+    total_credits: program.required_courses?.reduce((sum: number, c: any) => sum + Number(c.credits), 0) || 0,
+    required_count: program.required_courses?.filter((c: any) => c.is_required).length || 0,
+    optional_count: program.required_courses?.filter((c: any) => !c.is_required).length || 0,
+  }));
+
   // Fetch user's taken courses
   const { data: takenCourses } = await supabase
     .from('taken_courses')
@@ -34,6 +51,18 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
     `)
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
+
+  // Fetch course mappings for all programs
+  const mappings: Record<string, any[]> = {};
+  for (const program of programsWithDetails) {
+    const { data: programMappings } = await supabase
+      .from('program_course_mappings')
+      .select('*')
+      .eq('program_requirement_id', program.id)
+      .eq('user_id', user.id);
+    
+    mappings[program.id] = programMappings || [];
+  }
 
   // Fetch scenario overrides/simulated courses
   const { data: scenarioCourses } = await supabase
@@ -55,6 +84,8 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
       scenario={scenario}
       takenCourses={takenCourses || []}
       scenarioCourses={scenarioCourses || []}
+      programs={programsWithDetails}
+      mappings={mappings}
     />
   );
 }

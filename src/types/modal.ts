@@ -40,6 +40,7 @@ export interface CourseModalProps {
   onClose: () => void;
   course?: CourseModalData;
   terms: Term[];
+  institutions: Institution[];
 }
 
 /**

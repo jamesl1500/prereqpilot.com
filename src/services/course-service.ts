@@ -13,7 +13,7 @@ export async function createCourse(userId: string, data: CourseData, request: Re
   try {
     const supabase = createRouteHandlerClient(request);
     const { data: course, error } = await supabase
-      .from('courses')
+      .from('taken_courses')
       .insert([{ ...data, user_id: userId }])
       .select()
       .single();
@@ -32,7 +32,7 @@ export async function updateCourse(courseId: string, userId: string, data: Parti
   try {
     const supabase = createRouteHandlerClient(request);
     const { data: course, error } = await supabase
-      .from('courses')
+      .from('taken_courses')
       .update(data)
       .eq('id', courseId)
       .eq('user_id', userId)
@@ -53,7 +53,7 @@ export async function deleteCourse(courseId: string, request: Request) {
   try {
     const supabase = createRouteHandlerClient(request);
     const { error } = await supabase
-      .from('courses')
+      .from('taken_courses')
       .delete()
       .eq('id', courseId);
     
@@ -71,7 +71,7 @@ export async function getUserCourses(userId: string, request: Request) {
   try {
     const supabase = createRouteHandlerClient(request);
     const { data: courses, error } = await supabase
-      .from('courses')
+      .from('taken_courses')
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });

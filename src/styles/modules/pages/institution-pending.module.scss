@@ -1,0 +1,293 @@
+@import '../../../styles/abstracts/variables';
+@import '../../../styles/abstracts/mixins';
+
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.content {
+  max-width: 800px;
+  width: 100%;
+}
+
+.card {
+  background: $color-white;
+  border: 2px solid $color-black;
+  padding: 3rem;
+  text-align: center;
+}
+
+.iconWrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: #FFA500;
+  color: $color-white;
+  margin-bottom: 2rem;
+
+  svg {
+    animation: spin 2s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.title {
+  font-family: $font-grotesk;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: $font-size-lg;
+  color: $color-text-light;
+  margin-bottom: 3rem;
+
+  strong {
+    color: $color-black;
+  }
+}
+
+.statusBox {
+  background: #f5f5f5;
+  border: 2px solid $color-black;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.statusItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #ddd;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .label {
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    color: $color-text-muted;
+  }
+
+  .value {
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+
+    &.pending {
+      color: #FFA500;
+    }
+  }
+}
+
+.processSection {
+  margin-bottom: 3rem;
+  text-align: left;
+}
+
+.sectionTitle {
+  font-family: $font-grotesk;
+  font-size: 1.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.step {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: #f5f5f5;
+  border: 2px solid #ddd;
+
+  .stepNumber {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #ddd;
+    background: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-mono;
+    font-weight: $font-weight-bold;
+    color: $color-text-muted;
+  }
+
+  .stepContent {
+    flex: 1;
+
+    h3 {
+      font-family: $font-grotesk;
+      font-size: $font-size-base;
+      font-weight: $font-weight-semibold;
+      margin-bottom: 0.25rem;
+      color: $color-text-muted;
+    }
+
+    p {
+      font-size: $font-size-sm;
+      color: $color-text-light;
+      margin: 0;
+    }
+  }
+
+  &.completed {
+    background: $color-white;
+    border-color: #22c55e;
+
+    .stepNumber {
+      background: #22c55e;
+      color: $color-white;
+      border-color: #22c55e;
+    }
+
+    .stepContent h3 {
+      color: $color-black;
+    }
+  }
+
+  &.active {
+    background: $color-white;
+    border-color: $color-black;
+
+    .stepNumber {
+      background: $color-black;
+      color: $color-white;
+      border-color: $color-black;
+    }
+
+    .stepContent h3 {
+      color: $color-black;
+    }
+  }
+}
+
+.infoSection {
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.infoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f5f5f5;
+    border: 2px solid $color-black;
+    margin-bottom: 0.75rem;
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+
+    svg {
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+  }
+}
+
+.timelineBox {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #fffbeb;
+  border: 2px solid #FFA500;
+  margin-bottom: 2rem;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+
+  svg {
+    flex-shrink: 0;
+    color: #FFA500;
+  }
+
+  strong {
+    font-weight: $font-weight-bold;
+  }
+}
+
+.supportSection {
+  padding: 1.5rem;
+  background: #f5f5f5;
+  border: 2px solid $color-black;
+  margin-bottom: 2rem;
+  font-size: $font-size-sm;
+
+  a {
+    color: $color-black;
+    font-weight: $font-weight-semibold;
+    text-decoration: none;
+    border-bottom: 2px solid $color-black;
+
+    &:hover {
+      background: $color-black;
+      color: $color-white;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+
+  button,
+  a {
+    padding: 1rem 2rem;
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    border: 2px solid $color-black;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .homeButton {
+    background: $color-white;
+    color: $color-black;
+
+    &:hover {
+      background: #f5f5f5;
+    }
+  }
+
+  .refreshButton {
+    background: $color-black;
+    color: $color-white;
+
+    &:hover {
+      background: #333;
+    }
+  }
+}

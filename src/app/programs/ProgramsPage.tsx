@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { GraduationCap } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -15,6 +16,7 @@ interface ProgramsPageProps {
 }
 
 export default function ProgramsPage({ user, programs }: ProgramsPageProps) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<Program | undefined>();
@@ -24,14 +26,17 @@ export default function ProgramsPage({ user, programs }: ProgramsPageProps) {
     setIsModalOpen(true);
   };
 
-  const handleEditProgram = (program: Program) => {
-    setSelectedProgram(program);
-    setIsModalOpen(true);
+  const handleEditProgram = (programId: string) => {
+    router.push(`/programs/${programId}/edit`);
   };
 
   const handleDeleteProgram = (program: Program) => {
     setSelectedProgram(program);
     setIsDeleteModalOpen(true);
+  };
+
+  const handleViewProgram = (programId: string) => {
+    router.push(`/programs/${programId}`);
   };
 
   return (
@@ -54,7 +59,7 @@ export default function ProgramsPage({ user, programs }: ProgramsPageProps) {
             <div className={styles.icon}><GraduationCap size={96} strokeWidth={1.5} /></div>
             <h2 className={styles.comingSoonTitle}>No programs yet</h2>
             <p className={styles.comingSoonText}>
-              Add your first program requirement to start tracking your progress
+              Add your first program to start tracking your progress
               toward graduation. You'll be able to define prerequisite requirements
               and ensure you meet all graduation criteria.
             </p>
@@ -89,7 +94,10 @@ export default function ProgramsPage({ user, programs }: ProgramsPageProps) {
                 </div>
 
                 <div className={styles.cardActions}>
-                  <button className={styles.primaryAction} onClick={() => handleEditProgram(program)}>
+                  <button className={styles.primaryAction} onClick={() => handleViewProgram(program.id)}>
+                    View Details
+                  </button>
+                  <button className={styles.secondaryAction} onClick={() => handleEditProgram(program.id)}>
                     Edit
                   </button>
                   <button className={styles.secondaryAction} onClick={() => handleDeleteProgram(program)}>

@@ -1,0 +1,390 @@
+@import '@/styles/abstracts/variables';
+@import '@/styles/abstracts/mixins';
+
+.container {
+  padding: 2rem;
+  background: #f5f5f5;
+  min-height: calc(100vh - 70px);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  background: #fff;
+  border: 2px solid #000;
+  padding: 2rem;
+}
+
+.title {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin: 0;
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summaryCard {
+  background: #fff;
+  border: 2px solid #000;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s;
+
+  &:hover {
+    box-shadow: 8px 8px 0 #000;
+    transform: translate(-4px, -4px);
+  }
+}
+
+.summaryIcon {
+  background: #000;
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.summaryContent {
+  flex: 1;
+}
+
+.summaryLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+}
+
+.summaryValue {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  background: #fff;
+  border: 2px solid #000;
+  padding: 1.5rem;
+}
+
+.filterLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.select {
+  flex: 1;
+  max-width: 400px;
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  background: #fff;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 1rem;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #000;
+  }
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.empty {
+  background: #fff;
+  border: 2px solid #000;
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #666;
+
+  svg {
+    color: #ccc;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-family: var(--font-space-mono), monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 0.5rem 0;
+    text-transform: uppercase;
+  }
+
+  p {
+    font-family: var(--font-space-grotesk), sans-serif;
+    margin: 0;
+  }
+}
+
+.institutions {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.institutionBlock {
+  background: #fff;
+  border: 2px solid #000;
+  overflow: hidden;
+}
+
+.institutionHeader {
+  background: #000;
+  color: #fff;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 0 #666;
+  }
+}
+
+.institutionName {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.institutionCode {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: 0.875rem;
+  color: #ccc;
+  margin: 0.25rem 0 0 0;
+}
+
+.institutionStats {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.statLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #ccc;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.statValue {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader {
+  background: #f5f5f5;
+  border-bottom: 2px solid #000;
+
+  th {
+    padding: 1rem;
+    text-align: left;
+    font-family: var(--font-space-mono), monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+}
+
+.tableRow {
+  border-bottom: 1px solid #e5e5e5;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #fafafa;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  td {
+    padding: 1rem;
+    font-family: var(--font-space-grotesk), sans-serif;
+    font-size: 0.875rem;
+    color: #000;
+  }
+
+  &.retaken {
+    background: #fef3c7;
+    
+    &:hover {
+      background: #fde68a;
+    }
+  }
+}
+
+.termCell {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.courseCell {
+  min-width: 200px;
+}
+
+.courseTitle {
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 0.25rem;
+}
+
+.courseCode {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.creditsCell {
+  text-align: center;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+}
+
+.gradeCell {
+  text-align: center;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.statusCell {
+  text-align: center;
+}
+
+.completedBadge,
+.retakenBadge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.completedBadge {
+  background: #fff;
+  color: #000;
+}
+
+.retakenBadge {
+  background: #000;
+  color: #fff;
+}
+
+@media (max-width: 1024px) {
+  .institutionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .institutionStats {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .select {
+    max-width: none;
+  }
+
+  .table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .institutionHeader {
+    padding: 1rem;
+  }
+
+  .institutionName {
+    font-size: 1rem;
+  }
+
+  .statValue {
+    font-size: 1.25rem;
+  }
+}

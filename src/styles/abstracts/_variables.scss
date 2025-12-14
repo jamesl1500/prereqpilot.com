@@ -10,6 +10,8 @@ $color-error-bg: #fee;
 $color-error-border: #fcc;
 $color-border: #d1d5db;
 $color-border-dark: #4b5563;
+$color-white: #ffffff;
+$color-black: #000000;
 
 // Background & Foreground (CSS variables)
 $bg-light: #ffffff;
@@ -60,3 +62,9 @@ $breakpoint-desktop: 1280px;
 $z-index-dropdown: 100;
 $z-index-modal: 1000;
 $z-index-tooltip: 2000;
+
+// Fonts
+$font-mono: 'Space Mono', monospace;
+$font-grotesk: 'Space Grotesk', sans-serif;
+$font-sans: 'Inter', sans-serif;
+$font-serif: 'Merriweather', serif;

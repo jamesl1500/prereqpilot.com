@@ -1,0 +1,278 @@
+@import '../../abstracts/variables';
+@import '../../abstracts/mixins';
+
+.container {
+  min-height: 100vh;
+  background: #f5f5f5;
+}
+
+.header {
+  background: $color-white;
+  border-bottom: 4px solid $color-black;
+  padding: 3rem 2rem;
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  background: $color-white;
+  color: $color-black;
+  border: 2px solid $color-black;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+  }
+}
+
+.title {
+  font-family: $font-grotesk;
+  font-size: 3rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.subtitle {
+  font-family: $font-sans;
+  font-size: 1.25rem;
+  color: $color-text-light;
+  max-width: 800px;
+}
+
+.quickLinks {
+  padding: 4rem 2rem;
+}
+
+.sectionContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  font-family: $font-grotesk;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 2rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.linkGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.linkCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2.5rem 2rem;
+  background: $color-white;
+  border: 3px solid $color-black;
+  text-decoration: none;
+  color: $color-black;
+  transition: all 0.2s;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  span {
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    font-weight: $font-weight-semibold;
+    text-align: center;
+  }
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+    transform: translate(-4px, -4px);
+    box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.section {
+  padding: 4rem 2rem;
+
+  &:nth-child(even) {
+    background: $color-white;
+    border-top: 4px solid $color-black;
+    border-bottom: 4px solid $color-black;
+  }
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.faqItem {
+  background: $color-white;
+  border: 3px solid $color-black;
+  padding: 2.5rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 2rem;
+  }
+}
+
+.faqQuestion {
+  font-family: $font-grotesk;
+  font-size: 1.25rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1rem;
+}
+
+.faqAnswer {
+  font-family: $font-sans;
+  font-size: $font-size-base;
+  color: $color-text-light;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.contact {
+  background: $color-black;
+  color: $color-white;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.contactContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contactTitle {
+  font-family: $font-grotesk;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 1rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.contactDescription {
+  font-family: $font-sans;
+  font-size: 1.125rem;
+  margin-bottom: 3rem;
+  opacity: 0.9;
+}
+
+.contactMethods {
+  display: flex;
+  justify-content: center;
+}
+
+.contactMethod {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2rem 3rem;
+  background: $color-white;
+  color: $color-black;
+  border: 3px solid $color-white;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  div {
+    text-align: left;
+  }
+
+  h3 {
+    font-family: $font-grotesk;
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+    margin-bottom: 0.5rem;
+  }
+
+  a {
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    color: $color-black;
+    text-decoration: none;
+    border-bottom: 2px solid $color-black;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.footer {
+  background: $color-white;
+  border-top: 4px solid $color-black;
+  padding: 3rem 2rem;
+}
+
+.footerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+
+  a {
+    font-family: $font-mono;
+    font-size: $font-size-sm;
+    color: $color-text-light;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+
+    &:hover {
+      color: $color-black;
+      border-bottom-color: $color-black;
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-wrap: wrap;
+  }
+}
+
+.copyright {
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+}

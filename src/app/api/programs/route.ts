@@ -6,9 +6,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createProgram, getAllPrograms } from '@/services/program-service';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
+import {
+  getAllProgramRequirements,
+  createProgramRequirement,
+} from '@/services/program-requirement-service';
 
 export async function GET(request: NextRequest) {
   try {
+    // Check if requesting requirements or programs
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type');
+
+    if (type === 'requirements') {
+      const result = await getAllProgramRequirements(request);
+      if (!result.success) {
+        return NextResponse.json(
+          { error: result.error },
+          { status: result.error === 'Unauthorized' ? 401 : 500 }
+        );
+      }
+      return NextResponse.json(result.data);
+    }
+
+    // Default to programs
     const result = await getAllPrograms(request);
 
     if (!result.success) {
@@ -40,6 +60,23 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    
+    // Check if creating a requirement or program
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type');
+
+    if (type === 'requirement') {
+      const result = await createProgramRequirement(body, request);
+      if (!result.success) {
+        return NextResponse.json(
+          { error: result.error },
+          { status: result.error === 'Unauthorized' ? 401 : 400 }
+        );
+      }
+      return NextResponse.json(result.data, { status: 201 });
+    }
+
+    // Default to program
     const result = await createProgram(user.id, body, request);
 
     if (!result.success) {

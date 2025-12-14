@@ -1,66 +1,190 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from 'next/link';
+import styles from '@/styles/modules/pages/home.module.scss';
+import type { Metadata } from 'next';
+import { createClient } from '@/lib/supabase/server';
+import { PublicHeader } from '@/components/PublicHeader';
+import { PublicFooter } from '@/components/PublicFooter';
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'PrereqPilot - Plan Your Academic Journey',
+  description: 'Discover programs you qualify for, plan your course path, and streamline your academic journey with PrereqPilot.',
+};
+
+export default async function Home() {
+  const supabase = await createClient();
+  
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className={styles.container}>
+      <PublicHeader user={user} />
+      
+      {/* Hero Section */}
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>
+            Plan Your Academic Journey.<br />
+            Find Programs You Qualify For.
+          </h1>
+          <p className={styles.heroSubtitle}>
+            PrereqPilot helps students discover eligible programs, plan their course path, 
+            and navigate academic requirements with confidence.
+          </p>
+          <div className={styles.heroCta}>
+            {user ? (
+              <Link href="/programs" className={styles.primaryButton}>
+                Explore Programs
+              </Link>
+            ) : (
+              <>
+                <Link href="/signup" className={styles.primaryButton}>
+                  Get Started Free
+                </Link>
+                <Link href="/login" className={styles.secondaryButton}>
+                  Sign In
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className={styles.features}>
+        <div className={styles.sectionHeader}>
+          <h2 className={styles.sectionTitle}>Why Students Choose PrereqPilot</h2>
+          <p className={styles.sectionSubtitle}>
+            Everything you need to plan your academic future in one place
           </p>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className={styles.featureGrid}>
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10" />
+                <path d="M9 12l2 2 4-4" />
+              </svg>
+            </div>
+            <h3 className={styles.featureTitle}>Check Eligibility</h3>
+            <p className={styles.featureDescription}>
+              Instantly see which programs you qualify for based on your completed courses and GPA.
+            </p>
+          </div>
+
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M12 2v20M2 12h20" />
+                <circle cx="12" cy="12" r="9" />
+              </svg>
+            </div>
+            <h3 className={styles.featureTitle}>Plan Your Path</h3>
+            <p className={styles.featureDescription}>
+              Create custom academic plans with required courses, prerequisites, and timelines.
+            </p>
+          </div>
+
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+            </div>
+            <h3 className={styles.featureTitle}>Track Progress</h3>
+            <p className={styles.featureDescription}>
+              Monitor your completion percentage and see exactly what's left to achieve your goals.
+            </p>
+          </div>
+
+          <div className={styles.featureCard}>
+            <div className={styles.featureIcon}>
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </div>
+            <h3 className={styles.featureTitle}>Multiple Institutions</h3>
+            <p className={styles.featureDescription}>
+              Explore programs from different institutions and understand transfer requirements.
+            </p>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* How It Works */}
+      <section className={styles.howItWorks}>
+        <h2 className={styles.sectionTitle}>How PrereqPilot Works</h2>
+        <div className={styles.steps}>
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>1</div>
+            <div className={styles.stepContent}>
+              <h3 className={styles.stepTitle}>Create Your Profile</h3>
+              <p className={styles.stepDescription}>
+                Sign up and add your completed courses, current GPA, and academic interests.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.stepDivider}>→</div>
+
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>2</div>
+            <div className={styles.stepContent}>
+              <h3 className={styles.stepTitle}>Discover Programs</h3>
+              <p className={styles.stepDescription}>
+                Browse programs from top institutions and see your eligibility in real-time.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.stepDivider}>→</div>
+
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>3</div>
+            <div className={styles.stepContent}>
+              <h3 className={styles.stepTitle}>Plan Your Journey</h3>
+              <p className={styles.stepDescription}>
+                Create your personalized academic roadmap with required courses and deadlines.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.stepDivider}>→</div>
+
+          <div className={styles.step}>
+            <div className={styles.stepNumber}>4</div>
+            <div className={styles.stepContent}>
+              <h3 className={styles.stepTitle}>Achieve Your Goals</h3>
+              <p className={styles.stepDescription}>
+                Track your progress and complete your program requirements with confidence.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className={styles.cta}>
+        <div className={styles.ctaContent}>
+          <h2 className={styles.ctaTitle}>Ready to Plan Your Future?</h2>
+          <p className={styles.ctaSubtitle}>
+            Join thousands of students already using PrereqPilot to navigate their academic journey.
+          </p>
+          {!user && (
+            <Link href="/signup" className={styles.ctaButton}>
+              Get Started Free
+            </Link>
+          )}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <PublicFooter />
     </div>
   );
 }
