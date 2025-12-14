@@ -1,0 +1,123 @@
+@import '@/styles/abstracts/variables';
+@import '@/styles/abstracts/mixins';
+
+.container {
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+
+.iconWrapper {
+  margin-bottom: $spacing-3xl;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.emailIcon {
+  filter: drop-shadow(0 4px 12px rgba($color-primary, 0.3));
+}
+
+.title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: var(--foreground);
+  margin-bottom: $spacing-lg;
+  
+  @include mobile {
+    font-size: $font-size-2xl;
+  }
+}
+
+.message {
+  font-size: $font-size-base;
+  color: $color-text-light;
+  margin-bottom: $spacing-md;
+}
+
+.email {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-bottom: $spacing-xl;
+  word-break: break-word;
+}
+
+.instructions {
+  font-size: $font-size-base;
+  color: $color-text-light;
+  line-height: 1.6;
+  margin-bottom: $spacing-3xl;
+}
+
+.infoBox {
+  background: rgba($color-primary, 0.05);
+  border: 1px solid rgba($color-primary, 0.1);
+  border-radius: $radius-sm;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-3xl;
+  text-align: left;
+  
+  @media (prefers-color-scheme: dark) {
+    background: rgba($color-primary, 0.1);
+    border-color: rgba($color-primary, 0.2);
+  }
+}
+
+.infoTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--foreground);
+  margin-bottom: $spacing-md;
+}
+
+.tipsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  
+  li {
+    position: relative;
+    padding-left: $spacing-xl;
+    margin-bottom: $spacing-sm;
+    color: $color-text-light;
+    font-size: $font-size-sm;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: $color-primary;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-lg;
+    }
+  }
+}
+
+.actions {
+  text-align: center;
+}
+
+.loginLink {
+  color: $color-primary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  @include smooth-transition(color);
+  
+  &:hover {
+    color: $color-primary-dark;
+    text-decoration: underline;
+  }
+}

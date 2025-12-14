@@ -1,0 +1,132 @@
+@import '@/styles/abstracts/variables';
+@import '@/styles/abstracts/mixins';
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%);
+  @include flex-center;
+  z-index: 1000;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 60px,
+      rgba(255, 255, 255, 0.03) 60px,
+      rgba(255, 255, 255, 0.03) 120px
+    );
+    animation: gridSlide 20s linear infinite;
+  }
+}
+
+@keyframes gridSlide {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(100px, 100px);
+  }
+}
+
+.modal {
+  background: #fff;
+  width: 90%;
+  max-width: 450px;
+  padding: $spacing-3xl;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 2px solid #000;
+  text-align: center;
+  position: relative;
+  z-index: 1001;
+}
+
+.icon {
+  font-size: 4rem;
+  margin-bottom: $spacing-lg;
+  color: #000;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-lg;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.message {
+  font-size: $font-size-base;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: $spacing-md;
+}
+
+.example {
+  font-size: $font-size-sm;
+  color: #666;
+  font-style: italic;
+  margin-bottom: $spacing-2xl;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: center;
+}
+
+.cancelButton {
+  padding: 0.875rem 1.5rem;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+}
+
+.createButton {
+  padding: 0.875rem 1.5rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}

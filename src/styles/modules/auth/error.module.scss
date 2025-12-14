@@ -1,0 +1,123 @@
+@import '@/styles/abstracts/variables';
+@import '@/styles/abstracts/mixins';
+
+.container {
+  min-height: 100vh;
+  @include flex-center;
+  padding: $spacing-3xl;
+  background: linear-gradient(135deg, rgba($color-error, 0.05) 0%, rgba($color-error, 0.02) 100%);
+}
+
+.card {
+  background: var(--background);
+  border-radius: $radius-lg;
+  padding: $spacing-3xl * 2;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  
+  @include mobile {
+    padding: $spacing-3xl;
+  }
+}
+
+.iconWrapper {
+  margin-bottom: $spacing-3xl;
+  animation: shake 0.5s ease-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+.errorIcon {
+  filter: drop-shadow(0 4px 12px rgba($color-error, 0.3));
+}
+
+.title {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  color: var(--foreground);
+  margin-bottom: $spacing-lg;
+  
+  @include mobile {
+    font-size: $font-size-2xl;
+  }
+}
+
+.message {
+  font-size: $font-size-lg;
+  color: $color-text-light;
+  margin-bottom: $spacing-xl;
+  line-height: 1.6;
+}
+
+.reasonList {
+  text-align: left;
+  list-style: none;
+  margin-bottom: $spacing-3xl;
+  padding: $spacing-xl;
+  background: rgba($color-error, 0.05);
+  border-radius: $radius-sm;
+  border: 1px solid rgba($color-error, 0.1);
+  
+  li {
+    position: relative;
+    padding-left: $spacing-xl;
+    margin-bottom: $spacing-md;
+    color: $color-text-light;
+    font-size: $font-size-sm;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    &::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: $color-error;
+      font-weight: $font-weight-bold;
+      font-size: $font-size-lg;
+    }
+  }
+  
+  @media (prefers-color-scheme: dark) {
+    background: rgba($color-error, 0.1);
+    border-color: rgba($color-error, 0.2);
+  }
+}
+
+.actions {
+  @include flex-column;
+  gap: $spacing-lg;
+}
+
+.primaryButton {
+  @include button-base;
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+  color: white;
+  @include hover-lift;
+  text-align: center;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba($color-primary, 0.4);
+  }
+}
+
+.secondaryButton {
+  @include button-base;
+  background: transparent;
+  color: $color-primary;
+  border: 2px solid $color-primary;
+  text-align: center;
+  @include smooth-transition(all);
+  
+  &:hover {
+    background: rgba($color-primary, 0.1);
+    transform: translateY(-1px);
+  }
+}

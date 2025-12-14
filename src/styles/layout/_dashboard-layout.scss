@@ -1,0 +1,22 @@
+/**
+* Website Layout Styles
+*/
+.website-layout {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 70px;
+  background: #f5f5f5;
+
+  .sidebar-container{
+    position: fixed;
+    left: 0;
+    top: 70px;
+    bottom: 0;
+  }
+
+  .website-main{
+    flex: 1;
+    margin-left: 280px;
+    background: #f5f5f5;
+  }
+}

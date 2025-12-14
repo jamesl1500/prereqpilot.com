@@ -1,0 +1,121 @@
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+.formWrapper {
+  width: 100%;
+}
+
+.header {
+  margin-bottom: $spacing-3xl;
+}
+
+.title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: var(--foreground);
+  margin-bottom: $spacing-sm;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: $color-text-light;
+}
+
+.form {
+  @include flex-column;
+  gap: $spacing-xl;
+}
+
+.error {
+  padding: $spacing-md $spacing-lg;
+  background-color: $color-error-bg;
+  border: 1px solid $color-error-border;
+  border-radius: $radius-sm;
+  color: #c33;
+  font-size: $font-size-sm;
+  
+  @media (prefers-color-scheme: dark) {
+    background-color: rgba(220, 38, 38, 0.1);
+    border-color: rgba(220, 38, 38, 0.3);
+    color: $color-error-light;
+  }
+}
+
+.formGroup {
+  @include flex-column;
+  gap: $spacing-sm;
+}
+
+.labelRow {
+  @include flex-between;
+}
+
+.label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: var(--foreground);
+}
+
+.forgotLink {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  text-decoration: none;
+  @include smooth-transition(color);
+  
+  &:hover {
+    color: $color-primary-dark;
+    text-decoration: underline;
+  }
+}
+
+.input {
+  @include input-base;
+}
+
+.inputError {
+  @include input-error;
+}
+
+.errorText {
+  font-size: $font-size-xs;
+  color: $color-error;
+  margin-top: -$spacing-xs;
+  
+  @media (prefers-color-scheme: dark) {
+    color: $color-error-light;
+  }
+}
+
+.hint {
+  font-size: $font-size-xs;
+  color: $color-text-light;
+  margin-top: -$spacing-xs;
+}
+
+.submitButton {
+  @include button-base;
+  @include button-gradient;
+  margin-top: $spacing-sm;
+}
+
+.footer {
+  margin-top: $spacing-3xl;
+  text-align: center;
+}
+
+.footerText {
+  font-size: $font-size-sm;
+  color: $color-text-light;
+}
+
+.link {
+  color: $color-primary;
+  text-decoration: none;
+  font-weight: $font-weight-medium;
+  @include smooth-transition(color);
+  
+  &:hover {
+    color: $color-primary-dark;
+    text-decoration: underline;
+  }
+}

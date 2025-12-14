@@ -1,0 +1,33 @@
+:root {
+  --background: #{$bg-light};
+  --foreground: #{$fg-light};
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #{$bg-dark};
+    --foreground: #{$fg-dark};
+  }
+}
+
+body {
+  font-family: var(--font-space-grotesk), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+p {
+  line-height: 1.6;
+}
+
+code, pre, .monospace {
+  font-family: var(--font-space-mono), 'Courier New', monospace;
+}

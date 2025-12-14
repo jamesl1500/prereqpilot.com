@@ -1,0 +1,108 @@
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+.authContainer {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.leftPanel {
+  flex: 1;
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+  @include flex-center;
+  padding: $spacing-3xl;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: drift 60s linear infinite;
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(30px, 30px);
+  }
+}
+
+.brandingContent {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  color: white;
+}
+
+.logo {
+  margin: 0 auto $spacing-xl;
+  display: inline-block;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.appName {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  margin-bottom: $spacing-lg;
+  letter-spacing: -0.02em;
+}
+
+.tagline {
+  font-size: $font-size-lg;
+  opacity: 0.95;
+  font-weight: $font-weight-light;
+}
+
+.rightPanel {
+  flex: 1;
+  @include flex-center;
+  padding: $spacing-3xl;
+  background: var(--background);
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 420px;
+}
+
+@include mobile {
+  .authContainer {
+    flex-direction: column;
+  }
+
+  .leftPanel {
+    min-height: 200px;
+    flex: 0;
+  }
+
+  .appName {
+    font-size: $font-size-2xl;
+  }
+
+  .tagline {
+    font-size: $font-size-base;
+  }
+
+  .rightPanel {
+    flex: 1;
+  }
+}

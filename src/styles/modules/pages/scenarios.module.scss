@@ -1,0 +1,190 @@
+@import '@/styles/abstracts/variables';
+@import '@/styles/abstracts/mixins';
+
+.container {
+  padding: $spacing-3xl;
+  background: #f5f5f5;
+  min-height: calc(100vh - 70px);
+  
+  @include mobile {
+    padding: $spacing-xl;
+  }
+}
+
+.header {
+  @include flex-between;
+  margin-bottom: $spacing-3xl;
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-xl;
+  
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-lg;
+  }
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-xs;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: var(--font-space-mono), monospace;
+  
+  @include mobile {
+    font-size: 1.5rem;
+  }
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: #333;
+}
+
+.addButton {
+  padding: 0.875rem 1.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+}
+
+.comingSoon {
+  text-align: center;
+  padding: $spacing-3xl * 2;
+  background: #fff;
+  border: 2px solid #000;
+}
+
+.icon {
+  font-size: 6rem;
+  margin-bottom: $spacing-xl;
+  color: #666;
+}
+
+.comingSoonTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-lg;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.comingSoonText {
+  font-size: $font-size-base;
+  color: #333;
+  max-width: 600px;
+  margin: 0 auto $spacing-xl;
+  line-height: 1.6;
+}
+
+.scenariosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: $spacing-xl;
+}
+
+.scenarioCard {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-xl;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 0 #000;
+  }
+}
+
+.scenarioHeader {
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-lg;
+  border-bottom: 2px solid #000;
+}
+
+.scenarioName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.scenarioDate {
+  font-size: $font-size-xs;
+  color: #666;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+}
+
+.scenarioDescription {
+  font-size: $font-size-sm;
+  color: #333;
+  margin-bottom: $spacing-lg;
+  line-height: 1.5;
+}
+
+.cardActions {
+  display: flex;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.primaryAction {
+  padding: $spacing-sm $spacing-lg;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  flex: 1;
+  font-size: $font-size-sm;
+  min-width: 120px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+}
+
+.secondaryAction {
+  padding: $spacing-sm $spacing-lg;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+}

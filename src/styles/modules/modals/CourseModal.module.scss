@@ -1,0 +1,286 @@
+@import '@/styles/abstracts/variables';
+@import '@/styles/abstracts/mixins';
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  @include flex-center;
+  z-index: 1000;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 60px,
+      rgba(255, 255, 255, 0.03) 60px,
+      rgba(255, 255, 255, 0.03) 120px
+    );
+    animation: gridSlide 20s linear infinite;
+  }
+}
+
+@keyframes gridSlide {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(100px, 100px);
+  }
+}
+
+.modal {
+  background: #fff;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 2px solid #000;
+  position: relative;
+  z-index: 1001;
+}
+
+.header {
+  @include flex-between;
+  padding: $spacing-xl;
+  border-bottom: 2px solid #000;
+  background: #fff;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.closeButton {
+  background: transparent;
+  border: 2px solid #000;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: #000;
+  padding: 0.25rem 0.5rem;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  &:hover {
+    background: #000;
+    color: #fff;
+  }
+}
+
+.form {
+  padding: $spacing-xl;
+  background: #fff;
+}
+
+.error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: $spacing-md;
+  border: 2px solid #721c24;
+  margin-bottom: $spacing-lg;
+  font-size: $font-size-sm;
+  font-weight: 600;
+}
+
+.formGroup {
+  margin-bottom: $spacing-lg;
+  flex: 1;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+  
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #666;
+  margin-bottom: $spacing-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  background: #fff;
+  font-size: $font-size-base;
+  color: #000;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #666;
+  }
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: inherit;
+}
+
+.fieldError {
+  display: block;
+  color: #dc2626;
+  font-size: $font-size-xs;
+  margin-top: $spacing-xs;
+  font-weight: 600;
+}
+
+.fieldHint {
+  display: block;
+  color: #666;
+  font-size: $font-size-xs;
+  margin-top: $spacing-xs;
+  font-style: italic;
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: flex-end;
+  margin-top: $spacing-xl;
+  padding-top: $spacing-lg;
+  border-top: 2px solid #000;
+}
+
+.cancelButton {
+  padding: 0.875rem 1.5rem;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+}
+
+.submitButton {
+  padding: 0.875rem 1.5rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+// Simulate Retake Modal specific styles
+.coursesList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.courseItem {
+  border: 2px solid #000;
+  padding: $spacing-lg;
+  background: #fff;
+}
+
+.courseHeader {
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-md;
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.courseName {
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-xs;
+  font-family: var(--font-space-grotesk), sans-serif;
+}
+
+.courseInfo {
+  font-size: $font-size-sm;
+  color: #666;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.gradeSelection {
+  margin-bottom: $spacing-md;
+}
+
+.checkboxGroup {
+  margin-top: $spacing-md;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  font-size: $font-size-sm;
+  color: #000;
+  font-family: var(--font-space-grotesk), sans-serif;
+  
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #000;
+    cursor: pointer;
+  }
+}
+
+.subtitle {
+  color: #666;
+  margin: 0 0 $spacing-xl 0;
+  font-family: var(--font-space-grotesk), sans-serif;
+  font-size: $font-size-base;
+}
