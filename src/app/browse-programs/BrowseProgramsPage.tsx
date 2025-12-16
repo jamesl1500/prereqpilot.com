@@ -4,19 +4,9 @@ import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search, Filter, GraduationCap, MapPin, Calendar, DollarSign, Users } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
+import type { Institution } from '@/types/institution';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import styles from '@/styles/modules/pages/browse-programs.module.scss';
-
-interface Institution {
-  id: string;
-  name: string;
-  short_code: string | null;
-  country: string | null;
-  status: string;
-  is_official: boolean;
-  logo_url: string | null;
-  description: string | null;
-}
 
 interface Program {
   id: string;
@@ -192,7 +182,7 @@ export default function BrowseProgramsPage({ user, programs, institutions, userI
               >
                 <option value="all">All Types</option>
                 {programTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
+                  <option key={type || 'unknown'} value={type || ''}>{type}</option>
                 ))}
               </select>
             </div>
@@ -206,7 +196,7 @@ export default function BrowseProgramsPage({ user, programs, institutions, userI
               >
                 <option value="all">All Degrees</option>
                 {degreeTypes.map(degree => (
-                  <option key={degree} value={degree}>{degree}</option>
+                  <option key={degree || 'unknown'} value={degree || ''}>{degree}</option>
                 ))}
               </select>
             </div>
@@ -220,7 +210,7 @@ export default function BrowseProgramsPage({ user, programs, institutions, userI
               >
                 <option value="all">All Fields</option>
                 {fields.map(field => (
-                  <option key={field} value={field}>{field}</option>
+                  <option key={field || 'unknown'} value={field || ''}>{field}</option>
                 ))}
               </select>
             </div>

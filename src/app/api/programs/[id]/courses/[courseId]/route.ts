@@ -28,7 +28,7 @@ export async function PUT(
     }
 
     return NextResponse.json(result.data);
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Invalid request body' },
       { status: 400 }

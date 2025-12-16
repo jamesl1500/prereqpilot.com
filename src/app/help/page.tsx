@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import styles from '@/styles/modules/pages/help.module.scss';
 import type { Metadata } from 'next';
 import { PublicHeader } from '@/components/PublicHeader';

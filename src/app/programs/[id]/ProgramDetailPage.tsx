@@ -43,7 +43,7 @@ export default function ProgramDetailPage({ program, isOwner, user }: ProgramDet
         const error = await response.json();
         alert(error.error || 'Failed to delete course');
       }
-    } catch (error) {
+    } catch {
       alert('Failed to delete course');
     }
   };
@@ -269,7 +269,7 @@ function RequiredCourseModal({
         const error = await response.json();
         alert(error.error || 'Failed to save course');
       }
-    } catch (error) {
+    } catch {
       alert('Failed to save course');
     } finally {
       setIsSubmitting(false);

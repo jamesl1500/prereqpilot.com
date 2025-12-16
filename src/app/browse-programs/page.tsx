@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import BrowseProgramsPage from './BrowseProgramsPage';
 import type { Metadata } from 'next';
+import type { Institution } from '@/types/institution';
 
 export const metadata: Metadata = {
   title: 'Browse Programs - PrereqPilot',
@@ -43,20 +44,25 @@ export default async function BrowsePrograms() {
     .not('institution_id', 'is', null);
 
   // Deduplicate user institutions
-  const uniqueUserInstitutions = Array.from(
-    new Map(
-      userInstitutions
-        ?.filter((tc: any) => tc.institution)
-        .map((tc: any) => [tc.institution.id, tc.institution]) || []
-    ).values()
-  );
+  const institutionMap = new Map<string, Institution>();
+  if (Array.isArray(userInstitutions)) {
+    for (const item of userInstitutions) {
+      if (item && typeof item === 'object' && 'institution' in item && item.institution) {
+        const inst = item.institution as unknown as Institution;
+        if (inst.id) {
+          institutionMap.set(inst.id, inst);
+        }
+      }
+    }
+  }
+  const uniqueUserInstitutions = Array.from(institutionMap.values());
 
   return (
     <BrowseProgramsPage 
       user={user} 
       programs={programs || []}
       institutions={institutions || []}
-      userInstitutions={uniqueUserInstitutions}
+      userInstitutions={uniqueUserInstitutions as Institution[]}
     />
   );
 }

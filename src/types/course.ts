@@ -32,6 +32,7 @@ export interface Course {
   grade: string | null;
   grade_value: number | null;
   notes: string | null;
+  is_retaken?: boolean;
   created_at: string;
   course?: CourseData;
   institution?: InstitutionData;
@@ -49,5 +50,6 @@ export interface CourseModalData {
   grade: string | null;
   grade_value: number | null;
   term_id: string | null;
+  institution_id: string | null;
   notes: string | null;
 }

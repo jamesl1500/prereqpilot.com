@@ -5,8 +5,10 @@ import { useState } from 'react';
 import { PenTool } from 'lucide-react';
 import styles from '@/styles/modules/components/public-header.module.scss';
 
+import type { User } from '@supabase/supabase-js';
+
 interface PublicHeaderProps {
-  user?: any;
+  user?: User | null;
 }
 
 export function PublicHeader({ user }: PublicHeaderProps) {

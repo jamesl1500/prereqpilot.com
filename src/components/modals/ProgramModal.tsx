@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
-import type { Program } from '@/types/program';
 import type { ProgramModalProps } from '@/types/modal';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
@@ -45,7 +44,6 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm<ProgramFormData>({
     resolver: zodResolver(programSchema),
     defaultValues: program ? {
@@ -59,8 +57,6 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
       institution: '',
     },
   });
-
-  const selectedInstitutionId = watch('institution_id');
 
   const onSubmit = async (data: ProgramFormData) => {
     setIsSubmitting(true);

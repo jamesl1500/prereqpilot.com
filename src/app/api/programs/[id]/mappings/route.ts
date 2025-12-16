@@ -70,7 +70,7 @@ export async function POST(
     }
 
     return NextResponse.json(createResult.data, { status: 201 });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Invalid request body' },
       { status: 400 }

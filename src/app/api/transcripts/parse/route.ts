@@ -14,23 +14,24 @@ export const dynamic = 'force-dynamic';
 async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const PDFParser = require('pdf2json');
       const pdfParser = new PDFParser();
 
-      pdfParser.on('pdfParser_dataError', (errData: any) => {
+      pdfParser.on('pdfParser_dataError', (errData: { parserError?: string }) => {
         reject(new Error('PDF parsing error: ' + errData.parserError));
       });
 
-      pdfParser.on('pdfParser_dataReady', (pdfData: any) => {
+      pdfParser.on('pdfParser_dataReady', (pdfData: { Pages?: Array<{ Texts?: Array<{ R?: Array<{ T?: string }> }> }> }) => {
         try {
           // Extract text from all pages
           let text = '';
           if (pdfData.Pages) {
-            pdfData.Pages.forEach((page: any) => {
+            pdfData.Pages.forEach((page) => {
               if (page.Texts) {
-                page.Texts.forEach((textItem: any) => {
+                page.Texts.forEach((textItem) => {
                   if (textItem.R) {
-                    textItem.R.forEach((r: any) => {
+                    textItem.R.forEach((r) => {
                       if (r.T) {
                         // Decode URI component and add space
                         text += decodeURIComponent(r.T) + ' ';

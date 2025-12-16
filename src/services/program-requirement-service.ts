@@ -401,12 +401,12 @@ export async function getProgramWithDetails(
 ): Promise<{ success: boolean; data?: ProgramRequirementWithDetails; error?: string }> {
   const programResult = await getProgramRequirement(programId, request);
   if (!programResult.success || !programResult.data) {
-    return programResult as any;
+    return { success: false, error: programResult.error || 'Program not found' };
   }
 
   const coursesResult = await getRequiredCourses(programId, request);
   if (!coursesResult.success || !coursesResult.data) {
-    return coursesResult as any;
+    return { success: false, error: coursesResult.error || 'Failed to fetch courses' };
   }
 
   const requiredCourses = coursesResult.data;

@@ -22,7 +22,7 @@ interface InstitutionGroup {
   gpa: number | null;
 }
 
-export default function TranscriptPage({ user, takenCourses, institutions }: TranscriptPageProps) {
+export default function TranscriptPage({ takenCourses, institutions }: TranscriptPageProps) {
   const router = useRouter();
   const [selectedInstitution, setSelectedInstitution] = useState<string>('all');
 
@@ -164,7 +164,7 @@ export default function TranscriptPage({ user, takenCourses, institutions }: Tra
           {institutionIds.map(id => {
             const inst = institutions.find(i => i.id === id);
             return inst ? (
-              <option key={id} value={id}>{inst.name}</option>
+              <option key={id} value={id || ''}>{inst.name}</option>
             ) : null;
           })}
           {coursesWithoutInstitution.length > 0 && (

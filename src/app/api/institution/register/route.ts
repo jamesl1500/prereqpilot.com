@@ -141,10 +141,11 @@ export async function POST(request: Request) {
       requiresEmailVerification: true,
     });
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Institution registration error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
