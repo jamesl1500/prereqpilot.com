@@ -1,8 +1,14 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
-import ProgramsPage from './ProgramsPage';
+import BrowseProgramsPage from './BrowseProgramsPage';
+import type { Metadata } from 'next';
 
-export default async function Programs() {
+export const metadata: Metadata = {
+  title: 'Browse Programs - PrereqPilot',
+  description: 'Discover academic programs from institutions nationwide. Check eligibility and plan your academic journey.',
+};
+
+export default async function BrowsePrograms() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -10,21 +16,26 @@ export default async function Programs() {
     redirect('/login');
   }
 
-  // Fetch program requirements with prerequisite groups
+  // Fetch all verified institutions
+  const { data: institutions } = await supabase
+    .from('institutions')
+    .select('*')
+    .eq('is_official', true)
+    .eq('status', 'verified')
+    .order('name');
+
+  // Fetch all published programs from verified institutions
   const { data: programs } = await supabase
     .from('program_requirements')
     .select(`
       *,
-      prereq_groups(
-        *,
-        prereq_group_courses(
-          course:courses(*)
-        )
-      )
+      institution:institutions(*)
     `)
+    .eq('is_official', true)
+    .eq('is_published', true)
     .order('created_at', { ascending: false });
 
-  // Fetch user's institutions (from taken courses)
+  // Get user's institutions (from taken courses)
   const { data: userInstitutions } = await supabase
     .from('taken_courses')
     .select('institution:institutions(*)')
@@ -40,20 +51,12 @@ export default async function Programs() {
     ).values()
   );
 
-  // Fetch all verified institutions
-  const { data: allInstitutions } = await supabase
-    .from('institutions')
-    .select('*')
-    .eq('is_official', true)
-    .eq('status', 'verified')
-    .order('name');
-
   return (
-    <ProgramsPage 
+    <BrowseProgramsPage 
       user={user} 
       programs={programs || []}
+      institutions={institutions || []}
       userInstitutions={uniqueUserInstitutions}
-      allInstitutions={allInstitutions || []}
     />
   );
 }

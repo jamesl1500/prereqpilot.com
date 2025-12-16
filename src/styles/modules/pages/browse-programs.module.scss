@@ -1,0 +1,431 @@
+@import '../../abstracts/variables';
+@import '../../abstracts/mixins';
+
+.container {
+  min-height: 100vh;
+  background: $color-white;
+  padding: 2rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: 1.5rem;
+  }
+}
+
+.header {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-family: $font-grotesk;
+  font-size: 2.5rem;
+  font-weight: $font-weight-bold;
+  margin-bottom: 0.5rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 2rem;
+  }
+}
+
+.subtitle {
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  color: $color-text-light;
+}
+
+// User Institutions Section
+.userInstitutions {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f9f9f9;
+  border: 2px solid $color-black;
+}
+
+.sectionTitle {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.institutionChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.institutionChip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  padding: 0.5rem 1rem;
+  background: $color-white;
+  border: 2px solid $color-black;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 2px 2px 0 $color-black;
+  }
+
+  &.active {
+    background: $color-black;
+    color: $color-white;
+  }
+}
+
+.chipLogo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+// Controls
+.controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+  }
+}
+
+.searchBar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: $color-white;
+  border: 2px solid $color-black;
+
+  svg {
+    color: $color-text-light;
+  }
+}
+
+.searchInput {
+  flex: 1;
+  font-family: $font-mono;
+  font-size: $font-size-base;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.filterToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1.5rem;
+  background: $color-white;
+  border: 2px solid $color-black;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+
+    svg {
+      stroke: $color-white;
+    }
+  }
+}
+
+.filterBadge {
+  color: #e74c3c;
+  margin-left: 0.25rem;
+}
+
+// Filters Panel
+.filters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: #f9f9f9;
+  border: 2px solid $color-black;
+
+  @media (max-width: $breakpoint-tablet) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-family: $font-mono;
+    font-size: $font-size-xs;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.select {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  padding: 0.5rem;
+  border: 2px solid $color-black;
+  background: $color-white;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.5rem;
+}
+
+.clearFilters {
+  grid-column: 1 / -1;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 1rem;
+  background: $color-white;
+  border: 2px solid $color-black;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+  }
+}
+
+// Results
+.resultsCount {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  color: $color-text-light;
+  margin-bottom: 1.5rem;
+}
+
+// Programs Grid
+.programsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 1.5rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.programCard {
+  background: $color-white;
+  border: 3px solid $color-black;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0 $color-black;
+  }
+}
+
+.institutionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 2px solid $color-black;
+  background: #f9f9f9;
+}
+
+.institutionLogo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.institutionInfo {
+  flex: 1;
+}
+
+.institutionName {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+}
+
+.institutionLocation {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $color-text-light;
+  margin-top: 0.25rem;
+
+  svg {
+    stroke: $color-text-light;
+  }
+}
+
+.programContent {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.programName {
+  font-family: $font-grotesk;
+  font-size: 1.25rem;
+  font-weight: $font-weight-semibold;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.programDescription {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  line-height: 1.6;
+  color: $color-text-dark;
+  margin-bottom: 1rem;
+}
+
+.programMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  color: $color-text-light;
+
+  svg {
+    stroke: $color-text-light;
+  }
+}
+
+.requirements {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #f9f9f9;
+  border: 2px solid #e5e5e5;
+  margin-bottom: 1rem;
+}
+
+.requirement {
+  display: flex;
+  justify-content: space-between;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+}
+
+.requirementLabel {
+  color: $color-text-light;
+}
+
+.requirementValue {
+  font-weight: $font-weight-bold;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.stat {
+  text-align: center;
+  padding: 0.75rem;
+  border: 2px solid $color-black;
+}
+
+.statValue {
+  display: block;
+  font-family: $font-grotesk;
+  font-size: 1.5rem;
+  font-weight: $font-weight-bold;
+}
+
+.statLabel {
+  display: block;
+  font-family: $font-mono;
+  font-size: $font-size-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $color-text-light;
+  margin-top: 0.25rem;
+}
+
+.cardActions {
+  padding: 1.5rem;
+  border-top: 2px solid #e5e5e5;
+}
+
+.viewButton {
+  width: 100%;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: $font-weight-bold;
+  padding: 0.75rem 1.5rem;
+  background: $color-black;
+  color: $color-white;
+  border: 2px solid $color-black;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 2px 2px 0 $color-black;
+    background: $color-white;
+    color: $color-black;
+  }
+}
+
+// Empty State
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: $color-text-light;
+
+  svg {
+    stroke: $color-text-light;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-family: $font-grotesk;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: $color-text-dark;
+  }
+
+  p {
+    font-family: $font-mono;
+    font-size: $font-size-base;
+  }
+}

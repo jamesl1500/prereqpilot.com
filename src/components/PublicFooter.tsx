@@ -33,7 +33,7 @@ export function PublicFooter() {
         <div className={styles.footerSection}>
           <h4 className={styles.footerHeading}>Support</h4>
           <ul className={styles.footerLinks}>
-            <li><a href="mailto:support@prereqpilot.com">Contact</a></li>
+            <li><Link href="/contact">Contact</Link></li>
             <li><Link href="/privacy">Privacy Policy</Link></li>
             <li><Link href="/terms">Terms of Service</Link></li>
           </ul>

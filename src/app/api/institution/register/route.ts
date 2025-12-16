@@ -1,4 +1,4 @@
-import { createRouteHandlerClient } from '@/lib/supabase/route-handler';
+import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import type { InstitutionSignupData } from '@/types/institution';
 import crypto from 'crypto';

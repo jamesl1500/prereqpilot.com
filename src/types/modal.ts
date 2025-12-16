@@ -16,7 +16,7 @@ import type { Scenario } from './scenario';
 export interface DeleteModalProps {
   isOpen: boolean;
   onClose: () => void;
-  itemType: 'course' | 'institution' | 'program' | 'scenario';
+  itemType: 'course' | 'institution' | 'program' | 'scenario' | 'term';
   itemId: string;
   itemName: string;
 }

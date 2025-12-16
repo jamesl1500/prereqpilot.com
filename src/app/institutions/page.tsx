@@ -163,7 +163,7 @@ export default function ForInstitutionsPage() {
             Register Your Institution
           </Link>
           <p className={styles.ctaNote}>
-            Have questions? <a href="mailto:institutions@prereqpilot.com">Contact our team</a>
+            Have questions? <Link href="/contact">Contact our team</Link>
           </p>
         </div>
       </section>

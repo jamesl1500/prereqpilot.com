@@ -21,6 +21,8 @@ export default function DeleteModal({ isOpen, onClose, itemType, itemId, itemNam
         return `/api/programs/${itemId}`;
       case 'scenario':
         return `/api/scenarios/${itemId}`;
+      case 'term':
+        return `/api/terms/${itemId}`;
     }
   };
 

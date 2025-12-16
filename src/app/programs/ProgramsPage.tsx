@@ -10,12 +10,24 @@ import DeleteModal from '@/components/modals/DeleteModal';
 import styles from '@/styles/modules/pages/programs.module.scss';
 import type { Program } from '@/types/program';
 
+interface Institution {
+  id: string;
+  name: string;
+  short_code: string | null;
+  country: string | null;
+  status: string;
+  is_official: boolean;
+  logo_url: string | null;
+}
+
 interface ProgramsPageProps {
   user: User;
   programs: Program[];
+  userInstitutions: Institution[];
+  allInstitutions: Institution[];
 }
 
-export default function ProgramsPage({ user, programs }: ProgramsPageProps) {
+export default function ProgramsPage({ user, programs, userInstitutions, allInstitutions }: ProgramsPageProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -113,6 +125,8 @@ export default function ProgramsPage({ user, programs }: ProgramsPageProps) {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           program={selectedProgram}
+          userInstitutions={userInstitutions}
+          allInstitutions={allInstitutions}
         />
 
         <DeleteModal

@@ -161,6 +161,15 @@
   font-weight: 600;
 }
 
+.helperText {
+  display: block;
+  color: #666;
+  font-size: $font-size-xs;
+  margin-top: $spacing-xs;
+  font-family: var(--font-space-mono), monospace;
+  font-style: italic;
+}
+
 .fieldHint {
   display: block;
   color: #666;

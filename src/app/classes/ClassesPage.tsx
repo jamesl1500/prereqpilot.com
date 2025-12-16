@@ -8,6 +8,7 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import CourseModal from '@/components/modals/CourseModal';
 import DeleteModal from '@/components/modals/DeleteModal';
 import TermModal from '@/components/modals/TermModal';
+import ManageTermsModal from '@/components/modals/ManageTermsModal';
 import NoTermsPrompt from '@/components/modals/NoTermsPrompt';
 import TutorialTooltip from '@/components/onboarding/TutorialTooltip';
 import OnboardingModal from '@/components/onboarding/OnboardingModal';
@@ -38,8 +39,11 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<Course | undefined>();
   const [isTermModalOpen, setIsTermModalOpen] = useState(false);
+  const [isManageTermsModalOpen, setIsManageTermsModalOpen] = useState(false);
   const [isNoTermsPromptOpen, setIsNoTermsPromptOpen] = useState(false);
+  const [isDeleteTermModalOpen, setIsDeleteTermModalOpen] = useState(false);
   const [selectedTermForEdit, setSelectedTermForEdit] = useState<Term | undefined>();
+  const [selectedTermForDelete, setSelectedTermForDelete] = useState<Term | undefined>();
   
   const showOnboarding = !!(onboarding && !onboarding.onboarding_completed && onboarding.current_step === 'courses' && !onboarding.steps_completed.includes('courses'));
 
@@ -69,6 +73,10 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
     setIsModalOpen(true);
   };
 
+  const handleManageTerms = () => {
+    setIsManageTermsModalOpen(true);
+  };
+
   const handleAddTerm = () => {
     setSelectedTermForEdit(undefined);
     setIsTermModalOpen(true);
@@ -77,6 +85,11 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
   const handleEditTerm = (term: Term) => {
     setSelectedTermForEdit(term);
     setIsTermModalOpen(true);
+  };
+
+  const handleDeleteTerm = (term: Term) => {
+    setSelectedTermForDelete(term);
+    setIsDeleteTermModalOpen(true);
   };
 
   const handleCreateTermFromPrompt = () => {
@@ -117,7 +130,7 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
             </p>
           </div>
           <div className={styles.headerActions}>
-            <button className={styles.secondaryButton} onClick={handleAddTerm}>
+            <button className={styles.secondaryButton} onClick={handleManageTerms}>
               + Manage Terms
             </button>
             <button className={styles.addButton} onClick={handleAddCourse}>
@@ -293,6 +306,15 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
           term={selectedTermForEdit}
         />
 
+        <ManageTermsModal
+          isOpen={isManageTermsModalOpen}
+          onClose={() => setIsManageTermsModalOpen(false)}
+          onAddTerm={handleAddTerm}
+          onEditTerm={handleEditTerm}
+          onDeleteTerm={handleDeleteTerm}
+          terms={terms}
+        />
+
         <NoTermsPrompt
           isOpen={isNoTermsPromptOpen}
           onClose={() => setIsNoTermsPromptOpen(false)}
@@ -305,6 +327,14 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
           itemType="course"
           itemId={selectedCourse?.id || ''}
           itemName={selectedCourse?.course_title || ''}
+        />
+
+        <DeleteModal
+          isOpen={isDeleteTermModalOpen}
+          onClose={() => setIsDeleteTermModalOpen(false)}
+          itemType="term"
+          itemId={selectedTermForDelete?.id || ''}
+          itemName={selectedTermForDelete?.name || ''}
         />
 
         <TutorialTooltip

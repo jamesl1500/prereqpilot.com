@@ -10,8 +10,19 @@ import type { Program } from '@/types/program';
 import type { ProgramModalProps } from '@/types/modal';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
+interface Institution {
+  id: string;
+  name: string;
+  short_code: string | null;
+  country: string | null;
+  status: string;
+  is_official: boolean;
+  logo_url: string | null;
+}
+
 const programSchema = z.object({
   name: z.string().min(1, 'Program name is required'),
+  institution_id: z.string().optional(),
   institution: z.string().optional(),
   min_prereq_gpa: z.number().min(0).max(4).optional().nullable(),
   min_overall_gpa: z.number().min(0).max(4).optional().nullable(),
@@ -19,7 +30,12 @@ const programSchema = z.object({
 
 type ProgramFormData = z.infer<typeof programSchema>;
 
-export default function ProgramModal({ isOpen, onClose, program }: ProgramModalProps) {
+interface ExtendedProgramModalProps extends ProgramModalProps {
+  userInstitutions: Institution[];
+  allInstitutions: Institution[];
+}
+
+export default function ProgramModal({ isOpen, onClose, program, userInstitutions, allInstitutions }: ExtendedProgramModalProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,15 +45,22 @@ export default function ProgramModal({ isOpen, onClose, program }: ProgramModalP
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<ProgramFormData>({
     resolver: zodResolver(programSchema),
     defaultValues: program ? {
       name: program.name,
+      institution_id: program.institution_id || '',
       institution: program.institution || '',
       min_prereq_gpa: program.min_prereq_gpa,
       min_overall_gpa: program.min_overall_gpa,
-    } : undefined,
+    } : {
+      institution_id: '',
+      institution: '',
+    },
   });
+
+  const selectedInstitutionId = watch('institution_id');
 
   const onSubmit = async (data: ProgramFormData) => {
     setIsSubmitting(true);
@@ -46,6 +69,7 @@ export default function ProgramModal({ isOpen, onClose, program }: ProgramModalP
     try {
       const programData = {
         name: data.name,
+        institution_id: data.institution_id || null,
         institution: data.institution || null,
         min_prereq_gpa: data.min_prereq_gpa || null,
         min_overall_gpa: data.min_overall_gpa || null,
@@ -111,16 +135,41 @@ export default function ProgramModal({ isOpen, onClose, program }: ProgramModalP
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="institution" className={styles.label}>
+            <label htmlFor="institution_id" className={styles.label}>
               Institution
             </label>
-            <input
-              id="institution"
-              type="text"
-              {...register('institution')}
+            <select
+              id="institution_id"
+              {...register('institution_id')}
               className={styles.input}
-              placeholder="e.g., Stanford University"
-            />
+            >
+              <option value="">Select an institution (optional)</option>
+              
+              {userInstitutions.length > 0 && (
+                <optgroup label="Your Institutions">
+                  {userInstitutions.map((inst) => (
+                    <option key={inst.id} value={inst.id}>
+                      {inst.name}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              
+              {allInstitutions.length > 0 && (
+                <optgroup label="Available Institutions">
+                  {allInstitutions
+                    .filter(inst => !userInstitutions.some(ui => ui.id === inst.id))
+                    .map((inst) => (
+                      <option key={inst.id} value={inst.id}>
+                        {inst.name}
+                      </option>
+                    ))}
+                </optgroup>
+              )}
+            </select>
+            <p className={styles.helperText}>
+              Select an institution from the list or leave blank
+            </p>
           </div>
 
           <div className={styles.formRow}>
