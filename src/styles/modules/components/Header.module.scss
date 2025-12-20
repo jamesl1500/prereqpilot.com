@@ -1,5 +1,5 @@
-@import '@/styles/abstracts/variables';
-@import '@/styles/abstracts/mixins';
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
 
 .header {
   position: fixed;
@@ -73,9 +73,11 @@
   border: 2px solid #000;
   border-right: none;
   background: #fff;
+  cursor: pointer;
   @include smooth-transition(all);
   
-  &:last-of-type {
+  &:last-of-type,
+  &:last-child {
     border-right: 2px solid #000;
   }
   
@@ -96,6 +98,7 @@
   text-transform: uppercase;
   border: 2px solid #000;
   margin-left: -2px;
+  cursor: pointer;
   @include smooth-transition(all);
   
   &:hover {

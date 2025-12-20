@@ -155,6 +155,7 @@ export default function InstitutionSignupPage() {
       router.push('/institution/pending');
     } catch (err: any) {
       setError(err.message || 'An error occurred during registration');
+      console.error('Registration error:', err);
     } finally {
       setIsSubmitting(false);
     }

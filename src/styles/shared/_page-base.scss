@@ -1,6 +1,6 @@
 // Base page styles for authenticated pages
-@import '@/styles/abstracts/variables';
-@import '@/styles/abstracts/mixins';
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
 
 .page-container {
   padding: $spacing-3xl;

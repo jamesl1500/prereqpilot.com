@@ -1,12 +1,12 @@
 :root {
-  --background: #{$bg-light};
-  --foreground: #{$fg-light};
+  --background: $bg-light;
+  --foreground: $fg-light;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #{$bg-dark};
-    --foreground: #{$fg-dark};
+    --background: $bg-dark;
+    --foreground: $fg-dark;
   }
 }
 

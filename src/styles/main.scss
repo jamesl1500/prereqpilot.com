@@ -1,20 +1,20 @@
 // Font
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 // Abstracts
-@import 'abstracts/variables';
-@import 'abstracts/mixins';
+@use 'abstracts/variables' as *;
+@use 'abstracts/mixins' as *;
 
 // Base
-@import 'base/reset';
-@import 'base/typography';
+@use 'base/reset';
+@use 'base/typography';
 
 // Components
-@import 'components/auth-layout';
-@import 'components/auth-forms';
+@use 'components/auth-layout';
+@use 'components/auth-forms';
 
 // Shared
-@import 'shared/sidebar';
+@use 'shared/sidebar';
 
 // Layouts
-@import 'layout/dashboard-layout';
+@use 'layout/dashboard-layout';
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');

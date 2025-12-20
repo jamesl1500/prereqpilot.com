@@ -81,6 +81,17 @@ export async function POST(request: Request) {
       );
     }
 
+    // Sign in the user immediately after signup
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: adminEmail,
+      password: adminPassword,
+    });
+
+    if (signInError) {
+      console.error('Failed to sign in after registration:', signInError);
+      // Don't fail the registration, user can log in manually
+    }
+
     // Generate verification code
     const verificationCode = crypto.randomBytes(32).toString('hex');
 
@@ -112,7 +123,7 @@ export async function POST(request: Request) {
       await supabase.auth.admin.deleteUser(authData.user.id);
       
       return NextResponse.json(
-        { error: 'Failed to create institution record' },
+        { error: `Failed to create institution record: ${institutionError.message}` },
         { status: 500 }
       );
     }

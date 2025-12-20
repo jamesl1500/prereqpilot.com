@@ -1,5 +1,5 @@
-@import '@/styles/abstracts/variables';
-@import '@/styles/abstracts/mixins';
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
 
 .container {
   max-width: 1200px;
