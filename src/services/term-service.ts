@@ -1,6 +1,23 @@
+/**
+ * Term Service
+ * ----
+ * Term services and CRUD functions
+ * 
+ * @module services/term-service
+ */
 import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { TermData } from '@/types';
 
+/**
+ * createTerm
+ * ----
+ * Creates a term for logged in user
+ * 
+ * @param userId 
+ * @param data 
+ * @param request 
+ * @returns JSON response
+ */
 export async function createTerm(userId: string, data: TermData, request: Request) {
   try {
     const supabase = createRouteHandlerClient(request);

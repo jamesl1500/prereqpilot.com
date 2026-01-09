@@ -200,6 +200,14 @@ export async function getRequiredCourses(programId: string, request: NextRequest
   return { success: true, data: data as ProgramRequiredCourse[] };
 }
 
+/**
+ * createRequiredCourse
+ * Creates a new required course for a program requirement
+ * 
+ * @param courseData 
+ * @param request 
+ * @returns JSON response with success status and data or error message
+ */
 export async function createRequiredCourse(
   courseData: Partial<ProgramRequiredCourse>,
   request: NextRequest
@@ -230,6 +238,15 @@ export async function createRequiredCourse(
   return { success: true, data: data as ProgramRequiredCourse };
 }
 
+/**
+ * updateRequiredCourse
+ * Updates a required course for a program requirement
+ * 
+ * @param id 
+ * @param courseData 
+ * @param request 
+ * @returns JSON response with success status and data or error message
+ */
 export async function updateRequiredCourse(
   id: string,
   courseData: Partial<ProgramRequiredCourse>,
@@ -276,10 +293,14 @@ export async function deleteRequiredCourse(id: string, request: NextRequest) {
   return { success: true };
 }
 
-// ============================================================================
-// Program Course Mappings CRUD
-// ============================================================================
-
+/**
+ * getCourseMappings
+ * Fetches course mappings for a given program requirement and user
+ * 
+ * @param programId 
+ * @param request 
+ * @returns JSON response with success status and data or error message
+ */
 export async function getCourseMappings(programId: string, request: NextRequest) {
   const supabase = createRouteHandlerClient(request);
   const { data: { user } } = await supabase.auth.getUser();

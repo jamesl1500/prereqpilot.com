@@ -101,6 +101,7 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
               {...register('name')}
               className={styles.input}
               placeholder="e.g., Fall 2024, Spring 2025"
+              value={term ? term.name : ""}
             />
             {errors.name && (
               <span className={styles.fieldError}>{errors.name.message}</span>
@@ -117,6 +118,7 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
                 type="date"
                 {...register('start_date')}
                 className={styles.input}
+                value={term ? term.start_date || "" : ""}
               />
             </div>
 
@@ -129,6 +131,7 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
                 type="date"
                 {...register('end_date')}
                 className={styles.input}
+                value={term ? term.end_date || "" : ""}
               />
             </div>
           </div>

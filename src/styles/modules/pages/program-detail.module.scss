@@ -293,6 +293,7 @@
   border: 1px solid $color-black;
   cursor: pointer;
   transition: all 0.2s ease;
+  color: #000;
 
   &:hover {
     background: $color-black;
@@ -366,6 +367,7 @@
     font-family: $font-mono;
     font-size: 0.875rem;
     background: $color-white;
+    color: #000;
 
     &:focus {
       outline: none;

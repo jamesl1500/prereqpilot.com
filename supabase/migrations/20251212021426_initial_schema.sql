@@ -1,213 +1,268 @@
--- Enable required extensions
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
 
--- ======================================================================
--- Users
--- ======================================================================
-CREATE TABLE IF NOT EXISTS users (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  email TEXT NOT NULL UNIQUE,
-  password_hash TEXT,                 -- nullable if using OAuth
-  name TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE auth.audit_log_entries (
+  instance_id uuid,
+  id uuid NOT NULL,
+  payload json,
+  created_at timestamp with time zone,
+  ip_address character varying NOT NULL DEFAULT ''::character varying,
+  CONSTRAINT audit_log_entries_pkey PRIMARY KEY (id)
 );
-
--- Trigger to update updated_at automatically
-CREATE OR REPLACE FUNCTION trigger_set_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = now();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER users_set_timestamp
-BEFORE UPDATE ON users
-FOR EACH ROW EXECUTE PROCEDURE trigger_set_timestamp();
-
--- ======================================================================
--- Institutions (colleges)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS institutions (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL,
-  short_code TEXT,
-  country TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE auth.flow_state (
+  id uuid NOT NULL,
+  user_id uuid,
+  auth_code text NOT NULL,
+  code_challenge_method USER-DEFINED NOT NULL,
+  code_challenge text NOT NULL,
+  provider_type text NOT NULL,
+  provider_access_token text,
+  provider_refresh_token text,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  authentication_method text NOT NULL,
+  auth_code_issued_at timestamp with time zone,
+  CONSTRAINT flow_state_pkey PRIMARY KEY (id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_institutions_name ON institutions (name);
-
--- ======================================================================
--- Courses (canonical course metadata)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS courses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  institution_id UUID REFERENCES institutions(id) ON DELETE SET NULL,
-  code TEXT,                 -- e.g., "BIO 201"
-  title TEXT NOT NULL,       -- "Anatomy & Physiology I"
-  credits NUMERIC(6,2),
-  description TEXT,
-  canonical BOOLEAN NOT NULL DEFAULT FALSE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE auth.identities (
+  provider_id text NOT NULL,
+  user_id uuid NOT NULL,
+  identity_data jsonb NOT NULL,
+  provider text NOT NULL,
+  last_sign_in_at timestamp with time zone,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  email text DEFAULT lower((identity_data ->> 'email'::text)),
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  CONSTRAINT identities_pkey PRIMARY KEY (id),
+  CONSTRAINT identities_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_courses_title ON courses (lower(title));
-CREATE INDEX IF NOT EXISTS idx_courses_code ON courses (code);
-
--- ======================================================================
--- Terms (per-user academic terms / semesters)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS terms (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,        -- "Fall 2024"
-  start_date DATE,
-  end_date DATE,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE auth.instances (
+  id uuid NOT NULL,
+  uuid uuid,
+  raw_base_config text,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  CONSTRAINT instances_pkey PRIMARY KEY (id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_terms_user ON terms (user_id);
-
--- ======================================================================
--- Taken courses (user course instances / snapshots)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS taken_courses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  course_id UUID REFERENCES courses(id) ON DELETE SET NULL,
-  institution_id UUID REFERENCES institutions(id) ON DELETE SET NULL,
-  term_id UUID REFERENCES terms(id) ON DELETE SET NULL,
-  course_title TEXT NOT NULL,         -- snapshot of title at time of entry
-  credits NUMERIC(6,2) NOT NULL DEFAULT 0 CHECK (credits >= 0),
-  grade TEXT,                          -- e.g., "A", "B+", "Pass"
-  grade_value NUMERIC(4,3),            -- numeric equivalent (e.g., 3.700)
-  grade_scale TEXT DEFAULT '4.0',
-  is_retaken BOOLEAN NOT NULL DEFAULT FALSE,
-  original_taken_course_id UUID REFERENCES taken_courses(id) ON DELETE SET NULL,
-  notes TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE auth.mfa_amr_claims (
+  session_id uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL,
+  authentication_method text NOT NULL,
+  id uuid NOT NULL,
+  CONSTRAINT mfa_amr_claims_pkey PRIMARY KEY (id),
+  CONSTRAINT mfa_amr_claims_session_id_fkey FOREIGN KEY (session_id) REFERENCES auth.sessions(id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_taken_user ON taken_courses (user_id);
-CREATE INDEX IF NOT EXISTS idx_taken_courseid ON taken_courses (course_id);
-CREATE INDEX IF NOT EXISTS idx_taken_institution ON taken_courses (institution_id);
-
--- ======================================================================
--- Program requirements (e.g., nursing school programs)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS program_requirements (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  name TEXT NOT NULL,                -- "City Nursing School - ADN 2025"
-  institution TEXT,                  -- the school offering the program (free text)
-  min_prereq_gpa NUMERIC(3,2),
-  min_overall_gpa NUMERIC(3,2),
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE auth.mfa_challenges (
+  id uuid NOT NULL,
+  factor_id uuid NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  verified_at timestamp with time zone,
+  ip_address inet NOT NULL,
+  otp_code text,
+  web_authn_session_data jsonb,
+  CONSTRAINT mfa_challenges_pkey PRIMARY KEY (id),
+  CONSTRAINT mfa_challenges_auth_factor_id_fkey FOREIGN KEY (factor_id) REFERENCES auth.mfa_factors(id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_programs_name ON program_requirements (lower(name));
-
--- ======================================================================
--- Prereq groups (one program requirement may have multiple groups)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS prereq_groups (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  program_requirement_id UUID NOT NULL REFERENCES program_requirements(id) ON DELETE CASCADE,
-  label TEXT NOT NULL,           -- "Anatomy & Physiology I"
-  min_credits NUMERIC(6,2) DEFAULT 0 CHECK (min_credits >= 0),
-  required BOOLEAN NOT NULL DEFAULT TRUE
+CREATE TABLE auth.mfa_factors (
+  id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  friendly_name text,
+  factor_type USER-DEFINED NOT NULL,
+  status USER-DEFINED NOT NULL,
+  created_at timestamp with time zone NOT NULL,
+  updated_at timestamp with time zone NOT NULL,
+  secret text,
+  phone text,
+  last_challenged_at timestamp with time zone UNIQUE,
+  web_authn_credential jsonb,
+  web_authn_aaguid uuid,
+  last_webauthn_challenge_data jsonb,
+  CONSTRAINT mfa_factors_pkey PRIMARY KEY (id),
+  CONSTRAINT mfa_factors_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_prereqgroups_program ON prereq_groups (program_requirement_id);
-
--- ======================================================================
--- Mapping between PrereqGroup and Course (which canonical courses satisfy group)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS prereq_group_courses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  prereq_group_id UUID NOT NULL REFERENCES prereq_groups(id) ON DELETE CASCADE,
-  course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-  equivalent BOOLEAN NOT NULL DEFAULT FALSE
+CREATE TABLE auth.oauth_authorizations (
+  id uuid NOT NULL,
+  authorization_id text NOT NULL UNIQUE,
+  client_id uuid NOT NULL,
+  user_id uuid,
+  redirect_uri text NOT NULL CHECK (char_length(redirect_uri) <= 2048),
+  scope text NOT NULL CHECK (char_length(scope) <= 4096),
+  state text CHECK (char_length(state) <= 4096),
+  resource text CHECK (char_length(resource) <= 2048),
+  code_challenge text CHECK (char_length(code_challenge) <= 128),
+  code_challenge_method USER-DEFINED,
+  response_type USER-DEFINED NOT NULL DEFAULT 'code'::auth.oauth_response_type,
+  status USER-DEFINED NOT NULL DEFAULT 'pending'::auth.oauth_authorization_status,
+  authorization_code text UNIQUE CHECK (char_length(authorization_code) <= 255),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  expires_at timestamp with time zone NOT NULL DEFAULT (now() + '00:03:00'::interval),
+  approved_at timestamp with time zone,
+  nonce text CHECK (char_length(nonce) <= 255),
+  CONSTRAINT oauth_authorizations_pkey PRIMARY KEY (id),
+  CONSTRAINT oauth_authorizations_client_id_fkey FOREIGN KEY (client_id) REFERENCES auth.oauth_clients(id),
+  CONSTRAINT oauth_authorizations_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_pg_courses_prereq ON prereq_group_courses (prereq_group_id);
-
--- ======================================================================
--- Scenarios (saved what-if simulations)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS scenarios (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  description TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE auth.oauth_client_states (
+  id uuid NOT NULL,
+  provider_type text NOT NULL,
+  code_verifier text,
+  created_at timestamp with time zone NOT NULL,
+  CONSTRAINT oauth_client_states_pkey PRIMARY KEY (id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_scenarios_user ON scenarios (user_id);
-
--- ======================================================================
--- Scenario overrides (simulate retake / new course for a scenario)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS scenario_taken_courses (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  scenario_id UUID NOT NULL REFERENCES scenarios(id) ON DELETE CASCADE,
-  taken_course_id UUID REFERENCES taken_courses(id) ON DELETE SET NULL,
-  simulated_grade TEXT,
-  simulated_grade_value NUMERIC(4,3),
-  simulated_credits NUMERIC(6,2) CHECK (simulated_credits >= 0),
-  simulated_course_title TEXT
+CREATE TABLE auth.oauth_clients (
+  id uuid NOT NULL,
+  client_secret_hash text,
+  registration_type USER-DEFINED NOT NULL,
+  redirect_uris text NOT NULL,
+  grant_types text NOT NULL,
+  client_name text CHECK (char_length(client_name) <= 1024),
+  client_uri text CHECK (char_length(client_uri) <= 2048),
+  logo_uri text CHECK (char_length(logo_uri) <= 2048),
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  deleted_at timestamp with time zone,
+  client_type USER-DEFINED NOT NULL DEFAULT 'confidential'::auth.oauth_client_type,
+  CONSTRAINT oauth_clients_pkey PRIMARY KEY (id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_scenario_overrides ON scenario_taken_courses (scenario_id);
-
--- ======================================================================
--- Settings (per-user preferences)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS settings (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
-  grading_scale JSONB DEFAULT '{}'::jsonb,    -- mapping letter->value, e.g. {"A":4.0, "A-":3.7}
-  default_term_id UUID REFERENCES terms(id) ON DELETE SET NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE auth.oauth_consents (
+  id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  client_id uuid NOT NULL,
+  scopes text NOT NULL CHECK (char_length(scopes) <= 2048),
+  granted_at timestamp with time zone NOT NULL DEFAULT now(),
+  revoked_at timestamp with time zone,
+  CONSTRAINT oauth_consents_pkey PRIMARY KEY (id),
+  CONSTRAINT oauth_consents_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
+  CONSTRAINT oauth_consents_client_id_fkey FOREIGN KEY (client_id) REFERENCES auth.oauth_clients(id)
 );
-
--- ======================================================================
--- Audits (optional: store GPA calculation snapshots)
--- ======================================================================
-CREATE TABLE IF NOT EXISTS audits (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  computed_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  overall_gpa NUMERIC(4,3),
-  prereq_gpa NUMERIC(4,3),
-  payload JSONB
+CREATE TABLE auth.one_time_tokens (
+  id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  token_type USER-DEFINED NOT NULL,
+  token_hash text NOT NULL CHECK (char_length(token_hash) > 0),
+  relates_to text NOT NULL,
+  created_at timestamp without time zone NOT NULL DEFAULT now(),
+  updated_at timestamp without time zone NOT NULL DEFAULT now(),
+  CONSTRAINT one_time_tokens_pkey PRIMARY KEY (id),
+  CONSTRAINT one_time_tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id)
 );
-
-CREATE INDEX IF NOT EXISTS idx_audits_user ON audits (user_id);
-
--- ======================================================================
--- Helpful views (optional)
---  - You can remove these if you prefer only raw tables.
--- ======================================================================
-
--- Example view: a quick per-user credits summary (not material to the schema but handy)
-CREATE OR REPLACE VIEW user_credits_summary AS
-SELECT
-  tc.user_id,
-  COUNT(*) FILTER (WHERE tc.grade IS NOT NULL) AS course_count_with_grade,
-  COALESCE(SUM(tc.credits), 0) AS total_credits
-FROM taken_courses tc
-GROUP BY tc.user_id;
-
--- ======================================================================
--- Final housekeeping: grant basic rights to authenticated role (Supabase convention)
--- ======================================================================
--- In Supabase, RLS policies are typical; this section is optional and non-destructive.
--- Grant basic read/write to postgres role 'authenticated' if you want to test with that role.
--- Commented out by default — enable if you are comfortable with row-level policies separately.
-
--- GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO authenticated;
--- GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO authenticated;
-
--- End of migration
+CREATE TABLE auth.refresh_tokens (
+  instance_id uuid,
+  id bigint NOT NULL DEFAULT nextval('auth.refresh_tokens_id_seq'::regclass),
+  token character varying UNIQUE,
+  user_id character varying,
+  revoked boolean,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  parent character varying,
+  session_id uuid,
+  CONSTRAINT refresh_tokens_pkey PRIMARY KEY (id),
+  CONSTRAINT refresh_tokens_session_id_fkey FOREIGN KEY (session_id) REFERENCES auth.sessions(id)
+);
+CREATE TABLE auth.saml_providers (
+  id uuid NOT NULL,
+  sso_provider_id uuid NOT NULL,
+  entity_id text NOT NULL UNIQUE CHECK (char_length(entity_id) > 0),
+  metadata_xml text NOT NULL CHECK (char_length(metadata_xml) > 0),
+  metadata_url text CHECK (metadata_url = NULL::text OR char_length(metadata_url) > 0),
+  attribute_mapping jsonb,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  name_id_format text,
+  CONSTRAINT saml_providers_pkey PRIMARY KEY (id),
+  CONSTRAINT saml_providers_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id)
+);
+CREATE TABLE auth.saml_relay_states (
+  id uuid NOT NULL,
+  sso_provider_id uuid NOT NULL,
+  request_id text NOT NULL CHECK (char_length(request_id) > 0),
+  for_email text,
+  redirect_to text,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  flow_state_id uuid,
+  CONSTRAINT saml_relay_states_pkey PRIMARY KEY (id),
+  CONSTRAINT saml_relay_states_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id),
+  CONSTRAINT saml_relay_states_flow_state_id_fkey FOREIGN KEY (flow_state_id) REFERENCES auth.flow_state(id)
+);
+CREATE TABLE auth.schema_migrations (
+  version character varying NOT NULL,
+  CONSTRAINT schema_migrations_pkey PRIMARY KEY (version)
+);
+CREATE TABLE auth.sessions (
+  id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  factor_id uuid,
+  aal USER-DEFINED,
+  not_after timestamp with time zone,
+  refreshed_at timestamp without time zone,
+  user_agent text,
+  ip inet,
+  tag text,
+  oauth_client_id uuid,
+  refresh_token_hmac_key text,
+  refresh_token_counter bigint,
+  scopes text CHECK (char_length(scopes) <= 4096),
+  CONSTRAINT sessions_pkey PRIMARY KEY (id),
+  CONSTRAINT sessions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id),
+  CONSTRAINT sessions_oauth_client_id_fkey FOREIGN KEY (oauth_client_id) REFERENCES auth.oauth_clients(id)
+);
+CREATE TABLE auth.sso_domains (
+  id uuid NOT NULL,
+  sso_provider_id uuid NOT NULL,
+  domain text NOT NULL CHECK (char_length(domain) > 0),
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  CONSTRAINT sso_domains_pkey PRIMARY KEY (id),
+  CONSTRAINT sso_domains_sso_provider_id_fkey FOREIGN KEY (sso_provider_id) REFERENCES auth.sso_providers(id)
+);
+CREATE TABLE auth.sso_providers (
+  id uuid NOT NULL,
+  resource_id text CHECK (resource_id = NULL::text OR char_length(resource_id) > 0),
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  disabled boolean,
+  CONSTRAINT sso_providers_pkey PRIMARY KEY (id)
+);
+CREATE TABLE auth.users (
+  instance_id uuid,
+  id uuid NOT NULL,
+  aud character varying,
+  role character varying,
+  email character varying,
+  encrypted_password character varying,
+  email_confirmed_at timestamp with time zone,
+  invited_at timestamp with time zone,
+  confirmation_token character varying,
+  confirmation_sent_at timestamp with time zone,
+  recovery_token character varying,
+  recovery_sent_at timestamp with time zone,
+  email_change_token_new character varying,
+  email_change character varying,
+  email_change_sent_at timestamp with time zone,
+  last_sign_in_at timestamp with time zone,
+  raw_app_meta_data jsonb,
+  raw_user_meta_data jsonb,
+  is_super_admin boolean,
+  created_at timestamp with time zone,
+  updated_at timestamp with time zone,
+  phone text DEFAULT NULL::character varying UNIQUE,
+  phone_confirmed_at timestamp with time zone,
+  phone_change text DEFAULT ''::character varying,
+  phone_change_token character varying DEFAULT ''::character varying,
+  phone_change_sent_at timestamp with time zone,
+  confirmed_at timestamp with time zone DEFAULT LEAST(email_confirmed_at, phone_confirmed_at),
+  email_change_token_current character varying DEFAULT ''::character varying,
+  email_change_confirm_status smallint DEFAULT 0 CHECK (email_change_confirm_status >= 0 AND email_change_confirm_status <= 2),
+  banned_until timestamp with time zone,
+  reauthentication_token character varying DEFAULT ''::character varying,
+  reauthentication_sent_at timestamp with time zone,
+  is_sso_user boolean NOT NULL DEFAULT false,
+  deleted_at timestamp with time zone,
+  is_anonymous boolean NOT NULL DEFAULT false,
+  CONSTRAINT users_pkey PRIMARY KEY (id)
+);
