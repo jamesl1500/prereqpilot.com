@@ -34,7 +34,7 @@ export function PublicHeader({ user }: PublicHeaderProps) {
           <Link href="/help" className={styles.navLink}>
             Help
           </Link>
-          <Link href="/institutions" className={styles.navLink}>
+          <Link href="/forinstitutions" className={styles.navLink}>
             For Institutions
           </Link>
         </nav>
