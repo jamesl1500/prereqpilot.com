@@ -1,0 +1,586 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+
+.container {
+  padding: $spacing-3xl;
+  background: #f5f5f5;
+  min-height: calc(100vh - 70px);
+  
+  @include mobile {
+    padding: $spacing-xl;
+  }
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-lg;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  font-size: $font-size-sm;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: $spacing-xl;
+  
+  &:hover {
+    background: #000;
+    color: #fff;
+    transform: translateX(-4px);
+  }
+}
+
+.header {
+  background: #fff;
+  border: 3px solid #000;
+  padding: $spacing-3xl;
+  margin-bottom: $spacing-3xl;
+  @include flex-between;
+  
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-xl;
+    padding: $spacing-xl;
+  }
+}
+
+.headerContent {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-xl;
+  flex: 1;
+}
+
+.iconWrapper {
+  width: 80px;
+  height: 80px;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #000;
+  flex-shrink: 0;
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  
+  @include mobile {
+    font-size: 1.5rem;
+  }
+}
+
+.badge {
+  background: #000;
+  color: #fff;
+  padding: $spacing-xs $spacing-md;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  
+  &.verified {
+    background: #16a34a;
+  }
+}
+
+.shortCode {
+  font-size: $font-size-lg;
+  color: #666;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  margin-top: $spacing-sm;
+}
+
+.headerActions {
+  display: flex;
+  gap: $spacing-md;
+  flex-shrink: 0;
+  
+  @include mobile {
+    width: 100%;
+  }
+}
+
+.editButton,
+.deleteButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: $font-size-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  @include mobile {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+.editButton {
+  background: #000;
+  color: #fff;
+  
+  &:hover {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+}
+
+.deleteButton {
+  background: #fff;
+  color: #dc2626;
+  border-color: #dc2626;
+  
+  &:hover:not(:disabled) {
+    background: #fee;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #fcc;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.infoSection {
+  background: #fff;
+  border: 3px solid #000;
+  padding: $spacing-3xl;
+  margin-bottom: $spacing-3xl;
+  
+  @include mobile {
+    padding: $spacing-xl;
+  }
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: $spacing-xl;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.infoLabel {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-family: var(--font-space-mono), monospace;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.infoValue {
+  font-size: $font-size-lg;
+  color: #000;
+  font-weight: 600;
+}
+
+.websiteLink {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+  }
+}
+
+.statsSection {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: $spacing-xl;
+  margin-bottom: $spacing-3xl;
+}
+
+.statCard {
+  background: #fff;
+  border: 3px solid #000;
+  padding: $spacing-xl;
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 0 #000;
+  }
+}
+
+.statIcon {
+  width: 56px;
+  height: 56px;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+  flex-shrink: 0;
+}
+
+.statContent {
+  flex: 1;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #000;
+  font-family: var(--font-space-mono), monospace;
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.7rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+  margin-top: $spacing-xs;
+}
+
+.section {
+  background: #fff;
+  border: 3px solid #000;
+  padding: $spacing-3xl;
+  margin-bottom: $spacing-3xl;
+  
+  @include mobile {
+    padding: $spacing-xl;
+  }
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-lg;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.sectionDescription {
+  font-size: $font-size-base;
+  color: #666;
+  margin-bottom: $spacing-xl;
+}
+
+.coursesTable {
+  overflow-x: auto;
+  border: 2px solid #000;
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  thead {
+    background: #000;
+    color: #fff;
+    
+    th {
+      padding: $spacing-md $spacing-lg;
+      text-align: left;
+      font-family: var(--font-space-mono), monospace;
+      font-size: $font-size-sm;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-right: 2px solid #fff;
+      
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+  
+  tbody {
+    tr {
+      border-bottom: 2px solid #000;
+      
+      &:last-child {
+        border-bottom: none;
+      }
+      
+      &:hover {
+        background: #f9f9f9;
+      }
+    }
+    
+    td {
+      padding: $spacing-md $spacing-lg;
+      font-size: $font-size-base;
+    }
+  }
+}
+
+.courseTitle {
+  font-weight: 600;
+  color: #000;
+}
+
+.gradeBadge {
+  display: inline-block;
+  padding: $spacing-xs $spacing-md;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.programsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: $spacing-xl;
+}
+
+.programCard {
+  border: 2px solid #000;
+  padding: $spacing-xl;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 6px 6px 0 #000;
+  }
+}
+
+.programName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-md;
+  font-family: var(--font-space-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.programMeta {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.programDetail {
+  font-size: $font-size-sm;
+  color: #666;
+  font-weight: 600;
+}
+
+.catalogGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: $spacing-md;
+}
+
+.catalogItem {
+  border: 2px solid #000;
+  padding: $spacing-md;
+  background: #fff;
+  
+  &:hover {
+    background: #f9f9f9;
+  }
+}
+
+.courseCode {
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: $font-size-sm;
+  color: #000;
+  margin-bottom: $spacing-xs;
+}
+
+.courseName {
+  font-size: $font-size-sm;
+  color: #666;
+}
+
+.empty {
+  text-align: center;
+  padding: $spacing-3xl * 2;
+  
+  svg {
+    color: #666;
+    margin-bottom: $spacing-lg;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: $spacing-sm;
+    font-family: var(--font-space-mono), monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  p {
+    font-size: $font-size-base;
+    color: #666;
+    margin-bottom: $spacing-xl;
+  }
+}
+
+.addButton {
+  padding: $spacing-md $spacing-xl;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: $font-size-base;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+}
+
+// Modal
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-xl;
+}
+
+.modalContent {
+  background: #fff;
+  border: 3px solid #000;
+  padding: $spacing-3xl;
+  max-width: 500px;
+  width: 100%;
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-lg;
+  font-family: var(--font-space-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modalText {
+  font-size: $font-size-base;
+  color: #333;
+  margin-bottom: $spacing-xl;
+  line-height: 1.6;
+  
+  strong {
+    color: #000;
+    font-weight: 700;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: $spacing-lg;
+}
+
+.cancelButton,
+.confirmDeleteButton {
+  flex: 1;
+  padding: $spacing-md $spacing-xl;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: $font-size-base;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.cancelButton {
+  background: #fff;
+  color: #000;
+  
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+}
+
+.confirmDeleteButton {
+  background: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+  
+  &:hover:not(:disabled) {
+    background: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #991b1b;
+  }
+}

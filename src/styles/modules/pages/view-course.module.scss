@@ -1,0 +1,442 @@
+@use '../../abstracts/variables' as *;
+
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Header Section
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 2px solid $color-black;
+  color: $color-black;
+  font-family: $font-heading;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.editButton,
+.deleteButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid $color-black;
+  font-family: $font-heading;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.editButton {
+  background: $color-white;
+  color: $color-black;
+
+  &:hover {
+    background: $color-black;
+    color: $color-white;
+  }
+}
+
+.deleteButton {
+  background: $color-white;
+  color: #dc2626;
+  border-color: #dc2626;
+
+  &:hover {
+    background: #dc2626;
+    color: $color-white;
+    border-color: #dc2626;
+  }
+}
+
+// Main Content
+.mainContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.courseHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: $color-white;
+  border: 3px solid $color-black;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: $color-black;
+  color: $color-white;
+  border: 2px solid $color-black;
+  flex-shrink: 0;
+}
+
+.courseInfo {
+  flex: 1;
+}
+
+.courseTitle {
+  font-family: $font-heading;
+  font-size: 2rem;
+  font-weight: 900;
+  color: $color-black;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.courseCode {
+  font-family: $font-body;
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
+
+// Info Grid
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.infoCard {
+  background: $color-white;
+  border: 3px solid $color-black;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.1);
+  }
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid $color-black;
+}
+
+.cardTitle {
+  font-family: $font-heading;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  color: $color-black;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.cardValue {
+  font-family: $font-heading;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: $color-black;
+  margin: 0;
+}
+
+.cardDetail {
+  font-family: $font-body;
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.cardEmpty {
+  font-family: $font-body;
+  font-size: 1rem;
+  color: #999;
+  font-style: italic;
+  margin: 0;
+}
+
+// Details Section
+.detailsSection {
+  background: $color-white;
+  border: 3px solid $color-black;
+  padding: 2rem;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.sectionTitle {
+  font-family: $font-heading;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: $color-black;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid $color-black;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detailLabel {
+  font-family: $font-heading;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+}
+
+.detailValue {
+  font-family: $font-heading;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $color-black;
+
+  &.retaken {
+    color: #f59e0b;
+  }
+}
+
+// Notes Section
+.notesSection {
+  padding-top: 1.5rem;
+  border-top: 2px solid #e5e5e5;
+}
+
+.notesTitle {
+  font-family: $font-heading;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $color-black;
+  margin: 0 0 0.75rem 0;
+}
+
+.notesContent {
+  font-family: $font-body;
+  font-size: 1rem;
+  color: $color-black;
+  line-height: 1.6;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+// Modal Styles
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: $color-white;
+  border: 3px solid $color-black;
+  padding: 2rem;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 12px 12px 0 rgba(0, 0, 0, 0.2);
+}
+
+.modalTitle {
+  font-family: $font-heading;
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: $color-black;
+  margin: 0 0 1rem 0;
+}
+
+.modalMessage {
+  font-family: $font-body;
+  font-size: 1rem;
+  color: $color-black;
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancelButton,
+.confirmDeleteButton {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid $color-black;
+  font-family: $font-heading;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.cancelButton {
+  background: $color-white;
+  color: $color-black;
+
+  &:hover:not(:disabled) {
+    background: $color-black;
+    color: $color-white;
+  }
+}
+
+.confirmDeleteButton {
+  background: #dc2626;
+  color: $color-white;
+  border-color: #dc2626;
+
+  &:hover:not(:disabled) {
+    background: #b91c1c;
+    border-color: #b91c1c;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .editButton,
+  .deleteButton {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .courseHeader {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+  }
+
+  .courseTitle {
+    font-size: 1.5rem;
+  }
+
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .detailsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    padding: 1.5rem;
+  }
+
+  .modalActions {
+    flex-direction: column;
+    
+    button {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .backButton,
+  .editButton,
+  .deleteButton {
+    font-size: 0.9rem;
+    padding: 0.625rem 1rem;
+  }
+
+  .courseTitle {
+    font-size: 1.25rem;
+  }
+
+  .iconWrapper {
+    width: 60px;
+    height: 60px;
+    
+    svg {
+      width: 32px;
+      height: 32px;
+    }
+  }
+}

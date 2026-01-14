@@ -37,7 +37,7 @@ export async function createInstitution(
       name: data.name,
       short_code: data.short_code,
       country: data.country || null,
-      website: data.website || null,
+      website_url: data.website || null,
       user_id: user.id, // Associate institution with user
     };
 
@@ -77,7 +77,7 @@ export async function updateInstitution(
       name: data.name,
       short_code: data.short_code,
       country: data.country || null,
-      website: data.website || null,
+      website_url: data.website || null,
     };
 
     // Only allow users to update their own institutions

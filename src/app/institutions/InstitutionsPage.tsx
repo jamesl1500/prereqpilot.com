@@ -135,7 +135,6 @@ export default function InstitutionsPage({ user, userInstitutions, officialInsti
                                     <div 
                                         key={institution.id} 
                                         className={styles.institutionCard}
-                                        onClick={() => handleViewInstitution(institution.id)}
                                     >
                                         <div className={styles.cardHeader}>
                                             <div className={styles.institutionIcon}>
@@ -163,21 +162,36 @@ export default function InstitutionsPage({ user, userInstitutions, officialInsti
                                                         {institution.country}
                                                     </div>
                                                 )}
-                                                {institution.website && (
+                                                {institution.website_url && (
                                                     <div className={styles.metaItem}>
                                                         <Globe size={16} />
-                                                        Website
+                                                        {institution.website_url}
                                                     </div>
                                                 )}
                                             </div>
+                                            
+                                            {institution.courses && institution.courses[0]?.count > 0 && (
+                                                <div className={styles.courseInfo}>
+                                                    <span className={styles.courseCount}>
+                                                        {institution.courses[0].count} course{institution.courses[0].count !== 1 ? 's' : ''}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
                                         
-                                        <div className={styles.cardFooter}>
-                                            {institution.courses && institution.courses[0]?.count > 0 && (
-                                                <span className={styles.courseCount}>
-                                                    {institution.courses[0].count} course{institution.courses[0].count !== 1 ? 's' : ''}
-                                                </span>
-                                            )}
+                                        <div className={styles.cardActions}>
+                                            <button 
+                                                className={styles.viewButton}
+                                                onClick={() => handleViewInstitution(institution.id)}
+                                            >
+                                                View Details
+                                            </button>
+                                            <button 
+                                                className={styles.editButton}
+                                                onClick={() => router.push(`/institutions/${institution.id}/edit`)}
+                                            >
+                                                Edit
+                                            </button>
                                         </div>
                                     </div>
                                 ))}

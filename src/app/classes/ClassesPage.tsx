@@ -276,6 +276,9 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
                         )}
 
                         <div className={styles.courseActions}>
+                          <button className={styles.actionButton} onClick={() => router.push(`/classes/${course.id}`)}>
+                            View
+                          </button>
                           <button className={styles.actionButton} onClick={() => handleEditCourse(course)}>
                             Edit
                           </button>
