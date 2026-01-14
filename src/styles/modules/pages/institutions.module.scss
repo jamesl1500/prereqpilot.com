@@ -118,6 +118,26 @@
   }
 }
 
+.filterSelect {
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  background: #fff;
+  font-size: $font-size-base;
+  cursor: pointer;
+  min-width: 200px;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  
+  @include mobile {
+    width: 100%;
+  }
+  
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #666;
+  }
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -157,17 +177,57 @@
   font-family: var(--font-space-mono), monospace;
 }
 
+.section {
+  margin-bottom: $spacing-3xl;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: $spacing-sm;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.sectionDescription {
+  font-size: $font-size-base;
+  color: #666;
+  margin-bottom: $spacing-xl;
+  max-width: 600px;
+}
+
+.resultsCount {
+  font-family: var(--font-space-mono), monospace;
+  font-size: $font-size-sm;
+  color: #666;
+  margin-bottom: $spacing-lg;
+  font-weight: 600;
+}
+
 .institutionsGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: $spacing-xl;
+  margin-bottom: $spacing-3xl;
 }
 
 .institutionCard {
   background: #fff;
-  border: 2px solid #000;
-  padding: $spacing-xl;
+  border: 3px solid #000;
+  padding: 0;
   transition: all 0.2s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
   
   &:hover {
     transform: translateY(-4px);
@@ -176,24 +236,75 @@
 }
 
 .cardHeader {
+  padding: $spacing-xl;
   @include flex-between;
-  margin-bottom: $spacing-lg;
+  border-bottom: 2px solid #000;
 }
 
 .institutionIcon {
-  font-size: 3rem;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #000;
+  background: #f5f5f5;
   color: #000;
+  
+  svg {
+    width: 32px;
+    height: 32px;
+  }
 }
 
-.cardBadge {
+.institutionLogo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border: 2px solid #000;
+  background: #fff;
+  padding: $spacing-sm;
+}
+
+.badge {
   background: #000;
   color: #fff;
   padding: $spacing-xs $spacing-md;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-fatop: $spacing-md;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-size: $font-size-sm;
+  color: #666;
+  font-weight: 500;
+  
+  svg {
+    flex-shrink: 0;
+  }
+  padding: $spacing-xl;
+  flex: 1;
+}
+
+.cardFooter {
+  padding: $spacing-lg $spacing-xl;
+  border-top: 2px solid #000;
+  background: #f9f9f9;
+}
+
+.courseCount {
   font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .institutionName {
@@ -246,6 +357,35 @@
 .websiteLink {
   font-size: $font-size-sm;
   color: #4f46e5;
+  background: #fff;
+  border: 2px solid #000;
+}
+
+.empty {
+  text-align: center;
+  padding: $spacing-3xl * 2;
+  background: #fff;
+  border: 2px solid #000;
+  
+  svg {
+    color: #666;
+    margin-bottom: $spacing-lg;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: $spacing-sm;
+    font-family: var(--font-space-mono), monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  p {
+    font-size: $font-size-base;
+    color: #666;
+  }
   text-decoration: none;
   font-weight: 600;
   transition: all 0.2s ease;

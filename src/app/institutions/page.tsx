@@ -10,13 +10,31 @@ export default async function Institutions() {
         redirect('/login');
     }
 
-    // Fetch institutions associated with the user
+    // Fetch institutions associated with the user (user-created institutions)
     const { data: userInstitutions } = await supabase
         .from('institutions')
-        .select('*')
+        .select(`
+            *,
+            courses:courses(count)
+        `)
         .eq('user_id', user.id)
         .order('name');
 
+    // Fetch all official/verified institutions
+    const { data: officialInstitutions } = await supabase
+        .from('institutions')
+        .select(`
+            *,
+            courses:courses(count)
+        `)
+        .eq('is_official', true)
+        .eq('status', 'verified')
+        .order('name');
+
     // Return page
-    return <InstitutionsPage user={user} institutions={userInstitutions || []} />;
+    return <InstitutionsPage 
+        user={user} 
+        userInstitutions={userInstitutions || []} 
+        officialInstitutions={officialInstitutions || []}
+    />;
 }
