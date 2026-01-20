@@ -238,6 +238,7 @@ export default function ViewInstitutionPage({
                     <th>Credits</th>
                     <th>Grade</th>
                     <th>Term</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -251,6 +252,14 @@ export default function ViewInstitutionPage({
                         </span>
                       </td>
                       <td>{course.term?.name || '—'}</td>
+                      <td>
+                        <button
+                          onClick={() => router.push(`/classes/${course.id}`)}
+                          className={styles.viewButton}
+                        >
+                          View
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
