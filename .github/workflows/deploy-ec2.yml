@@ -34,5 +34,6 @@ jobs:
 
       - name: Restart service
         run: |
-          sudo systemctl restart prereqpilot
-          sudo systemctl status prereqpilot --no-pager -l
+            sudo -n /bin/systemctl restart prereqpilot
+            sudo -n /bin/systemctl is-active prereqpilot
+            sudo -n /bin/systemctl status prereqpilot
