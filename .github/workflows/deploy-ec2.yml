@@ -1,0 +1,38 @@
+name: Deploy to EC2 (self-hosted)
+
+on:
+  push:
+    branches: [ "production" ]
+  workflow_dispatch:
+
+concurrency:
+  group: prereqpilot-prod
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, ec2, prereqpilot]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node (from system)
+        run: |
+          node -v
+          npm -v
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # Optional: basic sanity check (if you have tests)
+      # - name: Test
+      #   run: npm test
+
+      - name: Restart service
+        run: |
+          sudo systemctl restart prereqpilot
+          sudo systemctl status prereqpilot --no-pager -l

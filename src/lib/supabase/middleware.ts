@@ -6,7 +6,7 @@ import { NextResponse, type NextRequest } from 'next/server';
  * This ensures auth cookies are properly managed for protected routes
  */
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
+  const supabaseResponse = NextResponse.next({
     request,
   });
 

@@ -18,6 +18,7 @@
   font-family: $font-mono;
   font-size: $font-size-sm;
   margin-bottom: 2rem;
+  color: #000;
   
   &:hover {
     background: $color-black;
@@ -74,13 +75,14 @@
       margin-bottom: 0.5rem;
     }
     
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 0.75rem;
       border: 2px solid $color-black;
       font-family: $font-mono;
       font-size: $font-size-sm;
       color: #000;
+      background: #fff;
       
       &:focus {
         outline: none;
@@ -274,6 +276,7 @@
   border: 2px solid $color-black;
   background: $color-white;
   cursor: pointer;
+  color: #000;
   
   &:hover {
     background: $color-black;
@@ -336,6 +339,8 @@
       border: 2px solid $color-black;
       font-family: $font-mono;
       font-size: $font-size-sm;
+      color: #000;
+      background: #fff;
       
       &:focus {
         outline: none;

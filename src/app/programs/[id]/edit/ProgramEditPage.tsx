@@ -6,15 +6,18 @@ import { ArrowLeft, Plus, Edit, Trash2, Save } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import type { ProgramRequirement, ProgramRequiredCourse } from '@/services/program-requirement-service';
+import type { Institution } from '@/types/institution';
 import styles from '@/styles/modules/pages/program-edit.module.scss';
 
 interface ProgramEditPageProps {
   program: ProgramRequirement;
   requiredCourses: ProgramRequiredCourse[];
   user: User;
+  userInstitutions: Institution[];
+  officialInstitutions: Institution[];
 }
 
-export default function ProgramEditPage({ program, requiredCourses, user }: ProgramEditPageProps) {
+export default function ProgramEditPage({ program, requiredCourses, user, userInstitutions, officialInstitutions }: ProgramEditPageProps) {
   const router = useRouter();
   const [showAddCourseModal, setShowAddCourseModal] = useState(false);
   const [editingCourse, setEditingCourse] = useState<ProgramRequiredCourse | null>(null);
@@ -116,13 +119,32 @@ export default function ProgramEditPage({ program, requiredCourses, user }: Prog
 
           <div className={styles.formGroup}>
             <label htmlFor="institution">Institution</label>
-            <input
-              type="text"
+            <select
               id="institution"
               value={programForm.institution}
               onChange={(e) => setProgramForm({ ...programForm, institution: e.target.value })}
-              placeholder="e.g., City College Nursing Program"
-            />
+              className={styles.select}
+            >
+              <option value="">Select institution...</option>
+              {userInstitutions.length > 0 && (
+                <optgroup label="Your Institutions">
+                  {userInstitutions.map(inst => (
+                    <option key={inst.id} value={inst.name}>
+                      {inst.name} {inst.short_code ? `(${inst.short_code})` : ''}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {officialInstitutions.length > 0 && (
+                <optgroup label="Official Institutions">
+                  {officialInstitutions.map(inst => (
+                    <option key={inst.id} value={inst.name}>
+                      {inst.name} {inst.short_code ? `(${inst.short_code})` : ''}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+            </select>
           </div>
 
           <div className={styles.formRow}>

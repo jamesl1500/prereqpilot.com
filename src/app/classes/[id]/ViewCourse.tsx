@@ -20,7 +20,7 @@ export default function ViewCourse({ user, course }: ViewCourseProps) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEdit = () => {
-    router.push(`/classes?edit=${course.id}`);
+    router.push(`/classes/${course.id}/edit`);
   };
 
   const handleDelete = async () => {

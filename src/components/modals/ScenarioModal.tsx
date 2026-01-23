@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,9 +8,11 @@ import { z } from 'zod';
 import axios from 'axios';
 import type { ScenarioModalProps } from '@/types/modal';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
+import { Program } from '@/types';
 
 const scenarioSchema = z.object({
   name: z.string().min(1, 'Scenario name is required'),
+  program_id: z.string().min(1, 'Program is required'),
   description: z.string().optional(),
 });
 
@@ -20,6 +22,8 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [userPrograms, setUserPrograms] = useState<Program[]>([]);
+  const [officialPrograms, setOfficialPrograms] = useState<Program[]>([]);
 
   const {
     register,
@@ -30,9 +34,29 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
     resolver: zodResolver(scenarioSchema),
     defaultValues: scenario ? {
       name: scenario.name,
+      program_id: scenario.program_id,
       description: scenario.description || '',
     } : undefined,
   });
+
+  useEffect(() => {
+    if (isOpen) {
+      (async () => {
+        try {
+          const userRes = await axios.get('/api/programs?filter=user');
+          setUserPrograms(userRes.data.data || []);
+        } catch {
+          setUserPrograms([]);
+        }
+        try {
+          const officialRes = await axios.get('/api/programs?filter=official');
+          setOfficialPrograms(officialRes.data.data || []);
+        } catch {
+          setOfficialPrograms([]);
+        }
+      })();
+    }
+  }, [isOpen]);
 
   const onSubmit = async (data: ScenarioFormData) => {
     setIsSubmitting(true);
@@ -41,6 +65,7 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
     try {
       const scenarioData = {
         name: data.name,
+        program_id: data.program_id,
         description: data.description || null,
       };
 
@@ -100,6 +125,40 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
             />
             {errors.name && (
               <span className={styles.fieldError}>{errors.name.message}</span>
+            )}
+          </div>
+
+          <div className={styles.formGroup}>
+            <label htmlFor="program_id" className={styles.label}>
+              Program *
+            </label>
+            <select
+              id="program_id"
+              {...register('program_id')}
+              className={styles.select}
+            >
+              <option value="">Select a program</option>
+              {userPrograms.length > 0 && (
+                <optgroup label="Your Programs">
+                  {userPrograms.map((program) => (
+                    <option key={program.id} value={program.id}>
+                      {program.name}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {officialPrograms.length > 0 && (
+                <optgroup label="Official Programs">
+                  {officialPrograms.map((program) => (
+                    <option key={program.id} value={program.id}>
+                      {program.name}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+            </select>
+            {errors.program_id && (
+              <span className={styles.fieldError}>{errors.program_id.message}</span>
             )}
           </div>
 

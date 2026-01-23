@@ -342,8 +342,48 @@
 }
 
 // Program Requirements Section
+
 .requirementsSection {
   margin-top: 3rem;
+}
+
+// GPA Requirements Section
+.gpaRequirementsSection {
+  background: #fff;
+  border: 2px solid #000;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.gpaRequirementsTitle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.125rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.gpaRequirementsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.gpaRequirementsList li {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1rem;
+  color: #333;
+  background: #f5f5f5;
+  border: 1px solid #000;
+  padding: 0.75rem 1.25rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  min-width: 220px;
 }
 
 .programSelector {

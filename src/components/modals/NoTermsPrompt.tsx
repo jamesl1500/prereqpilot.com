@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+
 import { Calendar } from 'lucide-react';
 import type { NoTermsPromptProps } from '@/types/modal';
 import styles from '@/styles/modules/modals/NoTermsPrompt.module.scss';

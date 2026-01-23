@@ -78,9 +78,29 @@ export async function getUserPrograms(userId: string, request: Request) {
   }
 }
 
-export async function getAllPrograms(request: Request) {
+export async function getAllPrograms(request: Request, filter?: string) {
   try {
     const supabase = createRouteHandlerClient(request);
+    if(filter && filter === "official") {
+      const { data: programs, error } = await supabase
+        .from('program_requirements')
+        .select('*, institution:institutions(*)')
+        .eq('is_official', true)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return { success: true, data: programs };
+    }else if(filter && filter === "user"){
+      const { data: programs, error } = await supabase
+        .from('program_requirements')
+        .select('*, institution:institutions(*)')
+        .eq('is_official', false)
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      return { success: true, data: programs };
+    }
+
     const { data: programs, error } = await supabase
       .from('program_requirements')
       .select('*, institution:institutions(*)')

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { GraduationCap } from 'lucide-react';
 import axios from 'axios';
 import styles from '@/styles/modules/onboarding/OnboardingModal.module.scss';
 

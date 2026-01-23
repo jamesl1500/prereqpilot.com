@@ -308,6 +308,10 @@ export default function ScenarioDetailPage({
     const currentProgram = programs.find(p => p.id === selectedProgram);
     if (!currentProgram) return null;
 
+    // Extract min GPAs
+    const minPrereqGPA = currentProgram.min_prereq_gpa;
+    const minOverallGPA = currentProgram.min_overall_gpa;
+
     const currentMappings = mappings[selectedProgram] || [];
     const totalRequired = currentProgram.required_courses.filter(c => c.is_required).length;
     const completedRequired = currentMappings.filter(m => {
@@ -327,6 +331,19 @@ export default function ScenarioDetailPage({
 
     return (
       <>
+        {/* GPA Requirements */}
+        <div className={styles.gpaRequirementsSection}>
+          <h3 className={styles.gpaRequirementsTitle}>GPA Requirements</h3>
+          <ul className={styles.gpaRequirementsList}>
+            <li>
+              <strong>Minimum Prerequisite GPA:</strong> {minPrereqGPA !== undefined && minPrereqGPA !== null ? minPrereqGPA.toFixed(2) : 'N/A'}
+            </li>
+            <li>
+              <strong>Minimum Overall GPA:</strong> {minOverallGPA !== undefined && minOverallGPA !== null ? minOverallGPA.toFixed(2) : 'N/A'}
+            </li>
+          </ul>
+        </div>
+
         <div className={styles.progressSection}>
           <div className={styles.progressHeader}>
             <span>Completion Progress</span>

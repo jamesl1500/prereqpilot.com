@@ -10,14 +10,15 @@ export default async function EditInstitution({params}: {params: Promise<{ id: s
 
     if(!user)
     {
-        redirect('/login')
+        redirect('/auth/login')
     }
 
-    // Fetch institution
+    // Fetch institution with ownership verification
     const { data: institution, error } = await supabase
         .from('institutions')
         .select('*')
         .eq('id', id)
+        .eq('user_id', user.id)
         .single()
 
     if(error || !institution)
@@ -25,15 +26,5 @@ export default async function EditInstitution({params}: {params: Promise<{ id: s
         redirect('/institutions')
     }
 
-    // Check if they're the owner
-    const isOwner = institution.user_id === user.id;
-
-    // If its custom and user doesnt own it, redirect to institutions page
-    if(institution.user_id && !isOwner)
-    {
-        redirect('/institutions')
-    }
-
-    // Now pass the institution data to component
     return (<EditInstitutionPage institution={institution} user={user} />);
 }

@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
-import type { Term } from '@/types/term';
+
 import type { TermModalProps } from '@/types/modal';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 

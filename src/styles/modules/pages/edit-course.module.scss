@@ -5,7 +5,6 @@
   padding: $spacing-3xl;
   background: #f5f5f5;
   min-height: calc(100vh - 70px);
-  
   @include mobile {
     padding: $spacing-xl;
   }
@@ -25,7 +24,6 @@
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: $spacing-xl;
-  
   &:hover {
     background: #000;
     color: #fff;
@@ -33,10 +31,9 @@
   }
 }
 
-// Header Section
 .header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-start;
   margin-bottom: $spacing-2xl;
   gap: $spacing-lg;
@@ -76,7 +73,6 @@
   margin: 0;
 }
 
-// Form Container
 .formContainer {
   background: $color-white;
   border: 3px solid $color-black;
@@ -90,7 +86,6 @@
   gap: $spacing-lg;
 }
 
-// Message Boxes
 .errorBox,
 .successBox {
   padding: $spacing-lg;
@@ -98,7 +93,6 @@
   background: #f5f5f5;
   font-family: var(--font-space-mono), monospace;
   font-size: 0.95rem;
-  
   p {
     margin: 0;
   }
@@ -117,7 +111,6 @@
   gap: $spacing-sm;
 }
 
-// Form Groups
 .formGroup {
   display: flex;
   flex-direction: column;
@@ -133,8 +126,7 @@
   color: $color-black;
 }
 
-.input,
-.select {
+.input {
   padding: $spacing-md $spacing-lg;
   font-family: var(--font-space-mono), monospace;
   font-size: 1rem;
@@ -142,18 +134,15 @@
   background: $color-white;
   color: $color-black;
   transition: all 0.2s ease;
-
   &:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
   }
-
   &:disabled {
     background: #f5f5f5;
     cursor: not-allowed;
     opacity: 0.6;
   }
-
   &::placeholder {
     color: #999;
   }
@@ -165,18 +154,15 @@
   border: 2px solid $color-black;
   background: $color-white;
   transition: all 0.2s ease;
-
   svg {
     padding: 0 $spacing-lg;
     color: $color-black;
     flex-shrink: 0;
   }
-
   input {
     flex: 1;
     border: none;
     padding: $spacing-md $spacing-lg $spacing-md 0;
-    
     &:focus {
       outline: none;
     }
@@ -196,24 +182,11 @@
   color: #666;
 }
 
-// Form Row
-.formRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $spacing-lg;
-
-  @include mobile {
-    grid-template-columns: 1fr;
-  }
-}
-
-// Actions
 .actions {
   display: flex;
   gap: $spacing-lg;
   justify-content: flex-end;
   margin-top: $spacing-xl;
-
   @include mobile {
     flex-direction: column-reverse;
   }
@@ -230,7 +203,6 @@
   transition: all 0.2s ease;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
@@ -240,7 +212,6 @@
 .cancelButton {
   background: $color-white;
   color: $color-black;
-
   &:hover:not(:disabled) {
     background: $color-black;
     color: $color-white;
@@ -252,7 +223,6 @@
 .submitButton {
   background: $color-black;
   color: $color-white;
-
   &:hover:not(:disabled) {
     transform: translate(-2px, -2px);
     box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
@@ -263,16 +233,10 @@
   .container {
     padding: $spacing-lg;
   }
-
   .formContainer {
     padding: $spacing-lg;
   }
-
   .header {
     flex-direction: column;
-  }
-
-  .formRow {
-    grid-template-columns: 1fr;
   }
 }

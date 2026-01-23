@@ -114,6 +114,13 @@ export default function ProgramDetailPage({ program, isOwner, user }: ProgramDet
             <Plus size={20} />
             Add Required Course
           </button>
+          <button
+            onClick={() => router.push(`/programs/${program.id}/edit`)}
+            className={styles.editProgramButton}
+          >
+            <Edit size={20} />
+            Edit Program Details
+          </button>
         </div>
       )}
 

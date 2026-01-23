@@ -39,11 +39,28 @@ export default async function ProgramEdit({
     .order('display_order', { ascending: true })
     .order('created_at', { ascending: true });
 
+  // Fetch user-created institutions
+  const { data: userInstitutions } = await supabase
+    .from('institutions')
+    .select('id, name, short_code, country, website, user_id, is_official, status')
+    .eq('user_id', user.id)
+    .order('name');
+
+  // Fetch official/verified institutions
+  const { data: officialInstitutions } = await supabase
+    .from('institutions')
+    .select('id, name, short_code, country, website, user_id, is_official, status')
+    .eq('is_official', true)
+    .eq('status', 'verified')
+    .order('name');
+
   return (
     <ProgramEditPage
       program={program}
       requiredCourses={requiredCourses || []}
       user={user}
+      userInstitutions={userInstitutions || []}
+      officialInstitutions={officialInstitutions || []}
     />
   );
 }

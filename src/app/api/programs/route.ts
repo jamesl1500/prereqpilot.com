@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
     // Check if requesting requirements or programs
     const { searchParams } = new URL(request.url);
     const type = searchParams.get('type');
+    const filter = searchParams.get('filter') ?? undefined;
 
     if (type === 'requirements') {
       const result = await getAllProgramRequirements(request);
@@ -29,7 +30,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Default to programs
-    const result = await getAllPrograms(request);
+    const result = await getAllPrograms(request, filter);
+    console.log("API GET /programs result:", result);
 
     if (!result.success) {
       return NextResponse.json(

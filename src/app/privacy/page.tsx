@@ -1,4 +1,4 @@
-import Link from 'next/link';
+
 import styles from '@/styles/modules/pages/legal.module.scss';
 import type { Metadata } from 'next';
 import { PublicHeader } from '@/components/PublicHeader';
