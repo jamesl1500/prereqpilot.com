@@ -55,6 +55,27 @@
   }
 }
 
+.badge {
+  background: #000;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.7rem;
+  border-radius: 2px;
+  margin-left: 0.5rem;
+}
+
+.userName {
+  padding: 0.75rem 1.5rem;
+  color: #000;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  border-right: none;
+  background: #f9f9f9;
+}
+
 .nav {
   display: flex;
   align-items: center;
@@ -105,6 +126,60 @@
     background: #1f1f1f;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdownToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  
+  svg {
+    transition: transform 0.2s ease;
+  }
+  
+  &:hover svg {
+    transform: translateY(2px);
+  }
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background: #fff;
+  border: 2px solid #000;
+  border-top: none;
+  z-index: 1000;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.dropdownItem {
+  display: block;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  color: #000;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid #e5e5e5;
+  @include smooth-transition(all);
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:hover {
+    background: #f5f5f5;
+    padding-left: 2rem;
   }
 }
 
