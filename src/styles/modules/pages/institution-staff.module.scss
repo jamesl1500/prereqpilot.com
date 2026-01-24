@@ -1,0 +1,445 @@
+@use '../../abstracts/variables' as *;
+@use '../../abstracts/mixins' as *;
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-xl;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-2xl;
+  flex-wrap: wrap;
+  gap: $spacing-lg;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 2px solid #000;
+  background: #fff;
+}
+
+.title {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  color: #666;
+  margin: $spacing-xs 0 0;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:hover:not(:disabled) {
+    background: #fff;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.successBox {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: #d4edda;
+  border: 2px solid #28a745;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  color: #155724;
+  margin-bottom: $spacing-xl;
+}
+
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: #fee;
+  border: 2px solid #c00;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  color: #c00;
+  margin-bottom: $spacing-xl;
+}
+
+.addStaffForm {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-xl;
+  margin-bottom: $spacing-2xl;
+
+  form {
+    margin-top: $spacing-lg;
+  }
+}
+
+.formTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  padding-bottom: $spacing-md;
+  border-bottom: 2px solid #000;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+
+  &.fullWidth {
+    grid-column: 1 / -1;
+  }
+}
+
+.label {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000;
+}
+
+.input,
+.select {
+  padding: $spacing-md;
+  border: 2px solid #000;
+  background: #fff;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  color: #000;
+  @include smooth-transition(all);
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.select {
+  cursor: pointer;
+}
+
+.inputWithIcon {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  svg {
+    position: absolute;
+    left: $spacing-md;
+    color: #666;
+    pointer-events: none;
+  }
+
+  .input {
+    padding-left: calc(#{$spacing-md} * 3);
+    width: 100%;
+  }
+}
+
+.fieldError {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #c00;
+}
+
+.fieldHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.formActions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: flex-end;
+}
+
+.cancelButton {
+  padding: $spacing-md $spacing-lg;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:hover:not(:disabled) {
+    background: #f9f9f9;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.submitButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-md $spacing-lg;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:hover:not(:disabled) {
+    background: #fff;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.staffGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: $spacing-lg;
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-lg;
+  padding: $spacing-3xl;
+  border: 2px dashed #999;
+  background: #f9f9f9;
+
+  svg {
+    color: #999;
+  }
+
+  p {
+    font-family: var(--font-space-mono), monospace;
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+  }
+}
+
+.staffCard {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  @include smooth-transition(all);
+
+  &:hover {
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.staffHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.staffAvatar {
+  width: 48px;
+  height: 48px;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.staffInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.staffName {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 $spacing-xs 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.staffEmail {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.staffDetails {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  padding-top: $spacing-md;
+  border-top: 2px solid #e5e5e5;
+}
+
+.staffRole,
+.staffDate {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.8rem;
+  color: #666;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.staffActions {
+  display: flex;
+  gap: $spacing-sm;
+  padding-top: $spacing-md;
+  border-top: 2px solid #e5e5e5;
+}
+
+.deleteButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background: #fff;
+  color: #c00;
+  border: 2px solid #c00;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:hover {
+    background: #c00;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: $spacing-lg;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .staffGrid {
+    grid-template-columns: 1fr;
+  }
+}

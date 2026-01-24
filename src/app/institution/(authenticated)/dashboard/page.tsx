@@ -40,9 +40,24 @@ export default async function DashboardPage() {
   }
 
   // Get institution statistics
-  const { data: stats } = await supabase.rpc('get_institution_stats', {
-    institution_id: institution.id,
-  });
+  // Count total programs
+  const { count: programCount } = await supabase
+    .from('program_requirements')
+    .select('*', { count: 'exact', head: true })
+    .eq('institution_id', institution.id);
+
+  // Count total courses
+  const { count: courseCount } = await supabase
+    .from('courses')
+    .select('*', { count: 'exact', head: true })
+    .eq('institution_id', institution.id);
+
+  const stats = {
+    program_count: programCount || 0,
+    course_count: courseCount || 0,
+    application_count: 0,
+    active_students: 0,
+  };
 
   // Get recent programs
   const { data: recentPrograms } = await supabase
@@ -79,7 +94,7 @@ export default async function DashboardPage() {
       institution={institution}
       user={user}
       role={userRole.role as 'institution_admin' | 'institution_staff'}
-      stats={stats || {}}
+      stats={stats}
       recentPrograms={recentPrograms || []}
       recentCourses={recentCourses || []}
       pendingApplications={pendingApplications || []}

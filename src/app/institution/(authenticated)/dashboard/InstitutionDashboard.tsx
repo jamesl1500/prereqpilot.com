@@ -98,7 +98,7 @@ export function InstitutionDashboard({
                 </div>
                 <div className={styles.statInfo}>
                   <div className={styles.statValue}>{stats.program_count || 0}</div>
-                  <div className={styles.statLabel}>Programs</div>
+                  <div className={styles.statLabel}>{stats.program_count === 1 ? 'Program' : 'Programs'}</div>
                 </div>
               </div>
 
@@ -111,7 +111,7 @@ export function InstitutionDashboard({
                 </div>
                 <div className={styles.statInfo}>
                   <div className={styles.statValue}>{stats.course_count || 0}</div>
-                  <div className={styles.statLabel}>Courses</div>
+                  <div className={styles.statLabel}>{stats.course_count === 1 ? 'Course' : 'Courses'}</div>
                 </div>
               </div>
 
@@ -126,7 +126,7 @@ export function InstitutionDashboard({
                 </div>
                 <div className={styles.statInfo}>
                   <div className={styles.statValue}>{stats.application_count || 0}</div>
-                  <div className={styles.statLabel}>Applications</div>
+                  <div className={styles.statLabel}>{stats.application_count === 1 ? 'Application' : 'Applications'}</div>
                 </div>
               </div>
 
@@ -141,7 +141,7 @@ export function InstitutionDashboard({
                 </div>
                 <div className={styles.statInfo}>
                   <div className={styles.statValue}>{stats.active_students || 0}</div>
-                  <div className={styles.statLabel}>Active Students</div>
+                  <div className={styles.statLabel}>{stats.active_students === 1 ? 'Active Student' : 'Active Students'}</div>
                 </div>
               </div>
             </div>
@@ -173,12 +173,12 @@ export function InstitutionDashboard({
                   </svg>
                   <span>Manage Staff</span>
                 </Link>
-                <Link href="/institution/settings" className={styles.actionCard}>
+                <Link href="/institution/profile" className={styles.actionCard}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="3" />
                     <path d="M12 1v6m0 6v6m5.656-14.656l-4.242 4.242m-5.656 5.656l-4.242 4.242M23 12h-6m-6 0H1m18.364-5.656l-4.242 4.242m-5.656 5.656l-4.242 4.242" />
                   </svg>
-                  <span>Settings</span>
+                  <span>Profile</span>
                 </Link>
               </div>
             </div>

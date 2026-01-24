@@ -75,11 +75,8 @@ export default function InstitutionHeader({ user }: InstitutionHeaderProps) {
                         </button>
                         {isDropdownOpen && (
                             <div className={styles.dropdownMenu}>
-                                <Link href="/institution/students" className={styles.dropdownItem}>
-                                    Students
-                                </Link>
-                                <Link href="/institution/reports" className={styles.dropdownItem}>
-                                    Reports
+                                <Link href="/institution/staff" className={styles.dropdownItem}>
+                                    Manage Staff
                                 </Link>
                                 <Link href="/institution/settings" className={styles.dropdownItem}>
                                     Settings
@@ -88,7 +85,6 @@ export default function InstitutionHeader({ user }: InstitutionHeaderProps) {
                         )}
                     </div>
 
-                    <span className={styles.userName}>{user.user_metadata?.name || user.email}</span>
                     <button
                         onClick={handleLogout}
                         className={`${styles.navLink} ${styles.actionLink}`}

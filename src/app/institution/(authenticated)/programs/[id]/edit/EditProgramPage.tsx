@@ -426,11 +426,15 @@ export default function EditProgramPage({ institution, program, requiredCourses,
                       className={styles.select}
                     >
                       <option value="">-- Or create custom course --</option>
-                      {catalogCourses.map((course) => (
-                        <option key={course.id} value={course.id}>
-                          {course.code} - {course.title} ({course.credits} CR)
-                        </option>
-                      ))}
+                      {catalogCourses
+                        .filter(catalogCourse => 
+                          !courses.some(reqCourse => reqCourse.course_id === catalogCourse.id)
+                        )
+                        .map((course) => (
+                          <option key={course.id} value={course.id}>
+                            {course.code} - {course.title} ({course.credits} CR)
+                          </option>
+                        ))}
                     </select>
                     <small className={styles.fieldHint}>
                       Select a course from your catalog to auto-fill details, or leave blank to create a custom course.
