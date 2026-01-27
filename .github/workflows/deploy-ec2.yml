@@ -36,3 +36,4 @@ jobs:
             sudo -n /bin/systemctl restart prereqpilot
             sudo -n /bin/systemctl is-active prereqpilot
             sudo -n /bin/systemctl status prereqpilot
+            sudo service apache2 restart
