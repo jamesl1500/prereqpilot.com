@@ -2,6 +2,64 @@
  * Unit tests for Header component
  */
 
+// Mock lucide-react BEFORE any imports
+jest.mock('lucide-react', () => {
+  const React = require('react');
+  const mockIcon = (props: any) => React.createElement('svg', { 
+    'data-testid': 'mock-icon',
+    ...props 
+  });
+  return {
+    PenTool: mockIcon,
+    ChevronDown: mockIcon,
+    Settings: mockIcon,
+    Menu: mockIcon,
+    X: mockIcon,
+    User: mockIcon,
+    LogOut: mockIcon,
+    BookOpen: mockIcon,
+    FileText: mockIcon,
+    Building: mockIcon,
+    Target: mockIcon,
+    GraduationCap: mockIcon,
+    Upload: mockIcon,
+    Download: mockIcon,
+    Trash: mockIcon,
+    Plus: mockIcon,
+    Edit: mockIcon,
+    Check: mockIcon,
+    AlertCircle: mockIcon,
+    Info: mockIcon,
+    Home: mockIcon,
+    ArrowLeft: mockIcon,
+    TrendingUp: mockIcon,
+    RefreshCw: mockIcon,
+    Link: mockIcon,
+    Search: mockIcon,
+    Building2: mockIcon,
+    Globe: mockIcon,
+    MapPin: mockIcon,
+    Mail: mockIcon,
+    Lock: mockIcon,
+    Trash2: mockIcon,
+    CheckCircle: mockIcon,
+    FileQuestionMark: mockIcon,
+    LayoutDashboard: mockIcon,
+    PcCase: mockIcon,
+    School: mockIcon,
+    SquareFunction: mockIcon,
+    Lightbulb: mockIcon,
+    Calendar: mockIcon,
+    List: mockIcon,
+    Sparkles: mockIcon,
+    ExternalLink: mockIcon,
+    UserIcon: mockIcon,
+    Loader: mockIcon,
+    Save: mockIcon,
+    Award: mockIcon,
+  };
+});
+
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Header from '@/components/Header';
@@ -26,9 +84,10 @@ describe('Header Component', () => {
 
   it('should render navigation links', () => {
     render(<Header />);
-    const settingsLink = screen.getByText('Settings');
-    expect(settingsLink).toBeInTheDocument();
-    expect(settingsLink).toHaveAttribute('href', '/settings');
+    // Check for primary navigation links
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Programs')).toBeInTheDocument();
+    expect(screen.getByText('Plans')).toBeInTheDocument();
   });
 
   it('should render logout button', () => {

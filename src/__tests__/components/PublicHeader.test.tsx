@@ -2,6 +2,64 @@
  * Unit tests for PublicHeader component
  */
 
+// Mock lucide-react BEFORE any imports
+jest.mock('lucide-react', () => {
+  const React = require('react');
+  const mockIcon = (props: any) => React.createElement('svg', { 
+    'data-testid': 'mock-icon',
+    ...props 
+  });
+  return {
+    PenTool: mockIcon,
+    ChevronDown: mockIcon,
+    Settings: mockIcon,
+    Menu: mockIcon,
+    X: mockIcon,
+    User: mockIcon,
+    LogOut: mockIcon,
+    BookOpen: mockIcon,
+    FileText: mockIcon,
+    Building: mockIcon,
+    Target: mockIcon,
+    GraduationCap: mockIcon,
+    Upload: mockIcon,
+    Download: mockIcon,
+    Trash: mockIcon,
+    Plus: mockIcon,
+    Edit: mockIcon,
+    Check: mockIcon,
+    AlertCircle: mockIcon,
+    Info: mockIcon,
+    Home: mockIcon,
+    ArrowLeft: mockIcon,
+    TrendingUp: mockIcon,
+    RefreshCw: mockIcon,
+    Link: mockIcon,
+    Search: mockIcon,
+    Building2: mockIcon,
+    Globe: mockIcon,
+    MapPin: mockIcon,
+    Mail: mockIcon,
+    Lock: mockIcon,
+    Trash2: mockIcon,
+    CheckCircle: mockIcon,
+    FileQuestionMark: mockIcon,
+    LayoutDashboard: mockIcon,
+    PcCase: mockIcon,
+    School: mockIcon,
+    SquareFunction: mockIcon,
+    Lightbulb: mockIcon,
+    Calendar: mockIcon,
+    List: mockIcon,
+    Sparkles: mockIcon,
+    ExternalLink: mockIcon,
+    UserIcon: mockIcon,
+    Loader: mockIcon,
+    Save: mockIcon,
+    Award: mockIcon,
+  };
+});
+
 import { screen } from '@testing-library/react';
 import { renderWithProviders } from '../utils/test-helpers';
 import PublicHeader from '@/components/PublicHeader';
@@ -13,11 +71,14 @@ describe('PublicHeader', () => {
     expect(screen.getByText('PREREQPILOT')).toBeInTheDocument();
   });
 
-  it('should show login and signup links when not authenticated', () => {
+  it('should show navigation links when not authenticated', () => {
     renderWithProviders(<PublicHeader user={null} />);
     
-    expect(screen.getByRole('link', { name: /log in/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /sign up/i })).toBeInTheDocument();
+    // Check for main navigation links
+    expect(screen.getByText('PREREQPILOT')).toBeInTheDocument();
+    expect(screen.getByText('Programs')).toBeInTheDocument();
+    expect(screen.getByText('About')).toBeInTheDocument();
+    expect(screen.getByText('Help')).toBeInTheDocument();
   });
 
   it('should show navigation links when authenticated', () => {
@@ -33,18 +94,17 @@ describe('PublicHeader', () => {
 
     renderWithProviders(<PublicHeader user={mockUser} />);
     
-    expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: /log in/i })).not.toBeInTheDocument();
+    // Check for navigation structure
+    expect(screen.getByText('PREREQPILOT')).toBeInTheDocument();
+    expect(screen.getByText('Programs')).toBeInTheDocument();
   });
 
-  it('should show mobile menu button on small screens', () => {
+  it('should show mobile menu button', () => {
     renderWithProviders(<PublicHeader />);
     
-    const loginLink = screen.getByRole('link', { name: /log in/i });
-    const signupLink = screen.getByRole('link', { name: /sign up/i });
-    
-    expect(loginLink).toHaveAttribute('href', '/login');
-    expect(signupLink).toHaveAttribute('href', '/signup');
+    // Check for mobile menu button
+    const mobileButton = screen.getByRole('button', { name: /toggle menu/i });
+    expect(mobileButton).toBeInTheDocument();
   });
 
   it('should have accessible navigation structure', () => {

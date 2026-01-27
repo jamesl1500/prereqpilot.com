@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +18,14 @@ const termSchema = z.object({
 
 type TermFormData = z.infer<typeof termSchema>;
 
+function toInputDate(value?: string | null): string {
+  if (!value) return '';
+  // Normalize potential ISO/date strings to input[type="date"] format YYYY-MM-DD
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toISOString().slice(0, 10);
+}
+
 export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,12 +38,32 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
     reset,
   } = useForm<TermFormData>({
     resolver: zodResolver(termSchema),
-    defaultValues: term ? {
-      name: term.name,
-      start_date: term.start_date || '',
-      end_date: term.end_date || '',
-    } : undefined,
+    defaultValues: term
+      ? {
+          name: term.name ?? '',
+          start_date: toInputDate(term.start_date),
+          end_date: toInputDate(term.end_date),
+        }
+      : {
+          name: '',
+          start_date: '',
+          end_date: '',
+        },
   });
+
+  // Ensure form fields populate when opening in edit mode or when term changes
+  useEffect(() => {
+    if (!isOpen) return;
+    if (term) {
+      reset({
+        name: term.name ?? '',
+        start_date: toInputDate(term.start_date),
+        end_date: toInputDate(term.end_date),
+      });
+    } else {
+      reset({ name: '', start_date: '', end_date: '' });
+    }
+  }, [term, isOpen, reset]);
 
   const onSubmit = async (data: TermFormData) => {
     setIsSubmitting(true);

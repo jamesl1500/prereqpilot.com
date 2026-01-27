@@ -71,6 +71,84 @@
   gap: $spacing-xl;
 }
 
+.section {
+  margin-bottom: $spacing-3xl;
+}
+
+.sectionHeader {
+  @include flex-between;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  align-items: flex-start;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.sectionSubtitle {
+  color: #555;
+  margin: $spacing-xs 0 0;
+  font-size: $font-size-sm;
+}
+
+.filters {
+  display: flex;
+  gap: $spacing-md;
+  align-items: center;
+
+  @include mobile {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.searchInput,
+.select {
+  border: 2px solid #000;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-sm;
+  font-weight: 600;
+  font-family: var(--font-space-mono), monospace;
+  background: #fff;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  color: #000;
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #000;
+    transform: translateY(-1px);
+  }
+}
+
+.searchInput {
+  min-width: 240px;
+}
+
+.select {
+  min-width: 180px;
+}
+
+.emptyState {
+  border: 2px dashed #000;
+  padding: $spacing-2xl;
+  text-align: center;
+  background: #fff;
+  color: #555;
+  font-weight: 600;
+}
+
 .programCard {
   background: #fff;
   border: 2px solid #000;
@@ -172,5 +250,6 @@
   
   &:hover:not(:disabled) {
     background: #f5f5f5;
+    color: #000;
   }
 }

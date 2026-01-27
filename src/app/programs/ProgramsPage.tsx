@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { GraduationCap } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
@@ -22,7 +22,7 @@ interface Institution {
 
 interface ProgramsPageProps {
   user: User;
-  programs: Program[];
+  programs: Array<Program & { is_official?: boolean | null; institution_id?: string | null; user_id?: string | null }>;
   userInstitutions: Institution[];
   allInstitutions: Institution[];
 }
@@ -32,6 +32,24 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<Program | undefined>();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [institutionFilter, setInstitutionFilter] = useState<string>('');
+
+  const { customPrograms, officialPrograms } = useMemo(() => {
+    const custom = programs.filter((p) => p.is_official === false || p.user_id);
+    const official = programs.filter((p) => p.is_official === true || (!p.user_id && p.institution_id));
+    return { customPrograms: custom, officialPrograms: official };
+  }, [programs]);
+
+  const filteredOfficial = useMemo(() => {
+    return officialPrograms.filter((p) => {
+      const matchesSearch = [p.name, p.institution]
+        .filter(Boolean)
+        .some((field) => field!.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesInstitution = !institutionFilter || p.institution_id === institutionFilter;
+      return matchesSearch && matchesInstitution;
+    });
+  }, [officialPrograms, searchTerm, institutionFilter]);
 
   const handleAddProgram = () => {
     setSelectedProgram(undefined);
@@ -80,45 +98,135 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
             </button>
           </div>
         ) : (
-          <div className={styles.programsGrid}>
-            {programs.map((program) => (
-              <div key={program.id} className={styles.programCard}>
-                <div className={styles.programHeader}>
-                  <h3 className={styles.programName}>{program.name}</h3>
-                  {program.institution && (
-                    <p className={styles.programInstitution}>{program.institution}</p>
-                  )}
-                </div>
-
-                <div className={styles.programDetails}>
-                  {program.min_prereq_gpa !== null && (
-                    <div className={styles.detail}>
-                      <span className={styles.detailLabel}>Min Prereq GPA:</span>
-                      <span className={styles.detailValue}>{program.min_prereq_gpa.toFixed(2)}</span>
-                    </div>
-                  )}
-                  {program.min_overall_gpa !== null && (
-                    <div className={styles.detail}>
-                      <span className={styles.detailLabel}>Min Overall GPA:</span>
-                      <span className={styles.detailValue}>{program.min_overall_gpa.toFixed(2)}</span>
-                    </div>
-                  )}
-                </div>
-
-                <div className={styles.cardActions}>
-                  <button className={styles.primaryAction} onClick={() => handleViewProgram(program.id)}>
-                    View Details
-                  </button>
-                  <button className={styles.secondaryAction} onClick={() => handleEditProgram(program.id)}>
-                    Edit
-                  </button>
-                  <button className={styles.secondaryAction} onClick={() => handleDeleteProgram(program)}>
-                    Delete
-                  </button>
+          <>
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <div>
+                  <h2 className={styles.sectionTitle}>Custom Programs</h2>
+                  <p className={styles.sectionSubtitle}>Programs you created or imported yourself.</p>
                 </div>
               </div>
-            ))}
-          </div>
+              {customPrograms.length === 0 ? (
+                <div className={styles.emptyState}>No custom programs yet.</div>
+              ) : (
+                <div className={styles.programsGrid}>
+                  {customPrograms.map((program) => (
+                    <div key={program.id} className={styles.programCard}>
+                      <div className={styles.programHeader}>
+                        <h3 className={styles.programName}>{program.name}</h3>
+                        {program.institution && (
+                          <p className={styles.programInstitution}>{program.institution}</p>
+                        )}
+                      </div>
+
+                      <div className={styles.programDetails}>
+                        {program.min_prereq_gpa !== null && (
+                          <div className={styles.detail}>
+                            <span className={styles.detailLabel}>Min Prereq GPA:</span>
+                            <span className={styles.detailValue}>{program.min_prereq_gpa.toFixed(2)}</span>
+                          </div>
+                        )}
+                        {program.min_overall_gpa !== null && (
+                          <div className={styles.detail}>
+                            <span className={styles.detailLabel}>Min Overall GPA:</span>
+                            <span className={styles.detailValue}>{program.min_overall_gpa.toFixed(2)}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className={styles.cardActions}>
+                        <button className={styles.primaryAction} onClick={() => handleViewProgram(program.id)}>
+                          View Details
+                        </button>
+                        <button className={styles.secondaryAction} onClick={() => handleEditProgram(program.id)}>
+                          Edit
+                        </button>
+                        <button className={styles.secondaryAction} onClick={() => handleDeleteProgram(program)}>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <div>
+                  <h2 className={styles.sectionTitle}>Official Programs</h2>
+                  <p className={styles.sectionSubtitle}>Verified programs from official institutions.</p>
+                </div>
+                <div className={styles.filters}>
+                  <input
+                    type="search"
+                    placeholder="Search official programs"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className={styles.searchInput}
+                    aria-label="Search official programs"
+                  />
+                  <select
+                    value={institutionFilter}
+                    onChange={(e) => setInstitutionFilter(e.target.value)}
+                    className={styles.select}
+                    aria-label="Filter by institution"
+                  >
+                    <option value="">All institutions</option>
+                    {allInstitutions.map((inst) => (
+                      <option key={inst.id} value={inst.id}>
+                        {inst.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {filteredOfficial.length === 0 ? (
+                <div className={styles.emptyState}>No official programs match your search.</div>
+              ) : (
+                <div className={styles.programsGrid}>
+                  {filteredOfficial.map((program) => (
+                    <div key={program.id} className={styles.programCard}>
+                      <div className={styles.programHeader}>
+                        <h3 className={styles.programName}>{program.name}</h3>
+                        {program.institution && (
+                          <p className={styles.programInstitution}>{program.institution}</p>
+                        )}
+                      </div>
+
+                      <div className={styles.programDetails}>
+                        {program.min_prereq_gpa !== null && (
+                          <div className={styles.detail}>
+                            <span className={styles.detailLabel}>Min Prereq GPA:</span>
+                            <span className={styles.detailValue}>{program.min_prereq_gpa.toFixed(2)}</span>
+                          </div>
+                        )}
+                        {program.min_overall_gpa !== null && (
+                          <div className={styles.detail}>
+                            <span className={styles.detailLabel}>Min Overall GPA:</span>
+                            <span className={styles.detailValue}>{program.min_overall_gpa.toFixed(2)}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className={styles.cardActions}>
+                        <button className={styles.primaryAction} onClick={() => handleViewProgram(program.id)}>
+                          View Details
+                        </button>
+                        <button className={styles.secondaryAction} onClick={() => handleEditProgram(program.id)}>
+                          Edit
+                        </button>
+                        <button className={styles.secondaryAction} onClick={() => handleDeleteProgram(program)}>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+          </>
         )}
 
         <ProgramModal

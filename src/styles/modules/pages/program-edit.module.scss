@@ -15,19 +15,7 @@
 }
 
 .header {
-  margin-bottom: 2rem;
-  
-  .title {
-    font-family: $font-grotesk;
-    font-size: 2.5rem;
-    font-weight: $font-weight-bold;
-    margin-bottom: 0.5rem;
-  }
-  
-  .subtitle {
-    @include typography.text-meta;
-    font-size: $font-size-lg;
-  }
+  @include layout.page-header;
 }
 
 .section {

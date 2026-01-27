@@ -16,8 +16,8 @@ describe('GPA Calculation Integration', () => {
 
       const gpa = calculateOverallGPA(semester);
       
-      // Expected: (4.0*3 + 3.3*4 + 3.7*3 + 3.0*3) / 13 = 3.54
-      expect(gpa).toBeCloseTo(3.54, 2);
+      // Expected: (4.0*3 + 3.3*4 + 3.7*3 + 3.0*3) / 13 = 3.48
+      expect(gpa).toBeCloseTo(3.48, 2);
     });
 
     it('should handle full academic year', () => {
@@ -53,7 +53,8 @@ describe('GPA Calculation Integration', () => {
       const gpa = calculateOverallGPA(courses);
       
       // Higher credit courses should have more weight
-      expect(gpa).toBeCloseTo(3.77, 2);
+      // Expected: (4.0*1 + 3.0*4 + 3.7*3 + 4.0*5) / 13 = 3.62
+      expect(gpa).toBeCloseTo(3.62, 2);
     });
 
     it('should calculate correctly with all perfect grades', () => {
@@ -77,7 +78,8 @@ describe('GPA Calculation Integration', () => {
       ];
 
       const gpa = calculateOverallGPA(minimumPassing);
-      expect(gpa).toBeCloseTo(1.08, 2);
+      // Expected: (1.0*3 + 1.3*3 + 0.7*3 + 1.0*3) / 12 = 1.0
+      expect(gpa).toBeCloseTo(1.0, 2);
     });
 
     it('should handle mixed performance realistically', () => {
@@ -89,7 +91,8 @@ describe('GPA Calculation Integration', () => {
       ];
 
       const gpa = calculateOverallGPA(mixedPerformance);
-      expect(gpa).toBeCloseTo(2.58, 2);
+      // Expected: (0.0*3 + 4.0*3 + 2.0*3 + 3.3*3) / 12 = 27.9/12 = 2.325
+      expect(gpa).toBeCloseTo(2.325, 2);
     });
   });
 

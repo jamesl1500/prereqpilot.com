@@ -1,3 +1,42 @@
+// Mock Next/Link
+jest.mock('next/link', () => {
+  const React = require('react');
+  return {
+    __esModule: true,
+    default: ({ children, href, className, ...props }: any) => {
+      return React.createElement('a', { href, className, ...props }, children);
+    },
+  };
+});
+
+// Mock Next.js router
+jest.mock('next/navigation', () => ({
+  useRouter() {
+    return {
+      push: jest.fn(),
+      replace: jest.fn(),
+      prefetch: jest.fn(),
+      back: jest.fn(),
+      forward: jest.fn(),
+      refresh: jest.fn(),
+      pathname: '/',
+      query: {},
+      asPath: '/',
+    };
+  },
+  usePathname() {
+    return '/';
+  },
+  useSearchParams() {
+    return new URLSearchParams();
+  },
+  useParams() {
+    return {};
+  },
+  redirect: jest.fn(),
+  notFound: jest.fn(),
+}));
+
 import '@testing-library/jest-dom';
 
 // Polyfill Web APIs for Next.js server components
@@ -94,46 +133,8 @@ if (typeof global.Headers === 'undefined') {
 const { NextRequest, NextResponse } = require('next/server');
 
 // Make NextRequest and NextResponse available globally for tests
-global.NextRequest = NextRequest;
-global.NextResponse = NextResponse;
-
-// Mock Next.js router
-jest.mock('next/navigation', () => ({
-  useRouter() {
-    return {
-      push: jest.fn(),
-      replace: jest.fn(),
-      prefetch: jest.fn(),
-      back: jest.fn(),
-      forward: jest.fn(),
-      refresh: jest.fn(),
-      pathname: '/',
-      query: {},
-      asPath: '/',
-    };
-  },
-  usePathname() {
-    return '/';
-  },
-  useSearchParams() {
-    return new URLSearchParams();
-  },
-  useParams() {
-    return {};
-  },
-  redirect: jest.fn(),
-  notFound: jest.fn(),
-}));
-
-// Mock Next/Link
-jest.mock('next/link', () => {
-  return {
-    __esModule: true,
-    default: ({ children, href }: { children: any; href: string }) => {
-      return children;
-    },
-  };
-});
+(global as any).NextRequest = NextRequest;
+(global as any).NextResponse = NextResponse;
 
 // Mock Supabase client
 jest.mock('@/lib/supabase/server', () => ({

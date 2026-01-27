@@ -26,8 +26,8 @@ export default async function ProgramDetail({
     redirect('/programs');
   }
 
-  // Check access (user must own it or it's global)
-  if (program.user_id && program.user_id !== user.id) {
+  // Check access: official programs are public, non-official programs are only visible to owner
+  if (!program.is_official && program.user_id !== user.id) {
     redirect('/programs');
   }
 

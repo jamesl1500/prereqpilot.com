@@ -15,10 +15,12 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@/public/(.*)$': '<rootDir>/public/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '^lucide-react$': '<rootDir>/src/__tests__/utils/lucide-react-mock.ts',
   },
   testMatch: [
     '**/__tests__/**/*.[jt]s?(x)',
     '**/?(*.)+(spec|test).[jt]s?(x)',
+    '!**/__tests__/utils/**',
   ],
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
