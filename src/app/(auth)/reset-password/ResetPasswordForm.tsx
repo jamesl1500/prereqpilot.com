@@ -28,16 +28,21 @@ export default function ResetPasswordForm({ onSubmit, isLoading, error }: ResetP
         <p className={styles.subtitle}>Enter your new password below</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <form 
+        onSubmit={handleSubmit(onSubmit)} 
+        className={styles.form}
+        aria-label="Reset password form"
+        noValidate
+      >
         {error && (
-          <div className={styles.error}>
+          <div className={styles.error} role="alert" aria-live="assertive">
             {error}
           </div>
         )}
 
         <div className={styles.formGroup}>
           <label htmlFor="password" className={styles.label}>
-            New password
+            New password <span aria-hidden="true">*</span>
           </label>
           <input
             type="password"
@@ -46,18 +51,25 @@ export default function ResetPasswordForm({ onSubmit, isLoading, error }: ResetP
             className={`${styles.input} ${errors.password ? styles.inputError : ''}`}
             placeholder="••••••••"
             autoComplete="new-password"
+            aria-required="true"
+            aria-invalid={errors.password ? 'true' : 'false'}
+            aria-describedby={errors.password ? 'password-error' : 'password-hint'}
           />
           {errors.password && (
-            <p className={styles.errorText}>{errors.password.message}</p>
+            <p className={styles.errorText} id="password-error" role="alert">
+              {errors.password.message}
+            </p>
           )}
           {!errors.password && (
-            <p className={styles.hint}>Must contain uppercase, lowercase, and a number</p>
+            <p className={styles.hint} id="password-hint">
+              Must contain uppercase, lowercase, and a number
+            </p>
           )}
         </div>
 
         <div className={styles.formGroup}>
           <label htmlFor="confirmPassword" className={styles.label}>
-            Confirm new password
+            Confirm new password <span aria-hidden="true">*</span>
           </label>
           <input
             type="password"
@@ -66,9 +78,14 @@ export default function ResetPasswordForm({ onSubmit, isLoading, error }: ResetP
             className={`${styles.input} ${errors.confirmPassword ? styles.inputError : ''}`}
             placeholder="••••••••"
             autoComplete="new-password"
+            aria-required="true"
+            aria-invalid={errors.confirmPassword ? 'true' : 'false'}
+            aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
           />
           {errors.confirmPassword && (
-            <p className={styles.errorText}>{errors.confirmPassword.message}</p>
+            <p className={styles.errorText} id="confirmPassword-error" role="alert">
+              {errors.confirmPassword.message}
+            </p>
           )}
         </div>
 
@@ -76,6 +93,7 @@ export default function ResetPasswordForm({ onSubmit, isLoading, error }: ResetP
           type="submit"
           disabled={isLoading}
           className={styles.submitButton}
+          aria-busy={isLoading ? 'true' : 'false'}
         >
           {isLoading ? 'Updating password...' : 'Reset password'}
         </button>

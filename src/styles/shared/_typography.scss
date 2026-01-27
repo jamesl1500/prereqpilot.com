@@ -1,0 +1,63 @@
+@use '@/styles/abstracts/variables' as *;
+
+// Typography Mixins
+
+// Mono Heading
+@mixin heading-mono {
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000;
+}
+
+// Meta Text (small supplementary text)
+@mixin text-meta {
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  font-family: var(--font-space-mono), monospace;
+}
+
+// Code/Badge style
+@mixin text-code {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// Link style
+@mixin link-brutalist {
+  color: #000;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  font-family: var(--font-space-mono), monospace;
+
+  &:hover {
+    border-bottom-color: #000;
+  }
+}
+
+// Truncate text
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Line clamp
+@mixin text-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

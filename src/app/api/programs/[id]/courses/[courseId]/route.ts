@@ -22,15 +22,15 @@ export async function PUT(
 
     if (!result.success) {
       return NextResponse.json(
-        { error: result.error },
+        { success: false, error: result.error },
         { status: result.error === 'Unauthorized' ? 401 : 400 }
       );
     }
 
-    return NextResponse.json(result.data);
+    return NextResponse.json({ success: true, data: result.data });
   } catch {
     return NextResponse.json(
-      { error: 'Invalid request body' },
+      { success: false, error: 'Invalid request body' },
       { status: 400 }
     );
   }
@@ -45,7 +45,7 @@ export async function DELETE(
 
   if (!result.success) {
     return NextResponse.json(
-      { error: result.error },
+      { success: false, error: result.error },
       { status: result.error === 'Unauthorized' ? 401 : 400 }
     );
   }

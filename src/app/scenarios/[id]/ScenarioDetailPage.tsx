@@ -69,6 +69,7 @@ export default function ScenarioDetailPage({
   const [selectedProgram, setSelectedProgram] = useState<string>(programs[0]?.id || '');
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [selectedRequiredCourse, setSelectedRequiredCourse] = useState<ProgramRequiredCourse | null>(null);
+  const [activeTab, setActiveTab] = useState<'requirements' | 'courses'>('requirements');
 
   // Create a map of overridden courses
   const overrideMap = new Map(
@@ -172,87 +173,106 @@ export default function ScenarioDetailPage({
           </button>
         </div>
 
-        <div className={styles.coursesSection}>
-          <h2 className={styles.sectionTitle}>Your Courses</h2>
-          
-          {takenCourses.length === 0 ? (
-            <div className={styles.emptyCourses}>
-              <p>No courses found. Add courses in the Classes page first.</p>
-              <button 
-                className={styles.primaryButton}
-                onClick={() => router.push('/classes')}
-              >
-                Go to Classes
-              </button>
-            </div>
-          ) : (
-            <div className={styles.coursesTable}>
-              <div className={styles.tableHeader}>
-                <div className={styles.checkboxCol}></div>
-                <div className={styles.courseCol}>Course</div>
-                <div className={styles.creditsCol}>Credits</div>
-                <div className={styles.gradeCol}>Grade</div>
-                <div className={styles.projectedCol}>Simulated</div>
-              </div>
-              
-              {takenCourses.map((course) => {
-                const override = overrideMap.get(course.id);
-                const isOverridden = !!override;
-                
-                return (
-                  <div 
-                    key={course.id} 
-                    className={`${styles.tableRow} ${isOverridden ? styles.overridden : ''}`}
-                  >
-                    <div className={styles.checkboxCol}>
-                      <input
-                        type="checkbox"
-                        checked={selectedCourses.has(course.id)}
-                        onChange={() => toggleCourseSelection(course.id)}
-                      />
-                    </div>
-                    <div className={styles.courseCol}>
-                      <div className={styles.courseTitle}>
-                        {course.course?.code && (
-                          <span className={styles.courseCode}>{course.course.code}</span>
-                        )}
-                        {course.course_title}
-                      </div>
-                      {course.institution && (
-                        <div className={styles.courseInstitution}>
-                          {course.institution.name}
-                        </div>
-                      )}
-                    </div>
-                    <div className={styles.creditsCol}>
-                      {course.credits}
-                    </div>
-                    <div className={styles.gradeCol}>
-                      {course.grade || 'N/A'}
-                    </div>
-                    <div className={styles.projectedCol}>
-                      {isOverridden ? (
-                        <div className={styles.simulatedGrade}>
-                          {override.simulated_grade || 'N/A'}
-                          {override.simulated_grade !== course.grade && (
-                            <span className={styles.changeIndicator}>
-                              (was {course.grade})
-                            </span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className={styles.noChange}>—</span>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+        {/* Tabs */}
+        <div className={styles.tabs}>
+          <button
+            className={`${styles.tab} ${activeTab === 'requirements' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('requirements')}
+          >
+            Program Requirements
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'courses' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('courses')}
+          >
+            Your Courses
+          </button>
         </div>
 
+        {/* Tab Content */}
+        {activeTab === 'courses' && (
+          <div className={styles.coursesSection}>
+            <h2 className={styles.sectionTitle}>Your Courses</h2>
+            
+            {takenCourses.length === 0 ? (
+              <div className={styles.emptyCourses}>
+                <p>No courses found. Add courses in the Classes page first.</p>
+                <button 
+                  className={styles.primaryButton}
+                  onClick={() => router.push('/classes')}
+                >
+                  Go to Classes
+                </button>
+              </div>
+            ) : (
+              <div className={styles.coursesTable}>
+                <div className={styles.tableHeader}>
+                  <div className={styles.checkboxCol}></div>
+                  <div className={styles.courseCol}>Course</div>
+                  <div className={styles.creditsCol}>Credits</div>
+                  <div className={styles.gradeCol}>Grade</div>
+                  <div className={styles.projectedCol}>Simulated</div>
+                </div>
+                
+                {takenCourses.map((course) => {
+                  const override = overrideMap.get(course.id);
+                  const isOverridden = !!override;
+                  
+                  return (
+                    <div 
+                      key={course.id} 
+                      className={`${styles.tableRow} ${isOverridden ? styles.overridden : ''}`}
+                    >
+                      <div className={styles.checkboxCol}>
+                        <input
+                          type="checkbox"
+                          checked={selectedCourses.has(course.id)}
+                          onChange={() => toggleCourseSelection(course.id)}
+                        />
+                      </div>
+                      <div className={styles.courseCol}>
+                        <div className={styles.courseTitle}>
+                          {course.course?.code && (
+                            <span className={styles.courseCode}>{course.course.code}</span>
+                          )}
+                          {course.course_title}
+                        </div>
+                        {course.institution && (
+                          <div className={styles.courseInstitution}>
+                            {course.institution.name}
+                          </div>
+                        )}
+                      </div>
+                      <div className={styles.creditsCol}>
+                        {course.credits}
+                      </div>
+                      <div className={styles.gradeCol}>
+                        {course.grade || 'N/A'}
+                      </div>
+                      <div className={styles.projectedCol}>
+                        {isOverridden ? (
+                          <div className={styles.simulatedGrade}>
+                            {override.simulated_grade || 'N/A'}
+                            {override.simulated_grade !== course.grade && (
+                              <span className={styles.changeIndicator}>
+                                (was {course.grade})
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span className={styles.noChange}>—</span>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Program Requirements Section */}
-        {programs.length > 0 && (
+        {activeTab === 'requirements' && programs.length > 0 && (
           <div className={styles.requirementsSection}>
             <h2 className={styles.sectionTitle}>Program Requirements</h2>
             
@@ -459,7 +479,8 @@ export default function ScenarioDetailPage({
         const error = await response.json();
         alert(error.error || 'Failed to save mapping');
       }
-    } catch (error) {
+    } catch {
+      // Error loading scenario
       alert('Failed to save mapping');
     }
   }

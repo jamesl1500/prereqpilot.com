@@ -2,15 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, Mail, Lock, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
+import { User as UserIcon, Mail, Lock, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
 import axios from 'axios';
 import styles from '@/styles/modules/pages/settings.module.scss';
 
-interface SettingsPageProps {
-  user: any;
-}
-
-export default function SettingsPage({ user }: SettingsPageProps) {
+export default function SettingsPage() {
   const router = useRouter();
   
   // Profile state
@@ -65,8 +61,9 @@ export default function SettingsPage({ user }: SettingsPageProps) {
       setProfileSuccess('Profile updated successfully!');
       setTimeout(() => setProfileSuccess(''), 3000);
       router.refresh();
-    } catch (error: any) {
-      setProfileError(error.response?.data?.error || 'Failed to update profile');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      setProfileError(err.response?.data?.error || 'Failed to update profile');
     } finally {
       setProfileLoading(false);
     }
@@ -101,8 +98,9 @@ export default function SettingsPage({ user }: SettingsPageProps) {
       setNewPassword('');
       setConfirmPassword('');
       setTimeout(() => setPasswordSuccess(''), 3000);
-    } catch (error: any) {
-      setPasswordError(error.response?.data?.error || 'Failed to update password');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      setPasswordError(err.response?.data?.error || 'Failed to update password');
     } finally {
       setPasswordLoading(false);
     }
@@ -121,8 +119,9 @@ export default function SettingsPage({ user }: SettingsPageProps) {
       await axios.delete('/api/settings/account');
       // Redirect to login after successful deletion
       router.push('/login');
-    } catch (error: any) {
-      setDeleteError(error.response?.data?.error || 'Failed to delete account');
+    } catch (error: unknown) {
+      const err = error as { response?: { data?: { error?: string } } };
+      setDeleteError(err.response?.data?.error || 'Failed to delete account');
       setDeleteLoading(false);
     }
   };
@@ -130,14 +129,16 @@ export default function SettingsPage({ user }: SettingsPageProps) {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Settings</h1>
-        <p className={styles.subtitle}>Manage your account settings and preferences</p>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Settings</h1>
+          <p className={styles.subtitle}>Manage your account settings and preferences</p>
+        </div>
       </div>
 
       {/* Profile Section */}
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
-          <User size={24} strokeWidth={2} />
+          <UserIcon size={24} strokeWidth={2} />
           <h2 className={styles.sectionTitle}>Profile Information</h2>
         </div>
         

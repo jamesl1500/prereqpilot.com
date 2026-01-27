@@ -280,6 +280,14 @@ export default function InstitutionsPage({ user, userInstitutions, officialInsti
                                             </span>
                                         )}
                                     </div>
+                                    <div className={styles.cardActions}>
+                                        <button 
+                                            className={styles.viewButton}
+                                            onClick={() => handleViewInstitution(institution.id)}
+                                        >
+                                            View Details
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                         </div>

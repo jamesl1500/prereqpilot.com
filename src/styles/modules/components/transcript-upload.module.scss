@@ -1,5 +1,7 @@
 @use '@/styles/abstracts/variables' as *;
 @use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/buttons';
+@use '@/styles/shared/typography';
 
 .container {
   background: #fff;
@@ -29,19 +31,13 @@
 }
 
 .title {
-  font-family: var(--font-space-mono), monospace;
+  @include typography.heading-mono;
   font-size: 1.25rem;
-  font-weight: 700;
   margin: 0 0 0.25rem 0;
-  color: #000;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
 }
 
 .subtitle {
-  font-family: var(--font-space-grotesk), sans-serif;
-  font-size: 0.875rem;
-  color: #666;
+  @include typography.text-meta;
   margin: 0;
   line-height: 1.5;
 }
@@ -83,24 +79,13 @@
 }
 
 .uploadButton {
+  @include buttons.button-primary;
   display: inline-block;
   padding: 0.875rem 2rem;
-  background: #000;
-  color: #fff;
-  border: 2px solid #000;
-  font-family: var(--font-space-mono), monospace;
-  font-weight: 700;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.2s;
-
+  
   &:hover {
     background: #fff;
     color: #000;
-    box-shadow: 4px 4px 0 #000;
-    transform: translate(-2px, -2px);
   }
 }
 

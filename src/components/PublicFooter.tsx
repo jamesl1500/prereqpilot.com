@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styles from '@/styles/modules/components/public-footer.module.scss';
 
-export function PublicFooter() {
+export default function PublicFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
@@ -41,7 +41,7 @@ export function PublicFooter() {
       </div>
 
       <div className={styles.footerBottom}>
-        <p>&copy; 2024 PrereqPilot. All rights reserved.</p>
+        <p>&copy; 2026 PrereqPilot. All rights reserved.</p>
       </div>
     </footer>
   );

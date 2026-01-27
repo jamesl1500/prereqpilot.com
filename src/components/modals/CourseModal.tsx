@@ -124,23 +124,41 @@ export default function CourseModal({ isOpen, onClose, course, terms, institutio
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={handleClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="course-modal-title"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>
+          <h2 className={styles.title} id="course-modal-title">
             {course ? 'Edit Course' : 'Add Course'}
           </h2>
-          <button className={styles.closeButton} onClick={handleClose}>
+          <button 
+            className={styles.closeButton} 
+            onClick={handleClose}
+            aria-label="Close modal"
+          >
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          {error && <div className={styles.error}>{error}</div>}
+        <form 
+          onSubmit={handleSubmit(onSubmit)} 
+          className={styles.form}
+          aria-label={course ? 'Edit course form' : 'Add course form'}
+        >
+          {error && (
+            <div className={styles.error} role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <div className={styles.formGroup}>
             <label htmlFor="course_title" className={styles.label}>
-              Course Title *
+              Course Title <span aria-hidden="true">*</span>
             </label>
             <input
               id="course_title"
@@ -148,16 +166,21 @@ export default function CourseModal({ isOpen, onClose, course, terms, institutio
               {...register('course_title')}
               className={styles.input}
               placeholder="e.g., Introduction to Computer Science"
+              aria-required="true"
+              aria-invalid={errors.course_title ? 'true' : 'false'}
+              aria-describedby={errors.course_title ? 'course_title-error' : undefined}
             />
             {errors.course_title && (
-              <span className={styles.fieldError}>{errors.course_title.message}</span>
+              <span className={styles.fieldError} id="course_title-error" role="alert">
+                {errors.course_title.message}
+              </span>
             )}
           </div>
 
           <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label htmlFor="credits" className={styles.label}>
-                Credits *
+                Credits <span aria-hidden="true">*</span>
               </label>
               <input
                 id="credits"
@@ -165,17 +188,29 @@ export default function CourseModal({ isOpen, onClose, course, terms, institutio
                 step="0.5"
                 {...register('credits', { valueAsNumber: true })}
                 className={styles.input}
+                aria-required="true"
+                aria-invalid={errors.credits ? 'true' : 'false'}
+                aria-describedby={errors.credits ? 'credits-error' : undefined}
               />
               {errors.credits && (
-                <span className={styles.fieldError}>{errors.credits.message}</span>
+                <span className={styles.fieldError} id="credits-error" role="alert">
+                  {errors.credits.message}
+                </span>
               )}
             </div>
 
             <div className={styles.formGroup}>
               <label htmlFor="term_id" className={styles.label}>
-                Term *
+                Term <span aria-hidden="true">*</span>
               </label>
-              <select id="term_id" {...register('term_id')} className={styles.select}>
+              <select 
+                id="term_id" 
+                {...register('term_id')} 
+                className={styles.select}
+                aria-required="true"
+                aria-invalid={errors.term_id ? 'true' : 'false'}
+                aria-describedby={errors.term_id ? 'term_id-error' : undefined}
+              >
                 <option value="">Select a term</option>
                 {terms.map((term) => (
                   <option key={term.id} value={term.id}>
@@ -184,7 +219,9 @@ export default function CourseModal({ isOpen, onClose, course, terms, institutio
                 ))}
               </select>
               {errors.term_id && (
-                <span className={styles.fieldError}>{errors.term_id.message}</span>
+                <span className={styles.fieldError} id="term_id-error" role="alert">
+                  {errors.term_id.message}
+                </span>
               )}
             </div>
           </div>

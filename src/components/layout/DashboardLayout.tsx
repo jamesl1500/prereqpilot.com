@@ -2,27 +2,20 @@
 
 import type { User } from '@supabase/supabase-js';
 import Header from '@/components/Header';
-import Sidebar from '@/components/shared/Sidebar';
+import { AuthFooter } from '@/components/AuthFooter';
 
 interface DashboardLayoutProps {
-  user: User;
+  user?: User;
   children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
-      <div className="website-layout">
-        {/* Sidebar */}
-        <div className='sidebar-container'>
-          <Sidebar />
-        </div>
-
-        {/* Main Content */}
-        <main className="website-main">{children}</main>
-      </div>
-    </>
+      <main style={{ flex: 1, paddingTop: '70px' }}>{children}</main>
+      <AuthFooter />
+    </div>
   );
 }

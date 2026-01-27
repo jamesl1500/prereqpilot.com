@@ -42,11 +42,24 @@ export default function ManageTermsModal({
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={handleClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="manage-terms-modal-title"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Manage Terms</h2>
-          <button className={styles.closeButton} onClick={handleClose}>
+          <h2 className={styles.title} id="manage-terms-modal-title">
+            Manage Terms
+          </h2>
+          <button 
+            className={styles.closeButton} 
+            onClick={handleClose}
+            aria-label="Close modal"
+            type="button"
+          >
             ×
           </button>
         </div>
@@ -61,8 +74,12 @@ export default function ManageTermsModal({
               <button 
                 className={manageStyles.actionButton}
                 onClick={handleViewTerms}
+                aria-label="View and delete terms"
+                type="button"
               >
-                <span className={manageStyles.buttonIcon}><List /></span>
+                <span className={manageStyles.buttonIcon} aria-hidden="true">
+                  <List />
+                </span>
                 <div className={manageStyles.buttonContent}>
                   <span className={manageStyles.buttonTitle}>View & Delete Terms</span>
                   <span className={manageStyles.buttonSubtitle}>
@@ -74,8 +91,12 @@ export default function ManageTermsModal({
               <button 
                 className={manageStyles.actionButton}
                 onClick={handleAddTermClick}
+                aria-label="Add new term"
+                type="button"
               >
-                <span className={manageStyles.buttonIcon}><Plus /></span>
+                <span className={manageStyles.buttonIcon} aria-hidden="true">
+                  <Plus />
+                </span>
                 <div className={manageStyles.buttonContent}>
                   <span className={manageStyles.buttonTitle}>Add New Term</span>
                   <span className={manageStyles.buttonSubtitle}>
@@ -91,12 +112,16 @@ export default function ManageTermsModal({
               <button 
                 className={manageStyles.backButton}
                 onClick={() => setView('menu')}
+                aria-label="Back to menu"
+                type="button"
               >
                 ← Back
               </button>
               <button 
                 className={manageStyles.addButton}
                 onClick={handleAddTermClick}
+                aria-label="Add new term"
+                type="button"
               >
                 + Add Term
               </button>
@@ -127,6 +152,8 @@ export default function ManageTermsModal({
                           handleClose();
                           onEditTerm(term);
                         }}
+                        aria-label={`Edit ${term.name}`}
+                        type="button"
                       >
                         Edit
                       </button>
@@ -136,6 +163,8 @@ export default function ManageTermsModal({
                           handleClose();
                           onDeleteTerm(term);
                         }}
+                        aria-label={`Delete ${term.name}`}
+                        type="button"
                       >
                         Delete
                       </button>

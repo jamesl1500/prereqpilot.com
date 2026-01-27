@@ -13,17 +13,45 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/public/(.*)$': '<rootDir>/public/$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '^lucide-react$': '<rootDir>/src/__tests__/utils/lucide-react-mock.ts',
   },
   testMatch: [
     '**/__tests__/**/*.[jt]s?(x)',
     '**/?(*.)+(spec|test).[jt]s?(x)',
+    '!**/__tests__/utils/**',
   ],
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/**/__tests__/**',
+    '!src/types/**',
+    '!src/lib/supabase/**',
+    '!src/**/layout.tsx',
+    '!src/**/page.tsx',
+    '!src/app/**/loading.tsx',
+    '!src/app/**/error.tsx',
+    '!src/app/**/not-found.tsx',
   ],
+  coverageThreshold: {
+    global: {
+      branches: 65,
+      functions: 30,
+      lines: 20,
+      statements: 20,
+    },
+  },
+  coverageReporters: ['text', 'lcov', 'html', 'json-summary'],
+  testTimeout: 10000,
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        jsx: 'react-jsx',
+      },
+    },
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

@@ -106,8 +106,8 @@ describe('Course Management Integration Tests', () => {
         result.data.map(c => ({ grade: c.grade, credits: c.credits }))
       );
 
-      // Expected: (4.0*3 + 3.3*4 + 3.7*3) / 10 = 3.64
-      expect(gpa).toBeCloseTo(3.64, 2);
+      // Expected: (4.0*3 + 3.3*4 + 3.7*3) / 10 = 3.63
+      expect(gpa).toBeCloseTo(3.63, 2);
     });
   });
 
@@ -136,10 +136,7 @@ describe('Course Management Integration Tests', () => {
     it('should handle concurrent updates', async () => {
       const mockQueryBuilder = createMockQueryBuilder();
       
-      // Simulate two concurrent update attempts
-      const update1 = updateCourse('course-123', 'user-123', { grade: 'A' }, mockRequest);
-      const update2 = updateCourse('course-123', 'user-123', { grade: 'B' }, mockRequest);
-
+      // Setup mocks BEFORE creating promises
       mockQueryBuilder.single
         .mockResolvedValueOnce({
           data: { id: 'course-123', grade: 'A' },
@@ -151,6 +148,10 @@ describe('Course Management Integration Tests', () => {
         });
 
       mockSupabase.from.mockReturnValue(mockQueryBuilder);
+
+      // Simulate two concurrent update attempts
+      const update1 = updateCourse('course-123', 'user-123', { grade: 'A' }, mockRequest);
+      const update2 = updateCourse('course-123', 'user-123', { grade: 'B' }, mockRequest);
 
       const [result1, result2] = await Promise.all([update1, update2]);
 

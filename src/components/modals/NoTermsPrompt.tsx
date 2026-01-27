@@ -9,27 +9,40 @@ export default function NoTermsPrompt({ isOpen, onClose, onCreateTerm }: NoTerms
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={onClose}
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="no-terms-prompt-title"
+      aria-describedby="no-terms-prompt-message"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.icon}><Calendar size={64} strokeWidth={2} /></div>
-        <h2 className={styles.title}>Terms Required</h2>
-        <p className={styles.message}>
+        <div className={styles.icon}>
+          <Calendar size={64} strokeWidth={2} aria-hidden="true" />
+        </div>
+        <h2 className={styles.title} id="no-terms-prompt-title">
+          Terms Required
+        </h2>
+        <p className={styles.message} id="no-terms-prompt-message">
           Before adding courses, you need to create at least one term (semester).
           Terms help organize your courses by academic period.
         </p>
-        <p className={styles.example}>
+        <p className={styles.example} aria-label="Examples of term names">
           Examples: Fall 2024, Spring 2025, Summer 2025
         </p>
         <div className={styles.actions}>
           <button
             onClick={onClose}
             className={styles.cancelButton}
+            type="button"
           >
             Cancel
           </button>
           <button
             onClick={onCreateTerm}
             className={styles.createButton}
+            type="button"
           >
             Create Your First Term
           </button>

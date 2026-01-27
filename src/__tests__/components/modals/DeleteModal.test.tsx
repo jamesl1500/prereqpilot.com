@@ -210,9 +210,13 @@ describe('DeleteModal Component', () => {
 
   it('should display error message when delete fails', async () => {
     mockedAxios.delete.mockRejectedValue({
-      isAxiosError: true,
       response: { data: { error: 'Failed to delete item' } },
+      isAxiosError: true,
+      toJSON: () => ({}),
+      name: 'AxiosError',
+      message: 'Failed to delete item',
     });
+    mockedAxios.isAxiosError = jest.fn().mockReturnValue(true);
 
     render(
       <DeleteModal

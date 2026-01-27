@@ -19,12 +19,12 @@ export async function GET(
 
   if (!result.success) {
     return NextResponse.json(
-      { error: result.error },
+      { success: false, error: result.error },
       { status: result.error === 'Unauthorized' ? 401 : 400 }
     );
   }
 
-  return NextResponse.json(result.data);
+  return NextResponse.json({ success: true, data: result.data });
 }
 
 export async function POST(
@@ -43,12 +43,12 @@ export async function POST(
     if (!result.success) {
       const errorMessage = 'error' in result ? result.error : 'An error occurred';
       return NextResponse.json(
-        { error: errorMessage },
+        { success: false, error: errorMessage },
         { status: errorMessage === 'Unauthorized' ? 401 : 400 }
       );
     }
 
-    return NextResponse.json(result.data, { status: 201 });
+    return NextResponse.json({ success: true, data: result.data }, { status: 201 });
   } catch {
     return NextResponse.json(
       { error: 'Invalid request body' },

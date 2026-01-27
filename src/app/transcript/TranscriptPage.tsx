@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, Calendar, GraduationCap, Award } from 'lucide-react';
+import { Building2, Calendar, GraduationCap, Award, Eye, Pencil } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import type { Course } from '@/types/course';
 import type { Institution } from '@/types/institution';
 import TranscriptUpload from '@/components/transcript/TranscriptUpload';
 import styles from '@/styles/modules/pages/transcript.module.scss';
+import TutorialTooltip from '@/components/onboarding/TutorialTooltip';
+import Link from 'next/link';
 
 interface TranscriptPageProps {
   user: User;
@@ -25,13 +27,14 @@ interface InstitutionGroup {
 export default function TranscriptPage({ takenCourses, institutions }: TranscriptPageProps) {
   const router = useRouter();
   const [selectedInstitution, setSelectedInstitution] = useState<string>('all');
+  const [transcriptUploadOpen, setTranscriptUploadOpen] = useState(false);
 
   // Group courses by institution
   const groupedByInstitution: InstitutionGroup[] = [];
-  
+
   // Get unique institution IDs from taken courses
   const institutionIds = Array.from(new Set(takenCourses.map(c => c.institution_id).filter(Boolean)));
-  
+
   // Add institutions with courses
   institutionIds.forEach(instId => {
     const institution = institutions.find(i => i.id === instId) || null;
@@ -79,22 +82,22 @@ export default function TranscriptPage({ takenCourses, institutions }: Transcrip
   });
 
   // Calculate overall stats
-  const allCoursesFiltered = selectedInstitution === 'all' 
-    ? takenCourses 
+  const allCoursesFiltered = selectedInstitution === 'all'
+    ? takenCourses
     : takenCourses.filter(c => c.institution_id === selectedInstitution || (!c.institution_id && selectedInstitution === 'none'));
-  
+
   const totalCredits = allCoursesFiltered.reduce((sum, c) => sum + Number(c.credits || 0), 0);
   const coursesWithGrades = allCoursesFiltered.filter(c => c.grade_value !== null && !c.is_retaken);
   const overallGPA = coursesWithGrades.length > 0
     ? coursesWithGrades.reduce((sum, c) => sum + Number(c.grade_value || 0), 0) / coursesWithGrades.length
     : null;
 
-  const filteredGroups = selectedInstitution === 'all' 
-    ? groupedByInstitution 
-    : groupedByInstitution.filter(g => 
-        g.institution?.id === selectedInstitution || 
-        (!g.institution && selectedInstitution === 'none')
-      );
+  const filteredGroups = selectedInstitution === 'all'
+    ? groupedByInstitution
+    : groupedByInstitution.filter(g =>
+      g.institution?.id === selectedInstitution ||
+      (!g.institution && selectedInstitution === 'none')
+    );
 
   return (
     <div className={styles.container}>
@@ -105,10 +108,29 @@ export default function TranscriptPage({ takenCourses, institutions }: Transcrip
             Academic record organized by institution
           </p>
         </div>
+        <div className={styles.headerActions}>
+          {!transcriptUploadOpen ? (
+            <button
+              className={styles.importTranscriptButton}
+              onClick={() => setTranscriptUploadOpen(true)}
+            >
+              Import Transcript
+            </button>
+          ) : (
+            <button
+              className={styles.importTranscriptButton}
+              onClick={() => setTranscriptUploadOpen(false)}
+            >
+              Close Transcript Import
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Transcript Upload */}
-      <TranscriptUpload onImportComplete={() => router.refresh()} />
+      {transcriptUploadOpen && (
+        <TranscriptUpload onImportComplete={() => router.refresh()} />
+      )}
 
       {/* Overall Summary */}
       <div className={styles.summary}>
@@ -184,7 +206,7 @@ export default function TranscriptPage({ takenCourses, institutions }: Transcrip
         <div className={styles.institutions}>
           {filteredGroups.map((group, idx) => (
             <div key={idx} className={styles.institutionBlock}>
-              <div 
+              <div
                 className={styles.institutionHeader}
                 onClick={() => group.institution && router.push(`/institutions/${group.institution.id}`)}
                 style={group.institution ? { cursor: 'pointer' } : undefined}
@@ -219,12 +241,13 @@ export default function TranscriptPage({ takenCourses, institutions }: Transcrip
                     <th>Credits</th>
                     <th>Grade</th>
                     <th>Status</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {group.courses.map((course) => (
-                    <tr 
-                      key={course.id} 
+                    <tr
+                      key={course.id}
                       className={`${styles.tableRow} ${course.is_retaken ? styles.retaken : ''}`}
                     >
                       <td className={styles.termCell}>{course.term?.name || 'N/A'}</td>
@@ -243,6 +266,14 @@ export default function TranscriptPage({ takenCourses, institutions }: Transcrip
                           <span className={styles.completedBadge}>Completed</span>
                         )}
                       </td>
+                      <td className={styles.actionsCell}>
+                        <Link href={`/courses/${course.id}`} className={styles.viewLink}>
+                          <Eye size={16} />
+                        </Link>
+                        <Link href={`/courses/${course.id}/edit`} className={styles.editLink}>
+                          <Pencil size={16} />
+                        </Link>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -251,6 +282,13 @@ export default function TranscriptPage({ takenCourses, institutions }: Transcrip
           ))}
         </div>
       )}
+
+      <TutorialTooltip
+        tutorialType="transcript"
+        title="View Your Transcript"
+        description="Review your courses, grades, and academic progress in your transcript."
+        position="bottom"
+      />
     </div>
   );
 }

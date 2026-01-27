@@ -97,8 +97,10 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
         </button>
 
       <div className={styles.header}>
-        <h1 className={styles.title}>Edit Program</h1>
-        <p className={styles.subtitle}>Update program details and manage requirements</p>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Edit Program</h1>
+          <p className={styles.subtitle}>Update program details and manage requirements</p>
+        </div>
       </div>
 
       {/* Program Details Form */}

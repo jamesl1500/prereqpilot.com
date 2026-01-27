@@ -7,7 +7,7 @@ import axios from 'axios';
 import styles from '@/styles/modules/onboarding/TutorialTooltip.module.scss';
 
 interface TutorialTooltipProps {
-  tutorialType: 'institutions' | 'courses' | 'scenarios';
+  tutorialType: 'institutions' | 'courses' | 'scenarios' | 'academic_plans' | 'transcript';
   title: string;
   description: string;
   position?: 'top' | 'bottom' | 'left' | 'right';
@@ -16,7 +16,9 @@ interface TutorialTooltipProps {
 const STEP_MAPPING: Record<string, { step: string; nextPath?: string }> = {
   institutions: { step: 'institutions', nextPath: '/classes' },
   courses: { step: 'courses', nextPath: '/scenarios' },
-  scenarios: { step: 'scenarios' }
+  scenarios: { step: 'scenarios' },
+  academic_plans: { step: 'academic_plans' },
+  transcript: { step: 'transcript' },
 };
 
 export default function TutorialTooltip({ 

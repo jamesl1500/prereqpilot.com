@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +18,14 @@ const termSchema = z.object({
 
 type TermFormData = z.infer<typeof termSchema>;
 
+function toInputDate(value?: string | null): string {
+  if (!value) return '';
+  // Normalize potential ISO/date strings to input[type="date"] format YYYY-MM-DD
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toISOString().slice(0, 10);
+}
+
 export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,12 +38,32 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
     reset,
   } = useForm<TermFormData>({
     resolver: zodResolver(termSchema),
-    defaultValues: term ? {
-      name: term.name,
-      start_date: term.start_date || '',
-      end_date: term.end_date || '',
-    } : undefined,
+    defaultValues: term
+      ? {
+          name: term.name ?? '',
+          start_date: toInputDate(term.start_date),
+          end_date: toInputDate(term.end_date),
+        }
+      : {
+          name: '',
+          start_date: '',
+          end_date: '',
+        },
   });
+
+  // Ensure form fields populate when opening in edit mode or when term changes
+  useEffect(() => {
+    if (!isOpen) return;
+    if (term) {
+      reset({
+        name: term.name ?? '',
+        start_date: toInputDate(term.start_date),
+        end_date: toInputDate(term.end_date),
+      });
+    } else {
+      reset({ name: '', start_date: '', end_date: '' });
+    }
+  }, [term, isOpen, reset]);
 
   const onSubmit = async (data: TermFormData) => {
     setIsSubmitting(true);
@@ -77,23 +105,41 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={handleClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="term-modal-title"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>
+          <h2 className={styles.title} id="term-modal-title">
             {term ? 'Edit Term' : 'Add Term'}
           </h2>
-          <button className={styles.closeButton} onClick={handleClose}>
+          <button 
+            className={styles.closeButton} 
+            onClick={handleClose}
+            aria-label="Close modal"
+          >
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          {error && <div className={styles.error}>{error}</div>}
+        <form 
+          onSubmit={handleSubmit(onSubmit)} 
+          className={styles.form}
+          aria-label={term ? 'Edit term form' : 'Add term form'}
+        >
+          {error && (
+            <div className={styles.error} role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <div className={styles.formGroup}>
             <label htmlFor="name" className={styles.label}>
-              Term Name *
+              Term Name <span aria-hidden="true">*</span>
             </label>
             <input
               id="name"
@@ -101,10 +147,14 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
               {...register('name')}
               className={styles.input}
               placeholder="e.g., Fall 2024, Spring 2025"
-              value={term ? term.name : ""}
+              aria-required="true"
+              aria-invalid={errors.name ? 'true' : 'false'}
+              aria-describedby={errors.name ? 'name-error' : undefined}
             />
             {errors.name && (
-              <span className={styles.fieldError}>{errors.name.message}</span>
+              <span className={styles.fieldError} id="name-error" role="alert">
+                {errors.name.message}
+              </span>
             )}
           </div>
 
@@ -118,7 +168,6 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
                 type="date"
                 {...register('start_date')}
                 className={styles.input}
-                value={term ? term.start_date || "" : ""}
               />
             </div>
 
@@ -131,7 +180,6 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
                 type="date"
                 {...register('end_date')}
                 className={styles.input}
-                value={term ? term.end_date || "" : ""}
               />
             </div>
           </div>

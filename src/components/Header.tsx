@@ -1,16 +1,27 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { PenTool } from 'lucide-react';
+import { PenTool, ChevronDown } from 'lucide-react';
 import styles from '@/styles/modules/components/Header.module.scss';
 import { NavLink } from '@/types/shared/header';
 
 export default function Header() {
     const router = useRouter();
+    const [showDropdown, setShowDropdown] = useState(false);
     
-    const links: NavLink[] = [
+    const primaryLinks: NavLink[] = [
+        { href: '/dashboard', label: 'Dashboard' },
+        { href: '/programs', label: 'Programs' },
+        { href: '/plans', label: 'Plans' },
+    ];
+
+    const dropdownLinks: NavLink[] = [
+        { href: '/classes', label: 'Classes' },
+        { href: '/transcript', label: 'Transcript' },
+        { href: '/institutions', label: 'Institutions' },
+        { href: '/scenarios', label: 'Scenarios' },
         { href: '/settings', label: 'Settings' },
     ];
 
@@ -38,7 +49,7 @@ export default function Header() {
                 </Link>
 
                 <nav className={styles.nav}>
-                    {links.map((link) => (
+                    {primaryLinks.map((link) => (
                         <Link
                             key={link.href}
                             href={link.href}
@@ -47,6 +58,31 @@ export default function Header() {
                             {link.label}
                         </Link>
                     ))}
+                    
+                    <div 
+                        className={styles.dropdown}
+                        onMouseEnter={() => setShowDropdown(true)}
+                        onMouseLeave={() => setShowDropdown(false)}
+                    >
+                        <button className={styles.dropdownTrigger}>
+                            More
+                            <ChevronDown size={16} />
+                        </button>
+                        {showDropdown && (
+                            <div className={styles.dropdownMenu}>
+                                {dropdownLinks.map((link) => (
+                                    <Link
+                                        key={link.href}
+                                        href={link.href}
+                                        className={styles.dropdownItem}
+                                    >
+                                        {link.label}
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
                     <button
                         onClick={handleLogout}
                         className={`${styles.navLink} ${styles.actionLink}`}

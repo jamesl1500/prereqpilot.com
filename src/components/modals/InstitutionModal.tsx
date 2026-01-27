@@ -105,23 +105,41 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={handleClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="institution-modal-title"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>
+          <h2 className={styles.title} id="institution-modal-title">
             {institution ? 'Edit Institution' : 'Add Institution'}
           </h2>
-          <button className={styles.closeButton} onClick={handleClose}>
+          <button 
+            className={styles.closeButton} 
+            onClick={handleClose}
+            aria-label="Close modal"
+          >
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          {error && <div className={styles.error}>{error}</div>}
+        <form 
+          onSubmit={handleSubmit(onSubmit)} 
+          className={styles.form}
+          aria-label={institution ? 'Edit institution form' : 'Add institution form'}
+        >
+          {error && (
+            <div className={styles.error} role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <div className={styles.formGroup}>
             <label htmlFor="name" className={styles.label}>
-              Institution Name *
+              Institution Name <span aria-hidden="true">*</span>
             </label>
             <input
               id="name"
@@ -129,15 +147,20 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
               {...register('name')}
               className={styles.input}
               placeholder="e.g., University of California, Berkeley"
+              aria-required="true"
+              aria-invalid={errors.name ? 'true' : 'false'}
+              aria-describedby={errors.name ? 'name-error' : undefined}
             />
             {errors.name && (
-              <span className={styles.fieldError}>{errors.name.message}</span>
+              <span className={styles.fieldError} id="name-error" role="alert">
+                {errors.name.message}
+              </span>
             )}
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="short_code" className={styles.label}>
-              Short Code *
+              Short Code <span aria-hidden="true">*</span>
             </label>
             <input
               id="short_code"
@@ -145,9 +168,13 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
               {...register('short_code')}
               className={styles.input}
               placeholder="e.g., UCB"
+              aria-required="true"
+              aria-invalid={errors.short_code ? 'true' : 'false'}
+              aria-describedby={errors.short_code ? 'short_code-error' : undefined}
             />
             {errors.short_code && (
-              <span className={styles.fieldError}>{errors.short_code.message}</span>
+              <span className={styles.fieldError} id="short_code-error" role="alert">
+                {errors.short_code.message}</span>
             )}
           </div>
 

@@ -36,13 +36,23 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Get user role from metadata
+  const userRole = user?.user_metadata?.role;
+
   // Protected routes check
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/login') &&
     !request.nextUrl.pathname.startsWith('/signup') &&
     !request.nextUrl.pathname.startsWith('/forgot-password') &&
-    !request.nextUrl.pathname.startsWith('/auth')
+    !request.nextUrl.pathname.startsWith('/auth') &&
+    !request.nextUrl.pathname.startsWith('/about') &&
+    !request.nextUrl.pathname.startsWith('/contact') &&
+    !request.nextUrl.pathname.startsWith('/help') &&
+    !request.nextUrl.pathname.startsWith('/privacy') &&
+    !request.nextUrl.pathname.startsWith('/terms') &&
+    !request.nextUrl.pathname.startsWith('/forinstitutions') &&
+    request.nextUrl.pathname !== '/'
   ) {
     // No user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
@@ -50,7 +60,45 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // If user is authenticated and trying to access login/signup, redirect to dashboard
+  // Role-based access control for institution admins
+  if (user && userRole === 'institution_admin') {
+    const path = request.nextUrl.pathname;
+    
+    // Student-only pages that institution admins cannot access
+    const studentOnlyPages = [
+      '/dashboard',
+      '/settings',
+      '/classes',
+      '/programs',
+      '/scenarios',
+      '/transcript',
+      '/browse-programs',
+      '/institutions'
+    ];
+    
+    // Check if trying to access a student-only page
+    const isAccessingStudentPage = studentOnlyPages.some(page => path.startsWith(page));
+    
+    if (isAccessingStudentPage) {
+      const url = request.nextUrl.clone();
+      url.pathname = '/institution/dashboard';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Role-based access control for students (prevent access to institution pages)
+  if (user && userRole !== 'institution_admin') {
+    const path = request.nextUrl.pathname;
+    
+    // Institution-only pages that students cannot access
+    if (path.startsWith('/institution') && path !== '/institutions') {
+      const url = request.nextUrl.clone();
+      url.pathname = '/dashboard';
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // If user is authenticated and trying to access login/signup, redirect based on role
   if (
     user &&
     (request.nextUrl.pathname.startsWith('/login') ||
@@ -58,7 +106,7 @@ export async function updateSession(request: NextRequest) {
      request.nextUrl.pathname.startsWith('/forgot-password'))
   ) {
     const url = request.nextUrl.clone();
-    url.pathname = '/dashboard';
+    url.pathname = userRole === 'institution_admin' ? '/institution/dashboard' : '/dashboard';
     return NextResponse.redirect(url);
   }
 

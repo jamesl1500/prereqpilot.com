@@ -1,0 +1,632 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
+@use '@/styles/shared/typography';
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.backButton {
+  @include buttons.button-back;
+  margin-bottom: 2rem;
+}
+
+.header {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #000;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: #000;
+  color: #fff;
+  border: 3px solid #000;
+}
+
+.title {
+  @include typography.heading-mono;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.subtitle {
+  @include typography.text-meta;
+  font-size: 0.9rem;
+  margin: 0.5rem 0 0 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #000;
+  overflow-x: auto;
+  height: auto;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  margin-bottom: -2px;
+  color: #666;
+  font-weight: 600;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include smooth-transition(all);
+  white-space: nowrap;
+
+  &:hover {
+    color: #fff;
+    background: #000;
+  }
+
+  &.active {
+    color: #fff;
+    background: #000;
+  }
+}
+
+.errorBox {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: #fee;
+  border: 2px solid #dc2626;
+  color: #dc2626;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+}
+
+.formContainer {
+  background: #fff;
+  border: 2px solid #000;
+  padding: 2rem;
+}
+
+.tabContent {
+  min-height: 400px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.input {
+  padding: 0.75rem 1rem;
+  color: #000;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  background: #fff;
+  @include smooth-transition(all);
+  
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  &:disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+  }
+}
+
+.textarea {
+  padding: 0.75rem 1rem;
+  color: #000;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  background: #fff;
+  resize: vertical;
+  min-height: 100px;
+  @include smooth-transition(all);
+  
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  &:disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+  }
+}
+
+.fieldError {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #dc2626;
+}
+
+.fieldHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #999;
+}
+
+// Courses Tab Styles
+.coursesHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.coursesTitle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.quickAddSection {
+  background: #f9f9f9;
+  border: 2px solid #000;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  color: #000;
+}
+
+.quickAddTitle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.5rem;
+}
+
+.quickAddHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0 0 1.5rem;
+}
+
+.catalogGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.catalogCourseCard {
+  background: #fff;
+  border: 2px solid #000;
+  padding: 1rem;
+  text-align: left;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:hover {
+    background: #000;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+
+    .catalogCourseCode,
+    .catalogCourseTitle,
+    .catalogCourseCredits {
+      color: #fff;
+    }
+  }
+}
+
+.catalogCourseCode {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  color: #000;
+}
+
+.catalogCourseTitle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  color: #000;
+}
+
+.catalogCourseCredits {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.7;
+  color: #000;
+}
+
+.viewMoreHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #666;
+  text-align: center;
+  margin: 0;
+}
+
+.courseForm {
+  background: #f9f9f9;
+  border: 2px solid #000;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.catalogSelector {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #ddd;
+}
+
+.select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #000;
+  background: #fff;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  color: #000;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+  }
+}
+
+.fieldHint {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+.courseFormTitle {
+  margin: 0 0 1.5rem 0;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.courseFormGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    width: auto;
+    cursor: pointer;
+  }
+}
+
+.courseFormActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.saveButton {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include smooth-transition(all);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+}
+
+.cancelButton {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include smooth-transition(all);
+  
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.coursesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+  border: 3px dashed #ccc;
+  background: #f9f9f9;
+  
+  svg {
+    color: #999;
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    margin: 0;
+    font-family: var(--font-space-mono), monospace;
+    font-size: 1.1rem;
+    color: #666;
+  }
+}
+
+.courseCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #fff;
+  border: 2px solid #000;
+  @include smooth-transition(all);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+}
+
+.courseInfo {
+  flex: 1;
+}
+
+.courseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.courseTitle {
+  margin: 0;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.courseBadges {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.categoryBadge {
+  padding: 0.25rem 0.75rem;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.courseDetails {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.courseDescription {
+  margin: 0.5rem 0 0 0;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+.courseActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.editButton,
+.deleteButton {
+  padding: 0.5rem;
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:hover {
+    background: #000;
+    color: #fff;
+  }
+}
+
+// Meta Tab Styles
+.metaInfo {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metaField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metaLabel {
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #666;
+}
+
+.metaValue {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background: #f9f9f9;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  color: #000;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #000;
+}
+
+.submitButton {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include smooth-transition(all);
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+}

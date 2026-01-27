@@ -151,25 +151,42 @@ export default function OnboardingModal({ isOpen, currentStep, onComplete }: Onb
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay}>
+    <div 
+      className={styles.overlay}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="onboarding-modal-title"
+      aria-describedby="onboarding-modal-description"
+    >
       <div className={styles.modal}>
         <div className={styles.header}>
           <div className={styles.progress}>
-            <div className={styles.progressBar}>
+            <div 
+              className={styles.progressBar} 
+              role="progressbar" 
+              aria-valuenow={activeStepIndex + 1} 
+              aria-valuemin={1} 
+              aria-valuemax={ONBOARDING_STEPS.length}
+              aria-label="Onboarding progress"
+            >
               <div 
                 className={styles.progressFill} 
                 style={{ width: `${((activeStepIndex + 1) / ONBOARDING_STEPS.length) * 100}%` }}
               />
             </div>
-            <div className={styles.progressText}>
+            <div className={styles.progressText} aria-live="polite">
               Step {activeStepIndex + 1} of {ONBOARDING_STEPS.length}
             </div>
           </div>
         </div>
 
         <div className={styles.content}>
-          <h2 className={styles.title}>{activeStep.title}</h2>
-          <p className={styles.description}>{activeStep.description}</p>
+          <h2 className={styles.title} id="onboarding-modal-title">
+            {activeStep.title}
+          </h2>
+          <p className={styles.description} id="onboarding-modal-description">
+            {activeStep.description}
+          </p>
         </div>
 
         <div className={styles.actions}>
@@ -177,6 +194,8 @@ export default function OnboardingModal({ isOpen, currentStep, onComplete }: Onb
             className={styles.skipButton}
             onClick={handleSkip}
             disabled={isUpdating}
+            type="button"
+            aria-label="Skip tutorial"
           >
             Skip Tutorial
           </button>
@@ -186,6 +205,8 @@ export default function OnboardingModal({ isOpen, currentStep, onComplete }: Onb
               className={styles.backButton}
               onClick={() => setActiveStepIndex(activeStepIndex - 1)}
               disabled={isUpdating}
+              type="button"
+              aria-label="Go back to previous step"
             >
               Back
             </button>
@@ -195,6 +216,8 @@ export default function OnboardingModal({ isOpen, currentStep, onComplete }: Onb
             className={styles.actionButton}
             onClick={handleAction}
             disabled={isUpdating}
+            type="button"
+            aria-busy={isUpdating ? 'true' : 'false'}
           >
             {isUpdating ? 'Loading...' : activeStep.actionLabel}
           </button>

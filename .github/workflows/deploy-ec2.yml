@@ -28,9 +28,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      # Optional: basic sanity check (if you have tests)
-      # - name: Test
-      #   run: npm test
+      - name: Test
+        run: npm test
 
       - name: Restart service
         run: |

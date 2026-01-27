@@ -3,6 +3,7 @@
  */
 
 import { SupabaseClient } from '@supabase/supabase-js';
+import { NextRequest } from 'next/server';
 
 /**
  * Creates a mock Supabase client for testing
@@ -47,10 +48,22 @@ export function createMockQueryBuilder() {
 }
 
 /**
- * Creates a mock request object
+ * Creates a mock Request object for testing
+ * Since most tests just pass this to mocked functions, we return a minimal mock
  */
-export function createMockRequest(options?: RequestInit): Request {
-  return new Request('http://localhost:3000', options);
+export function createMockRequest(
+  url: string = 'http://localhost:3000',
+  options?: RequestInit
+): any {
+  return {
+    url,
+    method: options?.method || 'GET',
+    headers: new Map(Object.entries(options?.headers || {})),
+    body: options?.body,
+    json: () => Promise.resolve(JSON.parse(options?.body as string || '{}')),
+    text: () => Promise.resolve(options?.body || ''),
+    clone: function() { return this; },
+  };
 }
 
 /**
