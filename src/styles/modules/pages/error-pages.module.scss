@@ -1,0 +1,236 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+
+// Shared styles for all error pages (404, 500)
+.container {
+  min-height: 100vh;
+  padding-top: 70px; // Account for fixed header
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $bg-light;
+  padding-left: $spacing-lg;
+  padding-right: $spacing-lg;
+  padding-bottom: $spacing-lg;
+}
+
+.content {
+  max-width: 700px;
+  width: 100%;
+  background-color: $color-white;
+  padding: $spacing-2xl;
+  border: 2px solid $color-black;
+  text-align: center;
+
+  @include mobile {
+    padding: $spacing-xl;
+  }
+}
+
+.errorCode {
+  font-family: $font-mono;
+  font-size: 8rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: $spacing-lg;
+  color: #000;
+
+  @include mobile {
+    font-size: 5rem;
+  }
+}
+
+.title {
+  font-family: $font-heading;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: $color-text-dark;
+  margin-bottom: $spacing-md;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+
+  @include mobile {
+    font-size: 2rem;
+  }
+}
+
+.description {
+  font-size: 1.125rem;
+  color: $color-text-light;
+  margin-bottom: $spacing-xl;
+  line-height: 1.6;
+}
+
+// Actions buttons
+.actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: $spacing-xl;
+}
+
+.primaryButton {
+  padding: $spacing-md $spacing-xl;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: $color-black;
+  color: $color-white;
+  border: 2px solid $color-black;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  font-family: $font-mono;
+
+  &:hover {
+    background-color: $color-white;
+    color: $color-black;
+  }
+}
+
+.secondaryButton {
+  padding: $spacing-md $spacing-xl;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: $color-white;
+  color: $color-black;
+  border: 2px solid $color-black;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  font-family: $font-mono;
+
+  &:hover {
+    background-color: $color-black;
+    color: $color-white;
+  }
+}
+
+.tertiaryButton {
+  padding: $spacing-md $spacing-xl;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background-color: $color-white;
+  color: #000;
+  border: 2px solid #000;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s;
+  font-family: $font-mono;
+
+  &:hover {
+    background-color: #000;
+    color: $color-white;
+  }
+}
+
+// Suggestions list (404 page)
+.suggestions {
+  text-align: left;
+  background-color: $bg-light;
+  padding: $spacing-lg;
+  border: 2px solid $color-black;
+  margin-bottom: $spacing-xl;
+
+  h2 {
+    font-family: $font-mono;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: $spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin-bottom: $spacing-sm;
+
+    a {
+      color: #000;
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.2s;
+
+      &:hover {
+        border-color: #000;
+      }
+    }
+  }
+}
+
+// Error details (500 page - development only)
+.errorDetails {
+  text-align: left;
+  background-color: #fef2f2;
+  border: 2px solid #ef4444;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  h3 {
+    font-family: $font-mono;
+    font-size: 0.875rem;
+    color: #ef4444;
+    margin-bottom: $spacing-sm;
+    text-transform: uppercase;
+  }
+
+  pre {
+    font-family: $font-mono;
+    font-size: 0.875rem;
+    color: $color-text-dark;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+.digest {
+  font-family: $font-mono;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: $spacing-sm;
+}
+
+// Info section (500 page)
+.info {
+  text-align: left;
+  background-color: $bg-light;
+  padding: $spacing-lg;
+  border: 2px solid $color-black;
+
+  h2 {
+    font-family: $font-mono;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: $spacing-md;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  ul {
+    list-style: disc;
+    padding-left: $spacing-lg;
+    margin: 0;
+
+    li {
+      margin-bottom: $spacing-sm;
+      color: $color-text-light;
+      line-height: 1.6;
+    }
+  }
+}
