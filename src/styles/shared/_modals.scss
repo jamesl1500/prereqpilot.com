@@ -1,0 +1,92 @@
+@use '@/styles/abstracts/variables' as *;
+
+// Modal Overlay
+@mixin modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-lg;
+}
+
+// Modal Container
+@mixin modal-container {
+  background: #fff;
+  border: 2px solid #000;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 8px 8px 0 #000;
+
+  @media (max-width: $breakpoint-mobile) {
+    max-height: 95vh;
+  }
+}
+
+// Modal Header
+@mixin modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-2xl;
+  border-bottom: 2px solid #000;
+}
+
+// Modal Title
+@mixin modal-title {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+  color: #000;
+}
+
+// Modal Body
+@mixin modal-body {
+  padding: $spacing-2xl;
+}
+
+// Modal Form (inside modal body)
+@mixin modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+// Export as classes
+.modalOverlay,
+.overlay {
+  @include modal-overlay;
+}
+
+.modal,
+.modalContent {
+  @include modal-container;
+}
+
+.modalHeader,
+.header {
+  @include modal-header;
+}
+
+.modalTitle,
+.title {
+  @include modal-title;
+}
+
+.modalBody {
+  @include modal-body;
+}
+
+.form {
+  @include modal-form;
+}

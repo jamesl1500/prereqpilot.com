@@ -1,0 +1,74 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/shared/modals' as *;
+@use '@/styles/shared/forms' as *;
+@use '@/styles/shared/buttons' as *;
+
+// Use shared modal styles
+.overlay {
+  @include modal-overlay;
+}
+
+.modal {
+  @include modal-container;
+}
+
+.header {
+  @include modal-header;
+}
+
+.title {
+  @include modal-title;
+}
+
+.closeButton {
+  @include button-close;
+}
+
+.form {
+  @include modal-form;
+  padding: $spacing-2xl;
+}
+
+.error {
+  @include form-error;
+}
+
+.formGroup {
+  @include form-group;
+  margin-bottom: $spacing-xl;
+}
+
+.formRow {
+  @include form-row;
+}
+
+.label {
+  @include form-label;
+}
+
+.input {
+  @include input-base;
+}
+
+.select {
+  @include input-select;
+}
+
+.textarea {
+  @include input-textarea;
+}
+
+.actions {
+  @include form-actions;
+}
+
+.cancelButton {
+  @include button-secondary;
+  flex: 1;
+}
+
+.submitButton {
+  @include button-primary;
+  flex: 1;
+}
+

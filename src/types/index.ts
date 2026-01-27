@@ -7,6 +7,20 @@ export type { Institution, InstitutionData } from './institution';
 // Program types
 export type { Program } from './program';
 
+// Plan types
+export type {
+  AcademicPlan,
+  AcademicPlanWithDetails,
+  PlanTerm,
+  PlanTermWithCourses,
+  PlannedCourse,
+  PlannedCoursePrerequisite,
+  CreateAcademicPlanData,
+  CreatePlanTermData,
+  CreatePlannedCourseData,
+  TermType,
+} from './plan';
+
 // Scenario types
 export type { Scenario } from './scenario';
 

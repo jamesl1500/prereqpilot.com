@@ -1,0 +1,186 @@
+@use '@/styles/abstracts/variables' as *;
+
+// Form Group
+@mixin form-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+// Form Row (side by side inputs)
+@mixin form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Label
+@mixin form-label {
+  display: block;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000;
+  margin-bottom: $spacing-sm;
+}
+
+// Input Base
+@mixin input-base {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: #fff;
+  color: #000;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #000;
+    transform: translate(-2px, -2px);
+  }
+
+  &:disabled {
+    background: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+// Select
+@mixin input-select {
+  @include input-base;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23000' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 3rem;
+}
+
+// Textarea
+@mixin input-textarea {
+  @include input-base;
+  resize: vertical;
+  min-height: 80px;
+  font-family: var(--font-space-mono), monospace;
+}
+
+// Checkbox Label
+@mixin checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  cursor: pointer;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.875rem;
+
+  input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+}
+
+// Form Actions (button container at bottom of forms)
+@mixin form-actions {
+  display: flex;
+  gap: $spacing-lg;
+  margin-top: $spacing-2xl;
+  padding-top: $spacing-2xl;
+  border-top: 2px solid #000;
+
+  @media (max-width: $breakpoint-mobile) {
+    flex-direction: column;
+  }
+}
+
+// Error Message
+@mixin form-error {
+  background: #fee;
+  border: 2px solid #f00;
+  color: #c00;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.875rem;
+}
+
+// Success Message
+@mixin form-success {
+  background: #efe;
+  border: 2px solid #0c0;
+  color: #060;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-xl;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.875rem;
+}
+
+// Help Text
+@mixin form-help {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: $spacing-xs;
+  font-family: var(--font-space-mono), monospace;
+}
+
+// Export as classes
+.formGroup {
+  @include form-group;
+}
+
+.formRow {
+  @include form-row;
+}
+
+.label {
+  @include form-label;
+}
+
+.input {
+  @include input-base;
+}
+
+.select {
+  @include input-select;
+}
+
+.textarea {
+  @include input-textarea;
+}
+
+.checkboxLabel {
+  @include checkbox-label;
+}
+
+.formActions {
+  @include form-actions;
+}
+
+.modalActions {
+  @include form-actions;
+}
+
+.error {
+  @include form-error;
+}
+
+.success {
+  @include form-success;
+}
+
+.helpText {
+  @include form-help;
+}

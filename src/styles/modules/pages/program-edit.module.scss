@@ -1,29 +1,17 @@
 @use '@/styles/abstracts/variables' as *;
 @use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
+@use '@/styles/shared/typography';
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  @include layout.page-container;
+  padding: $spacing-3xl;
 }
 
 .backButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: $color-white;
-  border: 2px solid $color-black;
-  cursor: pointer;
-  font-family: $font-mono;
-  font-size: $font-size-sm;
+  @include buttons.button-back;
   margin-bottom: 2rem;
-  color: #000;
-  
-  &:hover {
-    background: $color-black;
-    color: $color-white;
-  }
 }
 
 .header {
@@ -37,8 +25,8 @@
   }
   
   .subtitle {
+    @include typography.text-meta;
     font-size: $font-size-lg;
-    color: $color-text-light;
   }
 }
 

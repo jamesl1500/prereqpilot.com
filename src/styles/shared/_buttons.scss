@@ -1,0 +1,197 @@
+@use '@/styles/abstracts/variables' as *;
+
+// Brutalist Button Base
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid #000;
+  text-decoration: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Primary Button (Black background)
+@mixin button-primary {
+  @include button-base;
+  background: #000;
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 #000;
+  }
+
+  &:active:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 #000;
+  }
+}
+
+// Secondary Button (White background)
+@mixin button-secondary {
+  @include button-base;
+  background: #fff;
+  color: #000;
+
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 #000;
+  }
+
+  &:active:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 #000;
+  }
+}
+
+// Icon Button
+@mixin button-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-sm;
+  background: transparent;
+  border: 2px solid transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    border-color: #000;
+    color: #000;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Close Button (for modals)
+@mixin button-close {
+  background: none;
+  border: 2px solid #000;
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  color: #000;
+
+  &:hover {
+    background: #000;
+    color: #fff;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 #000;
+  }
+
+  &:active {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 #000;
+  }
+}
+
+// Back Button
+@mixin button-back {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s;
+  text-decoration: none;
+
+  &:hover {
+    background: #000;
+    color: #fff;
+    box-shadow: 4px 4px 0 #000;
+    transform: translate(-2px, -2px);
+  }
+
+  &:active {
+    box-shadow: 2px 2px 0 #000;
+    transform: translate(-1px, -1px);
+  }
+}
+
+// Add Button (with icon)
+@mixin button-add {
+  @include button-primary;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Danger Button (Red)
+@mixin button-danger {
+  @include button-base;
+  background: #fff;
+  color: #c00;
+  border-color: #f00;
+
+  &:hover:not(:disabled) {
+    background: #f00;
+    color: #fff;
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 #f00;
+  }
+
+  &:active:not(:disabled) {
+    transform: translate(-1px, -1px);
+    box-shadow: 2px 2px 0 #f00;
+  }
+}
+
+// Export as classes
+.primaryButton {
+  @include button-primary;
+}
+
+.secondaryButton {
+  @include button-secondary;
+}
+
+.iconButton {
+  @include button-icon;
+}
+
+.closeButton {
+  @include button-close;
+}
+
+.backButton {
+  @include button-back;
+}
+
+.addButton {
+  @include button-add;
+}
+
+.dangerButton {
+  @include button-danger;
+}

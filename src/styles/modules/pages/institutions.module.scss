@@ -1,67 +1,26 @@
 @use '@/styles/abstracts/variables' as *;
 @use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
 
 .container {
-  padding: $spacing-3xl;
-  background: #f5f5f5;
-  min-height: calc(100vh - 70px);
-  
-  @include mobile {
-    padding: $spacing-xl;
-  }
+  @include layout.page-container;
 }
 
 .header {
-  @include flex-between;
-  margin-bottom: $spacing-3xl;
-  background: #fff;
-  border: 2px solid #000;
-  padding: $spacing-xl;
-  
-  @include mobile {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $spacing-lg;
-  }
+  @include layout.page-header;
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: $spacing-xs;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  font-family: var(--font-space-mono), monospace;
-  
-  @include mobile {
-    font-size: 1.5rem;
-  }
+  @include layout.page-title;
 }
 
 .subtitle {
-  font-size: $font-size-sm;
-  color: #333;
+  @include layout.page-subtitle;
 }
 
 .addButton {
-  padding: 0.875rem 1.5rem;
-  font-family: var(--font-space-mono), monospace;
-  font-weight: 700;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border: 2px solid #000;
-  background: #000;
-  color: #fff;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  &:hover:not(:disabled) {
-    background: #1f1f1f;
-    transform: translateY(-2px);
-    box-shadow: 4px 4px 0 #666;
-  }
+  @include buttons.button-primary;
 }
 
 .filters {

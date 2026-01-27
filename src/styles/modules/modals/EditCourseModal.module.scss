@@ -1,0 +1,60 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/shared/modals' as *;
+@use '@/styles/shared/forms' as *;
+@use '@/styles/shared/buttons' as *;
+
+.modalOverlay {
+  @include modal-overlay;
+}
+
+.modalContent {
+  @include modal-container;
+  padding: $spacing-2xl;
+  max-width: 500px;
+}
+
+.modalTitle {
+  @include modal-title;
+  margin: 0 0 $spacing-xl 0;
+}
+
+.formGroup {
+  @include form-group;
+  margin-bottom: $spacing-xl;
+
+  label {
+    @include form-label;
+  }
+}
+
+.formRow {
+  @include form-row;
+
+  .formGroup {
+    flex: 1;
+  }
+}
+
+.input {
+  @include input-base;
+}
+
+.modalActions {
+  @include form-actions;
+}
+
+.primaryButton {
+  @include button-primary;
+  flex: 1;
+}
+
+.secondaryButton {
+  @include button-secondary;
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .modalContent {
+    padding: $spacing-xl;
+  }
+}

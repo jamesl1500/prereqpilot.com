@@ -2,11 +2,11 @@
 @use '@/styles/abstracts/mixins' as *;
 
 .container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: $spacing-3xl;
+  padding: $spacing-3xl 0;
   background: #f5f5f5;
   min-height: calc(100vh - 70px);
+  max-width: 1000px;
+  margin: 0 auto;
   
   @include mobile {
     padding: $spacing-xl;

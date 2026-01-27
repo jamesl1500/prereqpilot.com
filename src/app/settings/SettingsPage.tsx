@@ -7,7 +7,7 @@ import axios from 'axios';
 import styles from '@/styles/modules/pages/settings.module.scss';
 
 interface SettingsPageProps {
-  user: any;
+  user: User;
 }
 
 export default function SettingsPage({ user }: SettingsPageProps) {
@@ -130,8 +130,10 @@ export default function SettingsPage({ user }: SettingsPageProps) {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.title}>Settings</h1>
-        <p className={styles.subtitle}>Manage your account settings and preferences</p>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>Settings</h1>
+          <p className={styles.subtitle}>Manage your account settings and preferences</p>
+        </div>
       </div>
 
       {/* Profile Section */}

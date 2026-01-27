@@ -1,5 +1,7 @@
 @use '@/styles/abstracts/variables' as *;
 @use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/forms';
+@use '@/styles/shared/typography';
 
 .formWrapper {
   width: 100%;
@@ -13,13 +15,9 @@
 }
 
 .title {
+  @include typography.heading-mono;
   font-size: 2rem;
-  font-weight: 700;
-  color: #000;
   margin-bottom: $spacing-xs;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-family: var(--font-space-mono), monospace;
 }
 
 .subtitle {
@@ -35,17 +33,11 @@
 }
 
 .error {
-  padding: $spacing-md $spacing-lg;
-  background-color: #fee;
-  border: 1px solid #fcc;
-  border-radius: 4px;
-  color: #c33;
-  font-size: $font-size-sm;
+  @include forms.form-error;
 }
 
 .formGroup {
-  @include flex-column;
-  gap: $spacing-xs;
+  @include forms.form-group;
 }
 
 .labelRow {
@@ -54,40 +46,30 @@
 }
 
 .label {
-  font-size: $font-size-sm;
-  font-weight: 500;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
+  @include forms.form-label;
 }
 
 .forgotLink {
   font-size: $font-size-sm;
-  color: #4f46e5;
+  color: #000;
   text-decoration: none;
   font-weight: 500;
   @include smooth-transition(color);
   
   &:hover {
-    color: #4338ca;
+    color: #000;
     text-decoration: underline;
   }
 }
 
 .input {
-  padding: 0.875rem 1rem;
-  border: 2px solid #000;
-  border-radius: 0;
-  font-size: 0.95rem;
-  font-family: inherit;
-  background: #fff;
-  color: #000;
-  @include smooth-transition(all);
+  @include forms.input-base;
   
-  &:focus {
-    outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  &:autofill {
+    background-color: #fff;
+    box-shadow: 0 0 0px 1000px #fff inset;
+    -webkit-text-fill-color: #000;
+    transition: background-color 5000s ease-in-out 0s;
   }
 
   &::placeholder {
@@ -222,13 +204,13 @@
 }
 
 .link {
-  color: #4f46e5;
-  text-decoration: none;
+  color: #000;
+  text-decoration: underline;
   font-weight: 600;
   @include smooth-transition(color);
   
   &:hover {
-    color: #4338ca;
+    color: #000;
     text-decoration: underline;
   }
 }

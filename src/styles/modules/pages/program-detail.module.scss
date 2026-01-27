@@ -1,33 +1,16 @@
 @use '@/styles/abstracts/variables' as *;
 @use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
 
 .container {
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  @include layout.page-container;
+  padding: $spacing-3xl;
 }
 
 .backButton {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: $color-white;
-  color: $color-black;
-  border: 2px solid $color-black;
-  font-family: $font-mono;
-  font-size: $font-size-sm;
-  cursor: pointer;
+  @include buttons.button-back;
   margin-bottom: 2rem;
-  transition: all 0.2s ease;
-  color: #000;
-
-  &:hover {
-    background: $color-black;
-    color: $color-white;
-    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
-    transform: translateY(-2px);
-  }
 }
 
 .header {

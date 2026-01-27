@@ -1,0 +1,119 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+
+.container {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+.leftPanel {
+  flex: 1;
+  background: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: $spacing-3xl;
+  
+  @media (max-width: 968px) {
+    display: none;
+  }
+}
+
+.contentSection {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2xl;
+  margin-top: 20vh;
+}
+
+.heading {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  font-family: var(--font-space-mono), monospace;
+  margin-bottom: $spacing-lg;
+}
+
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-md;
+}
+
+.featureIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.featureContent {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.featureTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.featureDescription {
+  font-size: 0.95rem;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.quoteSection {
+  border-top: 1px solid #333;
+  padding-top: $spacing-xl;
+  margin-bottom: $spacing-xl;
+}
+
+.quote {
+  font-size: 1.125rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: $spacing-md;
+  color: #ccc;
+}
+
+.quoteAuthor {
+  font-size: 0.95rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.rightPanel {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-2xl;
+  
+  @media (max-width: 968px) {
+    flex: 1;
+    padding: $spacing-xl $spacing-lg;
+  }
+}
+
+.formContainer {
+  width: 100%;
+  max-width: 480px;
+}

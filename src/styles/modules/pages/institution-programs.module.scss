@@ -1,8 +1,11 @@
 @use '@/styles/abstracts/variables' as *;
 @use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
+@use '@/styles/shared/typography';
 
 .container {
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 2rem;
 }
@@ -34,41 +37,22 @@
 }
 
 .title {
-  font-family: var(--font-space-mono), monospace;
+  @include typography.heading-mono;
   font-size: 2.5rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   margin: 0;
 }
 
 .subtitle {
-  font-family: var(--font-space-mono), monospace;
+  @include typography.text-meta;
   font-size: 1rem;
-  color: #666;
   margin: 0.5rem 0 0 0;
 }
 
 .createButton {
+  @include buttons.button-primary;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: #000;
-  color: #fff;
-  border: 2px solid #000;
-  font-family: var(--font-space-mono), monospace;
-  font-weight: 600;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  @include smooth-transition(all);
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
-  }
 }
 
 .emptyState {

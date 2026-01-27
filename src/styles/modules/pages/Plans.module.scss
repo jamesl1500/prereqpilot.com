@@ -1,0 +1,381 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
+
+.container {
+  @include layout.page-container;
+}
+
+.header {
+  @include layout.page-header;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 2rem;
+  width: 100%;
+}
+
+.title {
+  @include layout.page-title;
+}
+
+.subtitle {
+  @include layout.page-subtitle;
+}
+
+.addButton {
+  @include buttons.button-primary;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.selectPrompt {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0 0 $spacing-xl 0;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: $spacing-xl;
+}
+
+.planCard {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-xl;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 0 #000;
+
+    .planCardArrow {
+      transform: translateX(4px);
+    }
+  }
+}
+
+.planCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-lg;
+
+  svg:first-child {
+    color: #000;
+  }
+}
+
+.planCardArrow {
+  color: #666;
+  transition: transform 0.2s;
+}
+
+.planCardContent {
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 $spacing-sm 0;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    font-family: var(--font-space-mono), monospace;
+  }
+}
+
+.planDescription {
+  font-size: 0.875rem;
+  color: #333;
+  margin: 0 0 $spacing-lg 0;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.planMeta {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+}
+
+.planMetaItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.planStats {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  font-size: 0.75rem;
+  color: #666;
+  padding-top: $spacing-lg;
+  border-top: 2px solid #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-3xl * 2;
+  background: #fff;
+  border: 2px solid #000;
+  text-align: center;
+
+  svg {
+    margin-bottom: $spacing-xl;
+    color: #000;
+  }
+
+  p {
+    margin: 0 0 $spacing-sm 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-space-mono), monospace;
+  }
+}
+
+.emptyHint {
+  font-size: 0.875rem !important;
+  color: #333 !important;
+  margin-bottom: $spacing-xl * 2 !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+  font-weight: 400 !important;
+  font-family: inherit !important;
+}
+
+// Modal Styles
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-lg;
+}
+
+.modalContent {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-2xl;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 $spacing-xl 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.formGroup {
+  margin-bottom: $spacing-xl;
+
+  label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: $spacing-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: var(--font-space-mono), monospace;
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: #fff;
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #000;
+    transform: translateY(-2px);
+  }
+}
+
+.textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 0.2s ease;
+  background: #fff;
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #000;
+    transform: translateY(-2px);
+  }
+}
+
+.select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  font-size: 1rem;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #000;
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #000;
+    transform: translateY(-2px);
+  }
+}
+
+.modalActions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-2xl;
+}
+
+.primaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.secondaryButton {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: $spacing-xl;
+  }
+
+  .header {
+    padding: $spacing-lg;
+  }
+
+  .headerContent {
+    flex-direction: column;
+    gap: $spacing-lg;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .plansGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .modalContent {
+    padding: $spacing-xl;
+  }
+}

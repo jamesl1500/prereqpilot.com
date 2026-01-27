@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import styles from '@/styles/modules/components/public-footer.module.scss';
+import styles from '@/styles/modules/components/auth-footer.module.scss';
 
-export function PublicFooter() {
+export function AuthFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
@@ -13,29 +13,29 @@ export function PublicFooter() {
         </div>
 
         <div className={styles.footerSection}>
-          <h4 className={styles.footerHeading}>Product</h4>
+          <h4 className={styles.footerHeading}>Dashboard</h4>
           <ul className={styles.footerLinks}>
+            <li><Link href="/dashboard">Overview</Link></li>
+            <li><Link href="/plans">Academic Plans</Link></li>
             <li><Link href="/programs">Programs</Link></li>
-            <li><Link href="/about">About Us</Link></li>
-            <li><Link href="/help">Help Center</Link></li>
           </ul>
         </div>
 
         <div className={styles.footerSection}>
-          <h4 className={styles.footerHeading}>For Institutions</h4>
+          <h4 className={styles.footerHeading}>Resources</h4>
           <ul className={styles.footerLinks}>
-            <li><Link href="/institutions">Learn More</Link></li>
-            <li><Link href="/institution/signup">Register Institution</Link></li>
-            <li><Link href="/institution/dashboard">Dashboard</Link></li>
+            <li><Link href="/classes">My Classes</Link></li>
+            <li><Link href="/transcript">Transcript</Link></li>
+            <li><Link href="/scenarios">What-If Scenarios</Link></li>
           </ul>
         </div>
 
         <div className={styles.footerSection}>
           <h4 className={styles.footerHeading}>Support</h4>
           <ul className={styles.footerLinks}>
-            <li><Link href="/contact">Contact</Link></li>
-            <li><Link href="/privacy">Privacy Policy</Link></li>
-            <li><Link href="/terms">Terms of Service</Link></li>
+            <li><Link href="/help">Help Center</Link></li>
+            <li><Link href="/settings">Account Settings</Link></li>
+            <li><Link href="/contact">Contact Us</Link></li>
           </ul>
         </div>
       </div>

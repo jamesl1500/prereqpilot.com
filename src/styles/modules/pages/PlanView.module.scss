@@ -1,0 +1,562 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
+
+.container {
+  @include layout.page-container;
+}
+
+.header {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-2xl;
+  margin-bottom: $spacing-3xl;
+}
+
+.backButton {
+  @include buttons.button-back;
+  margin-bottom: $spacing-xl;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $spacing-2xl;
+}
+
+.title {
+  @include layout.page-title;
+  margin: 0 0 $spacing-xs 0;
+}
+
+.subtitle {
+  @include layout.page-subtitle;
+  margin: 0;
+}
+
+.addButton {
+  @include buttons.button-primary;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+// Terms List
+.termsList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+}
+
+.termCard {
+  background: #fff;
+  border: 2px solid #000;
+  overflow: hidden;
+}
+
+.termHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-xl;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.termInfo {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  flex: 1;
+
+  svg {
+    color: #000;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0 0 $spacing-xs 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    font-family: var(--font-space-mono), monospace;
+  }
+}
+
+.termMeta {
+  font-size: 0.75rem;
+  color: #666;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.termActions {
+  display: flex;
+  gap: $spacing-xs;
+  align-items: center;
+}
+
+.termContent {
+  padding: 0 $spacing-xl $spacing-xl $spacing-xl;
+  border-top: 2px solid #000;
+}
+
+// Courses List
+.coursesList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-top: $spacing-lg;
+}
+
+.courseItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #000;
+  }
+}
+
+.checkbox {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #000;
+  }
+
+  .checked {
+    color: #000;
+  }
+}
+
+.courseInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: $spacing-lg;
+}
+
+.courseTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  flex: 1;
+
+  span {
+    &.completed {
+      text-decoration: line-through;
+      color: #666;
+    }
+  }
+}
+
+.courseCode {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  background: #000;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.courseCredits {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 700;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.emptyCourses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-3xl;
+  color: #666;
+  text-align: center;
+
+  svg {
+    margin-bottom: $spacing-lg;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+}
+
+.addCourseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  padding: 0.875rem 1rem;
+  background: transparent;
+  border: 2px dashed #000;
+  color: #000;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: $spacing-lg;
+  width: 100%;
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.emptyTerms {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-3xl * 2;
+  background: #fff;
+  border: 2px solid #000;
+  text-align: center;
+
+  svg {
+    margin-bottom: $spacing-xl;
+    color: #000;
+  }
+
+  p {
+    margin: 0 0 $spacing-xl 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-space-mono), monospace;
+  }
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-sm;
+  background: transparent;
+  border: 2px solid transparent;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #000;
+    color: #000;
+  }
+}
+
+// Modal Styles
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: $spacing-lg;
+}
+
+.modalContent {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-2xl;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.3);
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 $spacing-xl 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.formGroup {
+  margin-bottom: $spacing-xl;
+  position: relative;
+
+  label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: $spacing-sm;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: var(--font-space-mono), monospace;
+  }
+}
+
+.formRow {
+  display: flex;
+  gap: $spacing-lg;
+
+  .formGroup {
+    flex: 1;
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: #fff;
+  color: #000;
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #000;
+    transform: translateY(-2px);
+  }
+}
+
+.select {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 2px solid #000;
+  font-size: 1rem;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #000;
+
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 #000;
+    transform: translateY(-2px);
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: $spacing-xl 0;
+  color: #666;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: #000;
+  }
+
+  span {
+    padding: 0 $spacing-lg;
+  }
+}
+
+.searchResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 2px solid #000;
+  margin-top: $spacing-xs;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.searchResult {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md $spacing-lg;
+  width: 100%;
+  background: #fff;
+  border: none;
+  border-bottom: 2px solid #000;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: #f5f5f5;
+  }
+}
+
+.resultCode {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  background: #000;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.resultTitle {
+  flex: 1;
+  font-size: 0.875rem;
+  color: #000;
+}
+
+.resultCredits {
+  font-size: 0.75rem;
+  color: #666;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.modalActions {
+  display: flex;
+  gap: $spacing-md;
+  margin-top: $spacing-2xl;
+}
+
+.primaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  background: #000;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.secondaryButton {
+  flex: 1;
+  padding: 0.875rem 1.5rem;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: $spacing-xl;
+  }
+
+  .header {
+    padding: $spacing-lg;
+  }
+
+  .headerContent {
+    flex-direction: column;
+    gap: $spacing-lg;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .termHeader {
+    padding: $spacing-lg;
+  }
+
+  .termContent {
+    padding: 0 $spacing-lg $spacing-lg $spacing-lg;
+  }
+
+  .modalContent {
+    padding: $spacing-xl;
+  }
+
+  .formRow {
+    flex-direction: column;
+  }
+}
