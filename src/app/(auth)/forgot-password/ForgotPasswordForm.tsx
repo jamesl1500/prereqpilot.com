@@ -29,16 +29,21 @@ export default function ForgotPasswordForm({ onSubmit, isLoading, error }: Forgo
         <p className={styles.subtitle}>Enter your email to receive a password reset link</p>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+      <form 
+        onSubmit={handleSubmit(onSubmit)} 
+        className={styles.form}
+        aria-label="Forgot password form"
+        noValidate
+      >
         {error && (
-          <div className={styles.error}>
+          <div className={styles.error} role="alert" aria-live="assertive">
             {error}
           </div>
         )}
 
         <div className={styles.formGroup}>
           <label htmlFor="email" className={styles.label}>
-            Email address
+            Email address <span aria-hidden="true">*</span>
           </label>
           <input
             type="email"
@@ -47,9 +52,14 @@ export default function ForgotPasswordForm({ onSubmit, isLoading, error }: Forgo
             className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
             placeholder="you@example.com"
             autoComplete="email"
+            aria-required="true"
+            aria-invalid={errors.email ? 'true' : 'false'}
+            aria-describedby={errors.email ? 'email-error' : undefined}
           />
           {errors.email && (
-            <p className={styles.errorText}>{errors.email.message}</p>
+            <p className={styles.errorText} id="email-error" role="alert">
+              {errors.email.message}
+            </p>
           )}
         </div>
 
@@ -57,6 +67,7 @@ export default function ForgotPasswordForm({ onSubmit, isLoading, error }: Forgo
           type="submit"
           disabled={isLoading}
           className={styles.submitButton}
+          aria-busy={isLoading ? 'true' : 'false'}
         >
           {isLoading ? 'Sending...' : 'Send reset link'}
         </button>

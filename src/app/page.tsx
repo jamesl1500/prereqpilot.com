@@ -2,8 +2,8 @@ import Link from 'next/link';
 import styles from '@/styles/modules/pages/home.module.scss';
 import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
-import { PublicHeader } from '@/components/PublicHeader';
-import { PublicFooter } from '@/components/PublicFooter';
+import PublicHeader from '@/components/PublicHeader';
+import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
   title: 'PrereqPilot - Plan Your Academic Journey',

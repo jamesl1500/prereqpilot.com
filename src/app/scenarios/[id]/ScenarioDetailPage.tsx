@@ -479,7 +479,8 @@ export default function ScenarioDetailPage({
         const error = await response.json();
         alert(error.error || 'Failed to save mapping');
       }
-    } catch (error) {
+    } catch {
+      // Error loading scenario
       alert('Failed to save mapping');
     }
   }

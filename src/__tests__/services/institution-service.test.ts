@@ -12,6 +12,7 @@ import { createMockQueryBuilder, createMockRequest, mockData } from '../utils/te
 jest.mock('@/lib/supabase/server');
 
 describe('Institution Service', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockSupabase: any;
   let mockRequest: Request;
 
@@ -53,7 +54,7 @@ describe('Institution Service', () => {
           name: 'Test University',
           short_code: 'TU',
           country: 'USA',
-          website: 'https://test.edu',
+          website_url: 'https://test.edu',
           user_id: mockData.user.id,
         },
       ]);
@@ -98,7 +99,7 @@ describe('Institution Service', () => {
           name: 'Test University',
           short_code: 'TU',
           country: null,
-          website: null,
+          website_url: null,
           user_id: mockData.user.id,
         },
       ]);
@@ -131,7 +132,10 @@ describe('Institution Service', () => {
   describe('updateInstitution', () => {
     it('should successfully update an institution', async () => {
       const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.eq.mockResolvedValue({ error: null });
+      // For chained .eq() calls: first returns the builder, second resolves with result
+      mockQueryBuilder.eq
+        .mockReturnValueOnce(mockQueryBuilder)  // First .eq('id', 'inst-123') returns builder
+        .mockResolvedValueOnce({ error: null }); // Second .eq('user_id', 'user-123') resolves
       mockSupabase.from.mockReturnValue(mockQueryBuilder);
       mockSupabase.auth.getUser.mockResolvedValue({
         data: { user: mockData.user },
@@ -153,7 +157,7 @@ describe('Institution Service', () => {
         name: 'Updated University',
         short_code: 'UU',
         country: 'Canada',
-        website: 'https://updated.edu',
+        website_url: 'https://updated.edu',
       });
       expect(mockQueryBuilder.eq).toHaveBeenCalledWith('id', 'inst-123');
       expect(mockQueryBuilder.eq).toHaveBeenCalledWith('user_id', mockData.user.id);
@@ -179,9 +183,11 @@ describe('Institution Service', () => {
 
     it('should handle update errors', async () => {
       const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.eq.mockResolvedValue({
-        error: new Error('Update failed'),
-      });
+      mockQueryBuilder.eq
+        .mockReturnValueOnce(mockQueryBuilder)  // First .eq() returns builder
+        .mockResolvedValueOnce({                // Second .eq() resolves with error
+          error: new Error('Update failed'),
+        });
       mockSupabase.from.mockReturnValue(mockQueryBuilder);
       mockSupabase.auth.getUser.mockResolvedValue({
         data: { user: mockData.user },

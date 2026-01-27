@@ -15,6 +15,7 @@ import { createMockQueryBuilder, createMockRequest, mockData } from '../utils/te
 jest.mock('@/lib/supabase/server');
 
 describe('Program Service', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockSupabase: any;
   let mockRequest: Request;
 
@@ -35,8 +36,11 @@ describe('Program Service', () => {
 
       const programData = {
         name: 'Computer Science BS',
+        institution: 'University Name',
         institution_id: 'inst-123',
         description: 'Bachelor of Science in Computer Science',
+        min_prereq_gpa: 3.0,
+        min_overall_gpa: 2.5,
       };
 
       const result = await createProgram('user-123', programData, mockRequest);
@@ -59,8 +63,11 @@ describe('Program Service', () => {
 
       const programData = {
         name: 'Computer Science BS',
+        institution: 'University Name',
         institution_id: 'inst-123',
         description: 'Bachelor of Science in Computer Science',
+        min_prereq_gpa: 3.0,
+        min_overall_gpa: 2.5,
       };
 
       const result = await createProgram('user-123', programData, mockRequest);

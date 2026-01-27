@@ -72,21 +72,42 @@ export default function EditTermModal({ isOpen, onClose, term, onUpdate }: EditT
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="edit-term-modal-title"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Edit Term</h2>
-          <button onClick={onClose} className={styles.closeButton}>
+          <h2 className={styles.title} id="edit-term-modal-title">
+            Edit Term
+          </h2>
+          <button 
+            onClick={onClose} 
+            className={styles.closeButton}
+            aria-label="Close modal"
+            type="button"
+          >
             <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          {error && <div className={styles.error}>{error}</div>}
+        <form 
+          onSubmit={handleSubmit} 
+          className={styles.form}
+          aria-label="Edit term form"
+        >
+          {error && (
+            <div className={styles.error} role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <div className={styles.formGroup}>
             <label htmlFor="termName" className={styles.label}>
-              Term Name *
+              Term Name <span aria-hidden="true">*</span>
             </label>
             <input
               id="termName"
@@ -96,6 +117,8 @@ export default function EditTermModal({ isOpen, onClose, term, onUpdate }: EditT
               className={styles.input}
               placeholder="e.g., Fall 2024"
               required
+              aria-required="true"
+              aria-invalid={!termName.trim() ? 'true' : 'false'}
             />
           </div>
 

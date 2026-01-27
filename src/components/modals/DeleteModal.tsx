@@ -50,22 +50,40 @@ export default function DeleteModal({ isOpen, onClose, itemType, itemId, itemNam
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={onClose}
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="delete-modal-title"
+      aria-describedby="delete-modal-description"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Delete {itemType}</h2>
-          <button className={styles.closeButton} onClick={onClose}>
+          <h2 className={styles.title} id="delete-modal-title">
+            Delete {itemType}
+          </h2>
+          <button 
+            className={styles.closeButton} 
+            onClick={onClose}
+            aria-label="Close dialog"
+            type="button"
+          >
             ×
           </button>
         </div>
 
         <div className={styles.content}>
-          {error && <div className={styles.error}>{error}</div>}
+          {error && (
+            <div className={styles.error} role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
           
-          <p className={styles.message}>
+          <p className={styles.message} id="delete-modal-description">
             Are you sure you want to delete <strong>{itemName}</strong>?
           </p>
-          <p className={styles.warning}>
+          <p className={styles.warning} role="alert">
             This action cannot be undone.
           </p>
         </div>
@@ -84,6 +102,7 @@ export default function DeleteModal({ isOpen, onClose, itemType, itemId, itemNam
             onClick={handleDelete}
             className={styles.deleteButton}
             disabled={isDeleting}
+            aria-busy={isDeleting ? 'true' : 'false'}
           >
             {isDeleting ? 'Deleting...' : 'Delete'}
           </button>

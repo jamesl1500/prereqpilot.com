@@ -1,0 +1,159 @@
+name: Test Suite
+
+on:
+  push:
+    branches: [production, master, develop]
+  pull_request:
+    branches: [production, master, develop]
+  schedule:
+    # Run nightly at 2 AM UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 24.x]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run linter
+        run: npm run lint
+        continue-on-error: true
+      
+      - name: Run unit tests
+        run: npm run test:ci
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/lcov.info
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+      
+      - name: Generate coverage badge
+        if: matrix.node-version == '24.x'
+        run: |
+          COVERAGE=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          echo "Coverage: $COVERAGE%"
+          echo "COVERAGE=$COVERAGE" >> $GITHUB_ENV
+      
+      - name: Archive test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-${{ matrix.node-version }}
+          path: coverage/
+          retention-days: 30
+      
+      - name: Comment PR with coverage
+        if: github.event_name == 'pull_request' && matrix.node-version == '24.x'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const coverage = JSON.parse(fs.readFileSync('coverage/coverage-summary.json', 'utf8'));
+            const totalCoverage = coverage.total;
+            
+            const comment = `## 📊 Test Coverage Report
+            
+            | Metric | Coverage |
+            |--------|----------|
+            | Lines | ${totalCoverage.lines.pct}% |
+            | Statements | ${totalCoverage.statements.pct}% |
+            | Functions | ${totalCoverage.functions.pct}% |
+            | Branches | ${totalCoverage.branches.pct}% |
+            
+            ${totalCoverage.lines.pct >= 70 ? '✅' : '❌'} Coverage threshold: 70%
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run integration tests
+        run: npm run test:integration
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Archive integration test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-results
+          path: coverage/
+          retention-days: 30
+
+  build:
+    name: Build Check
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Check for build warnings
+        run: |
+          if grep -q "warning" .next/build.log 2>/dev/null; then
+            echo "⚠️ Build warnings detected"
+            exit 1
+          fi

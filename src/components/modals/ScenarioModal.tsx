@@ -98,23 +98,41 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={handleClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="scenario-modal-title"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>
+          <h2 className={styles.title} id="scenario-modal-title">
             {scenario ? 'Edit Scenario' : 'Create Scenario'}
           </h2>
-          <button className={styles.closeButton} onClick={handleClose}>
+          <button 
+            className={styles.closeButton} 
+            onClick={handleClose}
+            aria-label="Close modal"
+          >
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          {error && <div className={styles.error}>{error}</div>}
+        <form 
+          onSubmit={handleSubmit(onSubmit)} 
+          className={styles.form}
+          aria-label={scenario ? 'Edit scenario form' : 'Create scenario form'}
+        >
+          {error && (
+            <div className={styles.error} role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <div className={styles.formGroup}>
             <label htmlFor="name" className={styles.label}>
-              Scenario Name *
+              Scenario Name <span aria-hidden="true">*</span>
             </label>
             <input
               id="name"
@@ -122,20 +140,28 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
               {...register('name')}
               className={styles.input}
               placeholder="e.g., Graduate in 3 years"
+              aria-required="true"
+              aria-invalid={errors.name ? 'true' : 'false'}
+              aria-describedby={errors.name ? 'name-error' : undefined}
             />
             {errors.name && (
-              <span className={styles.fieldError}>{errors.name.message}</span>
+              <span className={styles.fieldError} id="name-error" role="alert">
+                {errors.name.message}
+              </span>
             )}
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="program_id" className={styles.label}>
-              Program *
+              Program <span aria-hidden="true">*</span>
             </label>
             <select
               id="program_id"
               {...register('program_id')}
               className={styles.select}
+              aria-required="true"
+              aria-invalid={errors.program_id ? 'true' : 'false'}
+              aria-describedby={errors.program_id ? 'program_id-error' : undefined}
             >
               <option value="">Select a program</option>
               {userPrograms.length > 0 && (
@@ -158,7 +184,9 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
               )}
             </select>
             {errors.program_id && (
-              <span className={styles.fieldError}>{errors.program_id.message}</span>
+              <span className={styles.fieldError} id="program_id-error" role="alert">
+                {errors.program_id.message}
+              </span>
             )}
           </div>
 
@@ -172,6 +200,7 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
               className={styles.textarea}
               rows={4}
               placeholder="Describe your what-if scenario..."
+              aria-label="Scenario description"
             />
           </div>
 

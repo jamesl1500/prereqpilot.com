@@ -95,10 +95,18 @@ export default function SimulateRetakeModal({
   };
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="simulate-retake-modal-title"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>Simulate Retakes</h2>
+          <h2 className={styles.title} id="simulate-retake-modal-title">
+            Simulate Retakes
+          </h2>
           <button
             type="button"
             className={styles.closeButton}
@@ -109,7 +117,16 @@ export default function SimulateRetakeModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
+        <form 
+          onSubmit={handleSubmit} 
+          className={styles.form}
+          aria-label="Simulate retake grades form"
+        >
+          {error && (
+            <div className={styles.error} role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
           <p className={styles.subtitle}>
             Select new grades for the courses you want to simulate retaking
           </p>
@@ -126,12 +143,17 @@ export default function SimulateRetakeModal({
                 </div>
 
                 <div className={styles.gradeSelection}>
-                  <label className={styles.label}>New Grade</label>
+                  <label htmlFor={`grade-${course.id}`} className={styles.label}>
+                    New Grade
+                  </label>
                   <select
+                    id={`grade-${course.id}`}
                     className={styles.select}
                     value={grades[course.id] || ''}
                     onChange={(e) => handleGradeChange(course.id, e.target.value)}
                     required
+                    aria-required="true"
+                    aria-label={`New grade for ${course.course_title}`}
                   >
                     <option value="">Select grade...</option>
                     {GRADE_OPTIONS.map(grade => (
@@ -148,6 +170,7 @@ export default function SimulateRetakeModal({
                       type="checkbox"
                       checked={markAsRepeats.has(course.id)}
                       onChange={() => handleRepeatToggle(course.id)}
+                      aria-label={`Mark ${course.course_title} as repeat`}
                     />
                     <span>Mark original as repeat (will exclude from GPA)</span>
                   </label>

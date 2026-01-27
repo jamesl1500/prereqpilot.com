@@ -18,7 +18,7 @@ export default async function Settings() {
 
   return (
     <DashboardLayout user={user}>
-      <SettingsPage user={user} />
+      <SettingsPage />
     </DashboardLayout>
   );
 }

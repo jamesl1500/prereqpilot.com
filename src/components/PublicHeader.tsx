@@ -11,7 +11,7 @@ interface PublicHeaderProps {
   user?: User | null;
 }
 
-export function PublicHeader({ user }: PublicHeaderProps) {
+export default function PublicHeader({ user }: PublicHeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (

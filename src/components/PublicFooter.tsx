@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import styles from '@/styles/modules/components/public-footer.module.scss';
 
-export function PublicFooter() {
+export default function PublicFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContent}>

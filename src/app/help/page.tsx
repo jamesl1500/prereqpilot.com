@@ -1,7 +1,7 @@
 import styles from '@/styles/modules/pages/help.module.scss';
 import type { Metadata } from 'next';
-import { PublicHeader } from '@/components/PublicHeader';
-import { PublicFooter } from '@/components/PublicFooter';
+import PublicHeader from '@/components/PublicHeader';
+import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
   title: 'Help Center - PrereqPilot',

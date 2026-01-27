@@ -13,6 +13,8 @@ const config: Config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/public/(.*)$': '<rootDir>/public/$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   },
   testMatch: [
     '**/__tests__/**/*.[jt]s?(x)',
@@ -23,7 +25,31 @@ const config: Config = {
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/**/__tests__/**',
+    '!src/types/**',
+    '!src/lib/supabase/**',
+    '!src/**/layout.tsx',
+    '!src/**/page.tsx',
+    '!src/app/**/loading.tsx',
+    '!src/app/**/error.tsx',
+    '!src/app/**/not-found.tsx',
   ],
+  coverageThreshold: {
+    global: {
+      branches: 70,
+      functions: 70,
+      lines: 70,
+      statements: 70,
+    },
+  },
+  coverageReporters: ['text', 'lcov', 'html', 'json-summary'],
+  testTimeout: 10000,
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        jsx: 'react-jsx',
+      },
+    },
+  },
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

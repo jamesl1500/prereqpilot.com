@@ -100,23 +100,41 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
   if (!isOpen) return null;
 
   return (
-    <div className={styles.overlay} onClick={handleClose}>
+    <div 
+      className={styles.overlay} 
+      onClick={handleClose}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="program-modal-title"
+    >
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>
+          <h2 className={styles.title} id="program-modal-title">
             {program ? 'Edit Program' : 'Add Program'}
           </h2>
-          <button className={styles.closeButton} onClick={handleClose}>
+          <button 
+            className={styles.closeButton} 
+            onClick={handleClose}
+            aria-label="Close modal"
+          >
             ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-          {error && <div className={styles.error}>{error}</div>}
+        <form 
+          onSubmit={handleSubmit(onSubmit)} 
+          className={styles.form}
+          aria-label={program ? 'Edit program form' : 'Add program form'}
+        >
+          {error && (
+            <div className={styles.error} role="alert" aria-live="assertive">
+              {error}
+            </div>
+          )}
 
           <div className={styles.formGroup}>
             <label htmlFor="name" className={styles.label}>
-              Program Name *
+              Program Name <span aria-hidden="true">*</span>
             </label>
             <input
               id="name"
@@ -124,9 +142,14 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
               {...register('name')}
               className={styles.input}
               placeholder="e.g., Computer Science Major"
+              aria-required="true"
+              aria-invalid={errors.name ? 'true' : 'false'}
+              aria-describedby={errors.name ? 'name-error' : undefined}
             />
             {errors.name && (
-              <span className={styles.fieldError}>{errors.name.message}</span>
+              <span className={styles.fieldError} id="name-error" role="alert">
+                {errors.name.message}
+              </span>
             )}
           </div>
 
