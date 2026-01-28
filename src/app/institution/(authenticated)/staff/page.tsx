@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createServiceRoleClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { StaffPage } from './StaffPage';
 import type { Metadata } from 'next';
@@ -51,20 +51,48 @@ export default async function Page() {
     .eq('institution_id', institution.id)
     .order('created_at', { ascending: false });
 
-  // Get user details for each staff member
-  const staffWithUsers = await Promise.all(
-    (staffMembers || []).map(async (staff) => {
-      const { data: userData } = await supabase.auth.admin.getUserById(staff.user_id);
-      return {
-        ...staff,
-        users: {
-          id: userData?.user?.id || '',
-          email: userData?.user?.email || '',
-          user_metadata: userData?.user?.user_metadata || {},
-        },
-      };
-    })
-  );
+  // Get user details for each staff member using service role client
+  // (needed to access auth.users table with email)
+  const userIds = staffMembers?.map(s => s.user_id) || [];
+  
+  let usersMap: Record<string, any> = {};
+  if (userIds.length > 0) {
+    try {
+      const serviceRoleClient = createServiceRoleClient();
+      const { data: authUsers, error: authError } = await serviceRoleClient
+        .from('auth.users')
+        .select('id, email, raw_user_meta_data')
+        .in('id', userIds);
+
+      if (authError) {
+        console.error('Error fetching auth users:', authError);
+      } else {
+        console.log('Auth Users fetched:', authUsers?.length, 'records');
+        
+        if (authUsers && Array.isArray(authUsers)) {
+          usersMap = authUsers.reduce((acc, user: any) => ({
+            ...acc,
+            [user.id]: {
+              id: user.id,
+              email: user.email,
+              user_metadata: user.raw_user_meta_data || {},
+            },
+          }), {});
+        }
+      }
+    } catch (error) {
+      console.error('Exception fetching auth users:', error);
+    }
+  }
+
+  const staffWithUsers = (staffMembers || []).map((staff) => ({
+    ...staff,
+    users: usersMap[staff.user_id] || {
+      id: staff.user_id,
+      email: '',
+      user_metadata: {},
+    },
+  }));
 
   return <StaffPage institution={institution} staffMembers={staffWithUsers} />;
 }

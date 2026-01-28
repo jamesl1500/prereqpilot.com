@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { createClient as createAdminClient } from '@supabase/supabase-js';
 
 /**
  * Creates a Supabase client for use in Server Components and Server Actions
@@ -29,6 +30,18 @@ export async function createClient() {
         },
       },
     }
+  );
+}
+
+/**
+ * Creates a service role Supabase client for administrative operations
+ * Use this only for server-side operations that need elevated permissions
+ * IMPORTANT: Never expose this key to the client
+ */
+export function createServiceRoleClient() {
+  return createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
   );
 }
 

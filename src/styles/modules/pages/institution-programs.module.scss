@@ -5,18 +5,11 @@
 @use '@/styles/shared/typography';
 
 .container {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 2rem;
+  @include layout.page-container;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #000;
+  @include layout.page-header;
 }
 
 .headerContent {

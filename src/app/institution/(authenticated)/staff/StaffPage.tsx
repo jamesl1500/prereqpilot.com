@@ -8,6 +8,7 @@ import { z } from 'zod';
 import axios from 'axios';
 import { Users, UserPlus, Mail, Shield, Calendar, Trash2, AlertCircle, Check } from 'lucide-react';
 import styles from '@/styles/modules/pages/institution-staff.module.scss';
+import { Institution } from '@/types';
 
 const staffSchema = z.object({
   email: z.string().email('Must be a valid email'),
@@ -32,7 +33,7 @@ interface StaffMember {
 }
 
 interface StaffPageProps {
-  institution: any;
+  institution: Institution;
   staffMembers: StaffMember[];
 }
 
@@ -117,6 +118,8 @@ export function StaffPage({ institution, staffMembers: initialStaffMembers }: St
       }
     }
   };
+
+  console.log('Staff Members:', staffMembers);
 
   return (
     <div className={styles.container}>
@@ -247,7 +250,7 @@ export function StaffPage({ institution, staffMembers: initialStaffMembers }: St
             <div key={member.id} className={styles.staffCard}>
               <div className={styles.staffHeader}>
                 <div className={styles.staffAvatar}>
-                  {(member.users.user_metadata?.name || member.users.email)[0].toUpperCase()}
+                  {(member.users.user_metadata?.name || member.users.email)[0]}
                 </div>
                 <div className={styles.staffInfo}>
                   <h3 className={styles.staffName}>

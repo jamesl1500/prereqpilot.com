@@ -1,24 +1,21 @@
 @use '@/styles/abstracts/variables' as *;
 @use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
 @use '@/styles/shared/buttons';
 @use '@/styles/shared/typography';
 @use '@/styles/shared/forms';
 
 .container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 2rem;
+  @include layout.page-container;
+}
+
+.header {
+  @include layout.page-header;
 }
 
 .backButton {
   @include buttons.button-back;
   margin-bottom: 2rem;
-}
-
-.header {
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #000;
 }
 
 .headerContent {

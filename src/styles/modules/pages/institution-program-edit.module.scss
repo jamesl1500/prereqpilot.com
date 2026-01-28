@@ -5,20 +5,16 @@
 @use '@/styles/shared/typography';
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  @include layout.page-container;
+}
+
+.header {
+  @include layout.page-header;
 }
 
 .backButton {
   @include buttons.button-back;
   margin-bottom: 2rem;
-}
-
-.header {
-  margin-bottom: 3rem;
-  padding-bottom: 2rem;
-  border-bottom: 2px solid #000;
 }
 
 .headerContent {

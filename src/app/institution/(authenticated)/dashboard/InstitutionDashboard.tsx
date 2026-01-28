@@ -5,6 +5,7 @@ import type { Institution, UserRole } from '@/types/institution';
 import Link from 'next/link';
 import { useState } from 'react';
 import styles from '@/styles/modules/pages/institution-dashboard.module.scss';
+import { Course, Program } from '@/types';
 
 interface InstitutionDashboardProps {
   institution: Institution;
@@ -16,8 +17,8 @@ interface InstitutionDashboardProps {
     application_count?: number;
     active_students?: number;
   };
-  recentPrograms: any[];
-  recentCourses: any[];
+  recentPrograms: Program[];
+  recentCourses: Course[];
   pendingApplications: any[];
 }
 
@@ -225,7 +226,7 @@ export function InstitutionDashboard({
                     <div className={styles.itemInfo}>
                       <div className={styles.itemName}>{program.name}</div>
                       <div className={styles.itemMeta}>
-                        {program.program_type} • {program.is_published ? 'Published' : 'Draft'}
+                        {program.program_type ?? 'Degree'} • {program.is_published ? 'Published' : 'Draft'}
                       </div>
                     </div>
                     <Link href={`/institution/programs/${program.id}`} className={styles.itemLink}>
