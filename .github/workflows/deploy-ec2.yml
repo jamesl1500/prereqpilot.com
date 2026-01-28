@@ -39,5 +39,5 @@ jobs:
 
       - name: Reload Apache
         run: |
-          sudo -n /bin/systemctl reload apache2
-          sudo -n /bin/systemctl status apache2 --no-pager -l || true
+          sudo -n /usr/bin/systemctl reload apache2
+          sudo -n /usr/bin/systemctl status apache2 --no-pager -l || true
