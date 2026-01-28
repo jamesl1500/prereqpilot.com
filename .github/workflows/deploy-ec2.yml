@@ -39,5 +39,6 @@ jobs:
 
       - name: Reload Apache
         run: |
+          whoami
           sudo -n /usr/bin/systemctl reload apache2
-          sudo -n /usr/bin/systemctl status apache2 --no-pager -l || true
+          sudo -n /usr/bin/systemctl status apache2
