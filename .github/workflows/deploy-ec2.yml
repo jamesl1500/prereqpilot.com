@@ -36,4 +36,8 @@ jobs:
             sudo -n /bin/systemctl restart prereqpilot
             sudo -n /bin/systemctl is-active prereqpilot
             sudo -n /bin/systemctl status prereqpilot
-            service apache2 restart
+
+      - name: Reload Apache
+        run: |
+          sudo -n /bin/systemctl reload apache2
+          sudo -n /bin/systemctl status apache2 --no-pager -l || true
