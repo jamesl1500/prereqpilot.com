@@ -1,15 +1,14 @@
 import { redirect } from 'next/navigation';
-import { cookies } from 'next/headers';
 import { createClient } from '@/lib/supabase/server';
-import CoursesPage from './CoursesPage';
+import CoursesListPage from './CoursesListPage';
+import type { Metadata } from 'next';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Course Catalog | PrereqPilot',
   description: 'Manage your institution\'s course catalog',
 };
 
 export default async function Page() {
-  const cookieStore = await cookies();
   const supabase = await createClient();
 
   const { data: { user } } = await supabase.auth.getUser();
@@ -47,11 +46,18 @@ export default async function Page() {
     .eq('institution_id', institution.id)
     .order('code');
 
+  // Get course count for stats
+  const { count: totalCourses } = await supabase
+    .from('courses')
+    .select('*', { count: 'exact', head: true })
+    .eq('institution_id', institution.id);
+
   return (
-    <CoursesPage
+    <CoursesListPage
       user={user}
       institution={institution}
       courses={courses || []}
+      totalCourses={totalCourses || 0}
     />
   );
 }

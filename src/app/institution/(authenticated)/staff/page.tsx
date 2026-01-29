@@ -59,29 +59,24 @@ export default async function Page() {
   if (userIds.length > 0) {
     try {
       const serviceRoleClient = createServiceRoleClient();
-      const { data: authUsers, error: authError } = await serviceRoleClient
-        .from('auth.users')
-        .select('id, email, raw_user_meta_data')
-        .in('id', userIds);
 
-      if (authError) {
-        console.error('Error fetching auth users:', authError);
-      } else {
-        console.log('Auth Users fetched:', authUsers?.length, 'records');
-        
-        if (authUsers && Array.isArray(authUsers)) {
-          usersMap = authUsers.reduce((acc, user: any) => ({
-            ...acc,
-            [user.id]: {
-              id: user.id,
-              email: user.email,
-              user_metadata: user.raw_user_meta_data || {},
-            },
-          }), {});
+      for(const id of userIds) {
+        const { data: user, error } = await serviceRoleClient.auth.admin.getUserById(id);
+
+        if (error) {
+          throw error;
+        } else {
+          usersMap[id] = {
+            id: user.user.id,
+            email: user.user.email,
+            user_metadata: user.user.user_metadata || {},
+          };
         }
       }
     } catch (error) {
-      console.error('Exception fetching auth users:', error);
+      console.error('Error fetching user details:', error);
+      // Handle error appropriately, e.g., set usersMap to empty or partial data
+      usersMap = {};
     }
   }
 

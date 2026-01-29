@@ -24,6 +24,7 @@ import {
     markCourseCompleted,
     updatePlanTerm,
 } from '@/services/plan-service';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/PlanView.module.scss';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import EditCourseModal from '@/components/modals/EditCourseModal';
@@ -54,6 +55,7 @@ enum TermType {
 
 export default function PlanViewClient({ user, plan: initialPlan, courses }: PlanViewClientProps) {
     const router = useRouter();
+    const { showToast } = useToast();
     const [expandedTerms, setExpandedTerms] = useState<Set<string>>(new Set());
     const [showCreateTerm, setShowCreateTerm] = useState(false);
     const [showAddCourse, setShowAddCourse] = useState<string | null>(null);
@@ -114,10 +116,11 @@ export default function PlanViewClient({ user, plan: initialPlan, courses }: Pla
             setTermYear(new Date().getFullYear());
             setTermCreditsTarget(15);
             setShowCreateTerm(false);
+            showToast('Term created successfully', 'success');
             router.refresh();
         } catch (error) {
             console.error('Error creating term:', error);
-            alert('Failed to create term');
+            showToast('Failed to create term', 'error');
         } finally {
             setIsLoading(false);
         }
@@ -151,10 +154,11 @@ export default function PlanViewClient({ user, plan: initialPlan, courses }: Pla
         setIsLoading(true);
         try {
             await deletePlanTerm(termId);
+            showToast('Term deleted successfully', 'success');
             router.refresh();
         } catch (error) {
             console.error('Error deleting term:', error);
-            alert('Failed to delete term');
+            showToast('Failed to delete term', 'error');
         } finally {
             setIsLoading(false);
         }
@@ -176,10 +180,11 @@ export default function PlanViewClient({ user, plan: initialPlan, courses }: Pla
             setCourseCredits(3);
             setCourseSearch('');
             setShowAddCourse(null);
+            showToast('Course added successfully', 'success');
             router.refresh();
         } catch (error) {
             console.error('Error adding course:', error);
-            alert('Failed to add course');
+            showToast('Failed to add course', 'error');
         } finally {
             setIsLoading(false);
         }
@@ -189,10 +194,11 @@ export default function PlanViewClient({ user, plan: initialPlan, courses }: Pla
         setIsLoading(true);
         try {
             await deletePlannedCourse(courseId);
+            showToast('Course removed successfully', 'success');
             router.refresh();
         } catch (error) {
             console.error('Error deleting course:', error);
-            alert('Failed to delete course');
+            showToast('Failed to delete course', 'error');
         } finally {
             setIsLoading(false);
         }
@@ -202,10 +208,11 @@ export default function PlanViewClient({ user, plan: initialPlan, courses }: Pla
         setIsLoading(true);
         try {
             await markCourseCompleted(courseId, !isCompleted);
+            showToast(isCompleted ? 'Course marked as incomplete' : 'Course marked as complete', 'success');
             router.refresh();
         } catch (error) {
             console.error('Error updating course:', error);
-            alert('Failed to update course');
+            showToast('Failed to update course', 'error');
         } finally {
             setIsLoading(false);
         }

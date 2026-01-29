@@ -7,6 +7,7 @@ import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SimulateRetakeModal from '@/components/modals/SimulateRetakeModal';
 import { calculateOverallGPA } from '@/services/course-service';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/scenario-detail.module.scss';
 import type { ProgramRequirementWithDetails, ProgramRequiredCourse, ProgramCourseMapping } from '@/services/program-requirement-service';
 
@@ -64,6 +65,7 @@ export default function ScenarioDetailPage({
   mappings = {},
 }: ScenarioDetailPageProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [isRetakeModalOpen, setIsRetakeModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<string>(programs[0]?.id || '');
@@ -472,16 +474,17 @@ export default function ScenarioDetailPage({
       });
 
       if (response.ok) {
+        showToast('Mapping saved successfully', 'success');
         router.refresh();
         setShowMatchModal(false);
         setSelectedRequiredCourse(null);
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to save mapping');
+        showToast(error.error || 'Failed to save mapping', 'error');
       }
     } catch {
       // Error loading scenario
-      alert('Failed to save mapping');
+      showToast('Failed to save mapping', 'error');
     }
   }
 }

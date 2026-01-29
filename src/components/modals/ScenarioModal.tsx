@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
 import type { ScenarioModalProps } from '@/types/modal';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 import { Program } from '@/types';
 
@@ -20,6 +21,7 @@ type ScenarioFormData = z.infer<typeof scenarioSchema>;
 
 export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioModalProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userPrograms, setUserPrograms] = useState<Program[]>([]);
@@ -41,6 +43,21 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
 
   useEffect(() => {
     if (isOpen) {
+      // Reset form with scenario data when modal opens
+      if (scenario) {
+        reset({
+          name: scenario.name,
+          program_id: scenario.program_id || '',
+          description: scenario.description || '',
+        });
+      } else {
+        reset({
+          name: '',
+          program_id: '',
+          description: '',
+        });
+      }
+
       (async () => {
         try {
           const userRes = await axios.get('/api/programs?filter=user');
@@ -56,7 +73,7 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
         }
       })();
     }
-  }, [isOpen]);
+  }, [isOpen, scenario, reset]);
 
   const onSubmit = async (data: ScenarioFormData) => {
     setIsSubmitting(true);
@@ -71,8 +88,10 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
 
       if (scenario) {
         await axios.put(`/api/scenarios/${scenario.id}`, scenarioData);
+        showToast('Scenario updated successfully', 'success');
       } else {
         await axios.post('/api/scenarios', scenarioData);
+        showToast('Scenario created successfully', 'success');
       }
 
       reset();
@@ -81,8 +100,10 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'An error occurred');
+        showToast(err.response?.data?.error || 'An error occurred', 'error');
       } else {
         setError('An error occurred');
+        showToast('An error occurred', 'error');
       }
     } finally {
       setIsSubmitting(false);

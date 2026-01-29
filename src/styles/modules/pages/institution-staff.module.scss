@@ -1,19 +1,15 @@
-@use '../../abstracts/variables' as *;
-@use '../../abstracts/mixins' as *;
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
+@use '@/styles/shared/typography';
 
 .container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: $spacing-xl;
+  @include layout.page-container;
 }
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: $spacing-2xl;
-  flex-wrap: wrap;
-  gap: $spacing-lg;
+  @include layout.page-header;
 }
 
 .headerContent {

@@ -5,9 +5,11 @@ import SignupForm from '@/components/forms/SignupForm';
 import type { SignupFormData } from '@/lib/schemas/auth.schema';
 import { signUp } from '@/lib/supabase/auth';
 import EmailConfirmation from './EmailConfirmation';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/SignupPage.module.scss';
 
 export default function SignupPage() {
+  const { showToast } = useToast();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -23,11 +25,13 @@ export default function SignupPage() {
       if (user) {
         setUserEmail(data.email);
         setShowConfirmation(true);
+        showToast('Account created! Please check your email.', 'success');
       } else {
         setError('Signup successful, but no user data returned');
       }
     } catch (err) {
       setError((err as Error).message || 'Failed to create account');
+      showToast((err as Error).message || 'Failed to create account', 'error');
     } finally {
       setLoading(false);
     }

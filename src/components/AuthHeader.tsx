@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { PenTool } from 'lucide-react';
+import Image from 'next/image';
 import styles from '@/styles/modules/components/auth-header.module.scss';
 
 export function AuthHeader() {
@@ -9,7 +9,13 @@ export function AuthHeader() {
     <header className={styles.header}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-          <PenTool size={24} strokeWidth={2} />
+          <Image
+            src="/primary_logo.png"
+            alt="PrereqPilot Logo"
+            width={32}
+            height={32}
+            className={styles.logoImage}
+          />
           <span>PREREQPILOT</span>
         </Link>
 

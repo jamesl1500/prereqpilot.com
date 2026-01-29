@@ -6,6 +6,7 @@ import { ArrowLeft, Edit, Trash2, BookOpen, School2, Calendar, Award, FileText }
 import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import type { Course } from '@/types/course';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/view-course.module.scss';
 import axios from 'axios';
 
@@ -16,6 +17,7 @@ interface ViewCourseProps {
 
 export default function ViewCourse({ user, course }: ViewCourseProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -27,10 +29,11 @@ export default function ViewCourse({ user, course }: ViewCourseProps) {
     setIsDeleting(true);
     try {
       await axios.delete(`/api/courses/${course.id}`);
+      showToast('Course deleted successfully', 'success');
       router.push('/classes');
       router.refresh();
     } catch {
-      alert('Failed to delete course');
+      showToast('Failed to delete course', 'error');
       setIsDeleting(false);
     }
   };

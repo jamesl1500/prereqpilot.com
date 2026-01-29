@@ -1,0 +1,351 @@
+@use '@/styles/abstracts/variables' as *;
+@use '@/styles/abstracts/mixins' as *;
+@use '@/styles/shared/layout';
+@use '@/styles/shared/buttons';
+@use '@/styles/shared/typography';
+
+.container {
+  @include layout.page-container;
+}
+
+.header {
+  @include layout.page-header;
+  margin-bottom: 1.5rem;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border: 2px solid #000;
+  background: #fff;
+}
+
+.title {
+  @include typography.heading-mono;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.subtitle {
+  @include typography.text-meta;
+  font-size: 0.9rem;
+  margin: $spacing-xs 0 0;
+}
+
+.primaryButton {
+  @include buttons.button-primary;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  text-decoration: none;
+}
+
+.secondaryButton {
+  padding: $spacing-md $spacing-lg;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  @include smooth-transition(all);
+
+  &:hover {
+    background: #f9f9f9;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+  }
+}
+
+// Filters Bar
+.filtersBar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  border: 2px solid #000;
+  background: #fff;
+  flex: 1;
+  min-width: 0;
+
+  svg {
+    flex-shrink: 0;
+    color: #666;
+  }
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  outline: none;
+
+  &::placeholder {
+    color: #999;
+  }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  svg {
+    color: #666;
+  }
+}
+
+.filterSelect {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #000;
+  background: #fff;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+  
+  &:focus {
+    outline: none;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.1);
+  }
+}
+
+.clearButton {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #666;
+  background: #fff;
+  color: #666;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  @include smooth-transition(all);
+  
+  &:hover {
+    border-color: #000;
+    color: #000;
+  }
+}
+
+.resultsCount {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+// Empty State
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-3xl * 2;
+  border: 3px dashed #ccc;
+  background: #f9f9f9;
+  text-align: center;
+
+  svg {
+    color: #666;
+    margin-bottom: $spacing-lg;
+  }
+
+  h3 {
+    font-family: var(--font-space-mono), monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 $spacing-md;
+  }
+
+  p {
+    font-family: var(--font-space-mono), monospace;
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0 0 $spacing-xl;
+    max-width: 400px;
+  }
+}
+
+// Courses Grid
+.coursesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: $spacing-lg;
+}
+
+.courseCard {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #000;
+  background: #fff;
+  padding: $spacing-lg;
+  text-decoration: none;
+  color: inherit;
+  @include smooth-transition(all);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.2);
+  }
+}
+
+.courseHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+  gap: $spacing-md;
+}
+
+.courseCode {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #000;
+  margin: 0 0 $spacing-xs;
+}
+
+.courseTitle {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  color: #333;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.courseMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.courseCredits {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: $spacing-xs $spacing-sm;
+  border: 2px solid #000;
+  background: #fff;
+  white-space: nowrap;
+}
+
+.courseLevel {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #666;
+  letter-spacing: 0.05em;
+}
+
+.courseDepartment {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 $spacing-sm;
+}
+
+.courseDescription {
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.8rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0 0 $spacing-lg;
+  flex: 1;
+}
+
+.courseActions {
+  display: flex;
+  gap: $spacing-sm;
+  padding-top: $spacing-md;
+  border-top: 2px solid #eee;
+  margin-top: auto;
+}
+
+.viewButton,
+.editButton,
+.deleteButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-sm $spacing-md;
+  background: #fff;
+  color: #000;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  text-decoration: none;
+  @include smooth-transition(all);
+
+  &:hover {
+    background: #f9f9f9;
+    transform: translateY(-1px);
+  }
+}
+
+.viewButton {
+  background: #000;
+  color: #fff;
+  
+  &:hover {
+    background: #333;
+  }
+}
+
+.deleteButton {
+  border-color: #c00;
+  color: #c00;
+  margin-left: auto;
+  padding: $spacing-sm;
+
+  &:hover {
+    background: #c00;
+    color: #fff;
+  }
+}

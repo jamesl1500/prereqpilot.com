@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { PenTool, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import styles from '@/styles/modules/components/Header.module.scss';
 import { NavLink } from '@/types/shared/header';
 
@@ -44,7 +45,13 @@ export default function Header() {
         <header className={styles.header}>
             <div className={styles.container}>
                 <Link href="/" className={styles.logo}>
-                    <PenTool size={24} strokeWidth={2} />
+                    <Image
+                        src="/primary_logo.png"
+                        alt="PrereqPilot Logo"
+                        width={32}
+                        height={32}
+                        className={styles.logoImage}
+                    />
                     <span>PREREQPILOT</span>
                 </Link>
 

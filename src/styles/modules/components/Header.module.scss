@@ -54,6 +54,17 @@
   }
 }
 
+.logoImage {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 .badge {
   background: #000;
   color: #fff;

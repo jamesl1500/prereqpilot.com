@@ -6,6 +6,7 @@ import Link from 'next/link';
 import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { Plus, Edit, Trash2, BookOpen, GraduationCap } from 'lucide-react';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-programs.module.scss';
 
 interface Program {
@@ -26,6 +27,7 @@ interface InstitutionProgramsPageProps {
 
 export default function InstitutionProgramsPage({ user, institution, programs }: InstitutionProgramsPageProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
   const handleDelete = async (programId: string) => {
@@ -35,13 +37,14 @@ export default function InstitutionProgramsPage({ user, institution, programs }:
       });
 
       if (response.ok) {
+        showToast('Program deleted successfully', 'success');
         router.refresh();
       } else {
-        alert('Failed to delete program');
+        showToast('Failed to delete program', 'error');
       }
     } catch (error) {
       console.error('Delete error:', error);
-      alert('An error occurred while deleting the program');
+      showToast('An error occurred while deleting the program', 'error');
     }
     setDeleteConfirm(null);
   };

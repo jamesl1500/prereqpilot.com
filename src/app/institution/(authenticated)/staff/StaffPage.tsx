@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
 import { Users, UserPlus, Mail, Shield, Calendar, Trash2, AlertCircle, Check } from 'lucide-react';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-staff.module.scss';
 import { Institution } from '@/types';
 
@@ -39,6 +40,7 @@ interface StaffPageProps {
 
 export function StaffPage({ institution, staffMembers: initialStaffMembers }: StaffPageProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [staffMembers, setStaffMembers] = useState<StaffMember[]>(initialStaffMembers);
   const [isAddingStaff, setIsAddingStaff] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -76,6 +78,7 @@ export function StaffPage({ institution, staffMembers: initialStaffMembers }: St
 
       if (response.data.success) {
         setSuccessMessage('Staff member invited successfully!');
+        showToast('Staff member invited successfully!', 'success');
         reset();
         setIsAddingStaff(false);
         setTimeout(() => {
@@ -85,8 +88,10 @@ export function StaffPage({ institution, staffMembers: initialStaffMembers }: St
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'Failed to invite staff member');
+        showToast(err.response?.data?.error || 'Failed to invite staff member', 'error');
       } else {
         setError('An error occurred while inviting staff member');
+        showToast('An error occurred while inviting staff member', 'error');
       }
     } finally {
       setIsSubmitting(false);
@@ -106,6 +111,7 @@ export function StaffPage({ institution, staffMembers: initialStaffMembers }: St
 
       if (response.data.success) {
         setSuccessMessage('Staff member removed successfully');
+        showToast('Staff member removed successfully', 'success');
         setTimeout(() => {
           refreshStaff();
         }, 1000);
@@ -113,8 +119,10 @@ export function StaffPage({ institution, staffMembers: initialStaffMembers }: St
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'Failed to remove staff member');
+        showToast(err.response?.data?.error || 'Failed to remove staff member', 'error');
       } else {
         setError('An error occurred while removing staff member');
+        showToast('An error occurred while removing staff member', 'error');
       }
     }
   };

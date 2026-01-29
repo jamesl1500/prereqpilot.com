@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import type { DeleteModalProps } from '@/types/modal';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/DeleteModal.module.scss';
 
 export default function DeleteModal({ isOpen, onClose, itemType, itemId, itemName }: DeleteModalProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -34,13 +36,16 @@ export default function DeleteModal({ isOpen, onClose, itemType, itemId, itemNam
       const endpoint = getApiEndpoint();
       await axios.delete(endpoint);
 
+      showToast(`${itemType.charAt(0).toUpperCase() + itemType.slice(1)} deleted successfully`, 'success');
       router.refresh();
       onClose();
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'An error occurred');
+        showToast(err.response?.data?.error || 'Failed to delete', 'error');
       } else {
         setError('An error occurred');
+        showToast('An error occurred', 'error');
       }
     } finally {
       setIsDeleting(false);

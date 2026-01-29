@@ -15,4 +15,7 @@ export interface Program {
   institution_id: string | null;
   min_prereq_gpa: number | null;
   min_overall_gpa: number | null;
+  created_at: string;
+  program_type: string;
+  is_published: boolean;
 }

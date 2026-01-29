@@ -22,7 +22,7 @@
 
   @media (max-width: $breakpoint-tablet) {
     padding: 0 1.5rem;
-    height: 60px;
+    height: 70px;
   }
 }
 
@@ -66,6 +66,17 @@
       width: 20px;
       height: 20px;
     }
+  }
+}
+
+.logoImage {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -208,6 +219,17 @@
 
   &:hover {
     background: #f5f5f5;
+  }
+}
+
+.actions{
+
+  @media (min-width: $breakpoint-tablet) {
+    display: none;
+  }
+
+  .actionsInner{
+    display: flex;
   }
 }
 
