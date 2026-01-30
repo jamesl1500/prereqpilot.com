@@ -142,7 +142,10 @@ describe('CourseModal', () => {
     await user.click(submitButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/failed to create course/i)).toBeInTheDocument();
+      // Find error in the modal/form, not the toast
+      const allMessages = screen.getAllByText(/failed to create course/i);
+      const modalError = allMessages.find(el => el.closest('[role="dialog"]'));
+      expect(modalError).toBeInTheDocument();
     });
   });
 

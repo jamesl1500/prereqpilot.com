@@ -112,7 +112,10 @@ describe('ScenarioModal', () => {
       await user.click(screen.getByRole('button', { name: /create/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/an error occurred/i)).toBeInTheDocument();
+        // Find error in the modal/form, not the toast
+        const allMessages = screen.getAllByText(/an error occurred/i);
+        const modalError = allMessages.find(el => el.closest('[role="dialog"]'));
+        expect(modalError).toBeInTheDocument();
       });
     });
   });
@@ -174,21 +177,24 @@ describe('ScenarioModal', () => {
       await user.click(screen.getByRole('button', { name: /update/i }));
 
       await waitFor(() => {
-        expect(screen.getByText(/an error occurred/i)).toBeInTheDocument();
+        // Find error in the modal/form, not the toast
+        const allMessages = screen.getAllByText(/an error occurred/i);
+        const modalError = allMessages.find(el => el.closest('[role="dialog"]'));
+        expect(modalError).toBeInTheDocument();
       });
     });
   });
 
   describe('Modal Behavior', () => {
     it('should not render when closed', () => {
-      const { container } = renderWithProviders(
+      renderWithProviders(
         <ScenarioModal
           isOpen={false}
           onClose={mockOnClose}
         />
       );
 
-      expect(container.firstChild).toBeNull();
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
     it('should close modal on cancel', async () => {

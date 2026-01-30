@@ -95,7 +95,10 @@ describe('TermModal', () => {
     await user.click(submitButton);
     
     await waitFor(() => {
-      expect(screen.getByText(/term already exists/i)).toBeInTheDocument();
+      // Find error in the modal/form, not the toast
+      const allMessages = screen.getAllByText(/term already exists/i);
+      const modalError = allMessages.find(el => el.closest('[role="dialog"]'));
+      expect(modalError).toBeInTheDocument();
     });
   });
 
