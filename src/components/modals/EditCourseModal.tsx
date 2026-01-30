@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { PlannedCourse } from '@/types/plan';
 import { updatePlannedCourse } from '@/services/plan-service';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/EditCourseModal.module.scss';
 
 interface EditCourseModalProps {
@@ -22,6 +23,7 @@ export default function EditCourseModal({
   const [courseCode, setCourseCode] = useState('');
   const [courseCredits, setCourseCredits] = useState<number>(3);
   const [isSaving, setIsSaving] = useState(false);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (course) {
@@ -41,11 +43,12 @@ export default function EditCourseModal({
         course_code: courseCode || undefined,
         credits: courseCredits,
       });
+      showToast('Course updated successfully', 'success');
       onUpdate();
       onClose();
     } catch (error) {
       console.error('Failed to update course:', error);
-      alert('Failed to update course');
+      showToast('Failed to update course', 'error');
     } finally {
       setIsSaving(false);
     }

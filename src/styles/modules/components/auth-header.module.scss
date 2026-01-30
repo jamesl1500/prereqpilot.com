@@ -76,6 +76,17 @@
   }
 }
 
+.logoImage {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 .nav {
   display: flex;
   align-items: center;

@@ -8,6 +8,7 @@ import { z } from 'zod';
 import axios from 'axios';
 import { gradeToGPA } from '@/services/course-service';
 import type { CourseModalProps } from '@/types/modal';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
 const courseSchema = z.object({
@@ -24,6 +25,7 @@ type CourseFormData = z.infer<typeof courseSchema>;
 
 export default function CourseModal({ isOpen, onClose, course, terms, institutions }: CourseModalProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -96,9 +98,11 @@ export default function CourseModal({ isOpen, onClose, course, terms, institutio
       if (course) {
         // Update existing course
         await axios.put(`/api/courses/${course.id}`, courseData);
+        showToast('Course updated successfully', 'success');
       } else {
         // Create new course
         await axios.post('/api/courses', courseData);
+        showToast('Course added successfully', 'success');
       }
 
       reset();
@@ -107,8 +111,10 @@ export default function CourseModal({ isOpen, onClose, course, terms, institutio
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'An error occurred');
+        showToast(err.response?.data?.error || 'Failed to save course', 'error');
       } else {
         setError('An error occurred');
+        showToast('An error occurred', 'error');
       }
     } finally {
       setIsSubmitting(false);

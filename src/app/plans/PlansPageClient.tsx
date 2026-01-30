@@ -14,6 +14,7 @@ import {
     BookOpen
 } from 'lucide-react';
 import { createPlan } from '@/services/plan-service';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/Plans.module.scss';
 import TutorialTooltip from '@/components/onboarding/TutorialTooltip';
 
@@ -43,6 +44,7 @@ export default function PlansPageClient({
     programs,
 }: PlansPageClientProps) {
     const router = useRouter();
+    const { showToast } = useToast();
     const [showCreatePlan, setShowCreatePlan] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
@@ -70,12 +72,13 @@ export default function PlansPageClient({
             setShowCreatePlan(false);
 
             // Wait a bit for the database to update, then navigate to the new plan
+            showToast('Plan created successfully!', 'success');
             setTimeout(() => {
                 router.push(`/plans/${newPlan.id}`);
             }, 100);
         } catch (error) {
             console.error('Error creating plan:', error);
-            alert('Failed to create plan');
+            showToast('Failed to create plan', 'error');
         } finally {
             setIsLoading(false);
         }

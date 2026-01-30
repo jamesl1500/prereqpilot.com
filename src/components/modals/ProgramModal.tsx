@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
 import type { ProgramModalProps } from '@/types/modal';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
 interface Institution {
@@ -36,6 +37,7 @@ interface ExtendedProgramModalProps extends ProgramModalProps {
 
 export default function ProgramModal({ isOpen, onClose, program, userInstitutions, allInstitutions }: ExtendedProgramModalProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,8 +75,10 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
 
       if (program) {
         await axios.put(`/api/programs/${program.id}`, programData);
+        showToast('Program updated successfully', 'success');
       } else {
         await axios.post('/api/programs', programData);
+        showToast('Program created successfully', 'success');
       }
 
       reset();
@@ -83,8 +87,10 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'An error occurred');
+        showToast(err.response?.data?.error || 'Failed to save program', 'error');
       } else {
         setError('An error occurred');
+        showToast('An error occurred', 'error');
       }
     } finally {
       setIsSubmitting(false);

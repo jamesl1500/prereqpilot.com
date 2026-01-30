@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
 import type { InstitutionModalProps } from '@/types/modal';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
 const institutionSchema = z.object({
@@ -20,6 +21,7 @@ type InstitutionFormData = z.infer<typeof institutionSchema>;
 
 export default function InstitutionModal({ isOpen, onClose, institution }: InstitutionModalProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -52,6 +54,7 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
 
       if (institution) {
         await axios.put(`/api/institutions/${institution.id}`, institutionData);
+        showToast('Institution updated successfully', 'success');
         reset();
         router.refresh();
         onClose();
@@ -71,6 +74,7 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
               steps_completed: updatedSteps
             });
             
+            showToast('Institution added successfully', 'success');
             reset();
             onClose();
             router.push('/classes');
@@ -81,6 +85,7 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
           console.error('Onboarding check failed:', onboardingErr);
         }
         
+        showToast('Institution added successfully', 'success');
         reset();
         router.refresh();
         onClose();
@@ -88,8 +93,10 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'An error occurred');
+        showToast(err.response?.data?.error || 'Failed to save institution', 'error');
       } else {
         setError('An error occurred');
+        showToast('An error occurred', 'error');
       }
     } finally {
       setIsSubmitting(false);

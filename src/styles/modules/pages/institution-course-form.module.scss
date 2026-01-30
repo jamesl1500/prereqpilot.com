@@ -63,6 +63,16 @@
   @include forms.form-error;
 }
 
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
 .formGroup {
   @include forms.form-group;
 }
@@ -78,6 +88,27 @@
   font-family: var(--font-space-mono), monospace;
   font-size: 0.9rem;
   background: #fff;
+  @include smooth-transition(all);
+  
+  &:focus {
+    outline: none;
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.1);
+  }
+  
+  &:disabled {
+    background: #f5f5f5;
+    cursor: not-allowed;
+  }
+}
+
+.select {
+  padding: 0.75rem 1rem;
+  color: #000;
+  border: 2px solid #000;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+  background: #fff;
+  cursor: pointer;
   @include smooth-transition(all);
   
   &:focus {
@@ -171,7 +202,7 @@
   cursor: pointer;
   @include smooth-transition(all);
   
-  &:hover {
+  &:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
   }

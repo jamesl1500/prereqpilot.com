@@ -6,6 +6,7 @@ import { ArrowLeft, Plus, Edit, Trash2, BookOpen, GraduationCap, Target } from '
 import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import type { ProgramRequirementWithDetails, ProgramRequiredCourse } from '@/services/program-requirement-service';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/program-detail.module.scss';
 
 interface ProgramDetailPageProps {
@@ -16,6 +17,7 @@ interface ProgramDetailPageProps {
 
 export default function ProgramDetailPage({ program, isOwner, user }: ProgramDetailPageProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [showAddCourseModal, setShowAddCourseModal] = useState(false);
   const [editingCourse, setEditingCourse] = useState<ProgramRequiredCourse | null>(null);
 
@@ -38,13 +40,14 @@ export default function ProgramDetailPage({ program, isOwner, user }: ProgramDet
       });
 
       if (response.ok) {
+        showToast('Course deleted successfully', 'success');
         router.refresh();
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to delete course');
+        showToast(error.error || 'Failed to delete course', 'error');
       }
     } catch {
-      alert('Failed to delete course');
+      showToast('Failed to delete course', 'error');
     }
   };
 
@@ -239,6 +242,7 @@ function RequiredCourseModal({
   onClose: () => void;
   onSuccess: () => void;
 }) {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     course_title: course?.course_title || '',
     course_code: course?.course_code || '',
@@ -271,13 +275,14 @@ function RequiredCourseModal({
       });
 
       if (response.ok) {
+        showToast(course ? 'Course updated successfully' : 'Course added successfully', 'success');
         onSuccess();
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to save course');
+        showToast(error.error || 'Failed to save course', 'error');
       }
     } catch {
-      alert('Failed to save course');
+      showToast('Failed to save course', 'error');
     } finally {
       setIsSubmitting(false);
     }

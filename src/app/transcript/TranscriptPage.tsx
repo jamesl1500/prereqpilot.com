@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Building2, Calendar, GraduationCap, Award, Eye, Pencil } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
-import type { Course } from '@/types/course';
+import type { Course, CourseData } from '@/types/course';
+import type { TermData } from '@/types/term';
 import type { Institution } from '@/types/institution';
 import TranscriptUpload from '@/components/transcript/TranscriptUpload';
 import styles from '@/styles/modules/pages/transcript.module.scss';
@@ -13,16 +14,21 @@ import Link from 'next/link';
 
 interface TranscriptPageProps {
   user: User;
-  takenCourses: Course[];
+  takenCourses: CourseWithTerm[];
   institutions: Institution[];
 }
 
 interface InstitutionGroup {
   institution: Institution | null;
-  courses: Course[];
+  courses: CourseWithTerm[];
   totalCredits: number;
   gpa: number | null;
 }
+
+type CourseWithTerm = Course & {
+  term?: TermData;
+  course?: CourseData;
+};
 
 export default function TranscriptPage({ takenCourses, institutions }: TranscriptPageProps) {
   const router = useRouter();

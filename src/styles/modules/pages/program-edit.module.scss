@@ -6,7 +6,6 @@
 
 .container {
   @include layout.page-container;
-  padding: $spacing-3xl;
 }
 
 .backButton {
@@ -126,10 +125,18 @@
   cursor: pointer;
   font-family: $font-mono;
   font-size: $font-size-sm;
+
+  svg{
+    color: white;
+  }
   
   &:hover {
     background: $color-white;
     color: $color-black;
+
+    svg{
+      color: black;
+    }
   }
 }
 

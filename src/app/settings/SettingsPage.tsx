@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User as UserIcon, Mail, Lock, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
 import axios from 'axios';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/settings.module.scss';
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   
   // Profile state
   const [name, setName] = useState('');
@@ -59,11 +61,13 @@ export default function SettingsPage() {
       });
 
       setProfileSuccess('Profile updated successfully!');
+      showToast('Profile updated successfully!', 'success');
       setTimeout(() => setProfileSuccess(''), 3000);
       router.refresh();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } } };
       setProfileError(err.response?.data?.error || 'Failed to update profile');
+      showToast(err.response?.data?.error || 'Failed to update profile', 'error');
     } finally {
       setProfileLoading(false);
     }
@@ -94,6 +98,7 @@ export default function SettingsPage() {
       });
 
       setPasswordSuccess('Password updated successfully!');
+      showToast('Password updated successfully!', 'success');
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
@@ -101,6 +106,7 @@ export default function SettingsPage() {
     } catch (error: unknown) {
       const err = error as { response?: { data?: { error?: string } } };
       setPasswordError(err.response?.data?.error || 'Failed to update password');
+      showToast(err.response?.data?.error || 'Failed to update password', 'error');
     } finally {
       setPasswordLoading(false);
     }

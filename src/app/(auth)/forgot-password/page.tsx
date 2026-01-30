@@ -4,8 +4,10 @@ import { useState } from 'react';
 import ForgotPasswordForm from './ForgotPasswordForm';
 import type { ForgotPasswordFormData } from '@/lib/schemas/auth.schema';
 import { requestPasswordReset } from '@/lib/supabase/auth';
+import { useToast } from '@/components/shared/Toast';
 
 export default function ForgotPasswordPage() {
+  const { showToast } = useToast();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
@@ -19,8 +21,10 @@ export default function ForgotPasswordPage() {
       await requestPasswordReset(data.email);
       setEmail(data.email);
       setEmailSent(true);
+      showToast('Password reset email sent!', 'success');
     } catch (err) {
       setError((err as Error).message || 'Failed to send reset email');
+      showToast((err as Error).message || 'Failed to send reset email', 'error');
     } finally {
       setLoading(false);
     }

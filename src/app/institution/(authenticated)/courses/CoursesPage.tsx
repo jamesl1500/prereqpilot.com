@@ -9,6 +9,7 @@ import axios from 'axios';
 import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { BookOpen, Plus, Edit2, Trash2, GraduationCap, Search } from 'lucide-react';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-courses.module.scss';
 
 const courseSchema = z.object({
@@ -40,6 +41,7 @@ interface CoursesPageProps {
 
 export default function CoursesPage({ institution, courses: initialCourses }: CoursesPageProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [courses, setCourses] = useState<Course[]>(initialCourses);
   const [showForm, setShowForm] = useState(false);
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
@@ -117,10 +119,11 @@ export default function CoursesPage({ institution, courses: initialCourses }: Co
 
     try {
       await axios.delete(`/api/institution/courses/${courseId}`);
+      showToast('Course deleted successfully', 'success');
       await refreshCourses();
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        alert(err.response?.data?.error || 'Failed to delete course');
+        showToast(err.response?.data?.error || 'Failed to delete course', 'error');
       }
     }
   };

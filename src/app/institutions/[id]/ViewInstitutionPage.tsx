@@ -5,6 +5,7 @@ import { ArrowLeft, Building2, Globe, MapPin, BookOpen, GraduationCap, Edit, Tra
 import { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Institution } from '@/types';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/view-institution.module.scss';
 import { useState } from 'react';
 import axios from 'axios';
@@ -55,6 +56,7 @@ export default function ViewInstitutionPage({
   programs
 }: ViewInstitutionPageProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -81,10 +83,11 @@ export default function ViewInstitutionPage({
     setIsDeleting(true);
     try {
       await axios.delete(`/api/institutions/${institution.id}`);
+      showToast('Institution deleted successfully', 'success');
       router.push('/institutions');
       router.refresh();
     } catch {
-      alert('Failed to delete institution. It may have courses or programs associated with it.');
+      showToast('Failed to delete institution. It may have courses or programs associated with it.', 'error');
       setIsDeleting(false);
     }
   };

@@ -7,6 +7,7 @@ import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import type { ProgramRequirement, ProgramRequiredCourse } from '@/services/program-requirement-service';
 import type { Institution } from '@/types/institution';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/program-edit.module.scss';
 
 interface ProgramEditPageProps {
@@ -19,6 +20,7 @@ interface ProgramEditPageProps {
 
 export default function ProgramEditPage({ program, requiredCourses, user, userInstitutions, officialInstitutions }: ProgramEditPageProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [showAddCourseModal, setShowAddCourseModal] = useState(false);
   const [editingCourse, setEditingCourse] = useState<ProgramRequiredCourse | null>(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -47,13 +49,13 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
 
       if (response.ok) {
         router.refresh();
-        alert('Program updated successfully!');
+        showToast('Program updated successfully!', 'success');
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to update program');
+        showToast(error.error || 'Failed to update program', 'error');
       }
     } catch (error) {
-      alert('Failed to update program');
+      showToast('Failed to update program', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -68,13 +70,14 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
       });
 
       if (response.ok) {
+        showToast('Course deleted successfully', 'success');
         router.refresh();
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to delete course');
+        showToast(error.error || 'Failed to delete course', 'error');
       }
     } catch (error) {
-      alert('Failed to delete course');
+      showToast('Failed to delete course', 'error');
     }
   };
 
@@ -312,6 +315,7 @@ function RequiredCourseModal({
   onClose: () => void;
   onSuccess: () => void;
 }) {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     course_title: course?.course_title || '',
     course_code: course?.course_code || '',
@@ -344,13 +348,14 @@ function RequiredCourseModal({
       });
 
       if (response.ok) {
+        showToast(course ? 'Course updated successfully' : 'Course added successfully', 'success');
         onSuccess();
       } else {
         const error = await response.json();
-        alert(error.error || 'Failed to save course');
+        showToast(error.error || 'Failed to save course', 'error');
       }
     } catch (error) {
-      alert('Failed to save course');
+      showToast('Failed to save course', 'error');
     } finally {
       setIsSubmitting(false);
     }

@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createServiceRoleClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { StaffPage } from './StaffPage';
 import type { Metadata } from 'next';
@@ -51,20 +51,43 @@ export default async function Page() {
     .eq('institution_id', institution.id)
     .order('created_at', { ascending: false });
 
-  // Get user details for each staff member
-  const staffWithUsers = await Promise.all(
-    (staffMembers || []).map(async (staff) => {
-      const { data: userData } = await supabase.auth.admin.getUserById(staff.user_id);
-      return {
-        ...staff,
-        users: {
-          id: userData?.user?.id || '',
-          email: userData?.user?.email || '',
-          user_metadata: userData?.user?.user_metadata || {},
-        },
-      };
-    })
-  );
+  // Get user details for each staff member using service role client
+  // (needed to access auth.users table with email)
+  const userIds = staffMembers?.map(s => s.user_id) || [];
+  
+  let usersMap: Record<string, any> = {};
+  if (userIds.length > 0) {
+    try {
+      const serviceRoleClient = createServiceRoleClient();
+
+      for(const id of userIds) {
+        const { data: user, error } = await serviceRoleClient.auth.admin.getUserById(id);
+
+        if (error) {
+          throw error;
+        } else {
+          usersMap[id] = {
+            id: user.user.id,
+            email: user.user.email,
+            user_metadata: user.user.user_metadata || {},
+          };
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user details:', error);
+      // Handle error appropriately, e.g., set usersMap to empty or partial data
+      usersMap = {};
+    }
+  }
+
+  const staffWithUsers = (staffMembers || []).map((staff) => ({
+    ...staff,
+    users: usersMap[staff.user_id] || {
+      id: staff.user_id,
+      email: '',
+      user_metadata: {},
+    },
+  }));
 
   return <StaffPage institution={institution} staffMembers={staffWithUsers} />;
 }

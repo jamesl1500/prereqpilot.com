@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
 interface SimulateRetakeModalProps {
@@ -38,6 +39,7 @@ export default function SimulateRetakeModal({
   courses,
   onSuccess,
 }: SimulateRetakeModalProps) {
+  const { showToast } = useToast();
   const [grades, setGrades] = useState<Record<string, string>>({});
   const [markAsRepeats, setMarkAsRepeats] = useState<Set<string>>(new Set());
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -85,10 +87,12 @@ export default function SimulateRetakeModal({
       );
 
       onSuccess();
+      showToast('Retake simulation saved successfully', 'success');
       onClose();
     } catch (err) {
       console.error('Error simulating retakes:', err);
       setError('Failed to simulate retakes. Please try again.');
+      showToast('Failed to simulate retakes', 'error');
     } finally {
       setIsSubmitting(false);
     }

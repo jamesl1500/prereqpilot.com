@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Building2, Mail, Lock, Globe, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-signup.module.scss';
 
 interface FormData {
@@ -25,6 +26,7 @@ interface FormData {
 
 export default function InstitutionSignupPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -152,9 +154,11 @@ export default function InstitutionSignupPage() {
       }
 
       // Redirect to pending verification page
+      showToast('Institution registered successfully!', 'success');
       router.push('/institution/pending');
     } catch (err: any) {
       setError(err.message || 'An error occurred during registration');
+      showToast(err.message || 'An error occurred during registration', 'error');
       console.error('Registration error:', err);
     } finally {
       setIsSubmitting(false);

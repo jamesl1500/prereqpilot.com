@@ -34,6 +34,20 @@ export interface Course {
   notes: string | null;
   is_retaken?: boolean;
   created_at: string;
+  course_number?: string;
+  department?: string;
+  level?: string;
+  prerequisites?: string;
+  is_official?: boolean;
+  name?: string;
+}
+
+/**
+ * Data structure for Course Detail Page props
+ * @interface CourseDetailPageData
+ */
+export interface CourseDetailPageData {
+  user_id: string;
   course?: CourseData;
   institution?: InstitutionData;
   term?: TermData;

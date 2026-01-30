@@ -9,6 +9,7 @@ import axios from 'axios';
 import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { Building2, Mail, Globe, MapPin, FileText, Check, AlertCircle } from 'lucide-react';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-profile.module.scss';
 
 const institutionSchema = z.object({
@@ -38,6 +39,7 @@ interface InstitutionProfilePageProps {
 
 export default function InstitutionProfilePage({ user, institution, stats }: InstitutionProfilePageProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -87,6 +89,7 @@ export default function InstitutionProfilePage({ user, institution, stats }: Ins
 
       if (response.data.success) {
         setSuccessMessage('Profile updated successfully!');
+        showToast('Profile updated successfully!', 'success');
         setTimeout(() => {
           router.refresh();
         }, 1500);
@@ -94,8 +97,10 @@ export default function InstitutionProfilePage({ user, institution, stats }: Ins
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'Failed to update profile');
+        showToast(err.response?.data?.error || 'Failed to update profile', 'error');
       } else {
         setError('An error occurred while updating the profile');
+        showToast('An error occurred while updating the profile', 'error');
       }
     } finally {
       setIsSubmitting(false);

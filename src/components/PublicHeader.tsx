@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
-import { PenTool } from 'lucide-react';
 import styles from '@/styles/modules/components/public-header.module.scss';
 
 import type { User } from '@supabase/supabase-js';
@@ -19,7 +19,13 @@ export default function PublicHeader({ user }: PublicHeaderProps) {
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo}>
-          <PenTool size={24} strokeWidth={2} />
+          <Image
+            src="/primary_logo.png"
+            alt="PrereqPilot Logo"
+            width={32}
+            height={32}
+            className={styles.logoImage}
+          />
           <span>PREREQPILOT</span>
         </Link>
 
@@ -42,7 +48,7 @@ export default function PublicHeader({ user }: PublicHeaderProps) {
         {/* Auth Buttons */}
         <div className={styles.actions}>
           {user ? (
-            <>
+            <div className={styles.actionsInner}>
               <Link href="/dashboard" className={styles.dashboardButton}>
                 Dashboard
               </Link>
@@ -51,7 +57,7 @@ export default function PublicHeader({ user }: PublicHeaderProps) {
                   Sign Out
                 </button>
               </form>
-            </>
+            </div>
           ) : (
             <>
               <Link href="/signup" className={styles.signupButton}>

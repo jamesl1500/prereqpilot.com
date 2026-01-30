@@ -8,6 +8,7 @@ import { z } from 'zod';
 import axios from 'axios';
 
 import type { TermModalProps } from '@/types/modal';
+import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
 const termSchema = z.object({
@@ -28,6 +29,7 @@ function toInputDate(value?: string | null): string {
 
 export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -78,8 +80,10 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
 
       if (term) {
         await axios.put(`/api/terms/${term.id}`, termData);
+        showToast('Term updated successfully', 'success');
       } else {
         await axios.post('/api/terms', termData);
+        showToast('Term created successfully', 'success');
       }
 
       reset();
@@ -88,8 +92,10 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'An error occurred');
+        showToast(err.response?.data?.error || 'Failed to save term', 'error');
       } else {
         setError('An error occurred');
+        showToast('An error occurred', 'error');
       }
     } finally {
       setIsSubmitting(false);

@@ -6,9 +6,11 @@ import LoginForm from '@/components/forms/LoginForm';
 import type { LoginFormData } from '@/lib/schemas/auth.schema';
 import { signIn } from '@/lib/supabase/auth';
 import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/components/shared/Toast';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -40,9 +42,11 @@ export default function LoginPage() {
         router.push('/dashboard');
       }
       
+      showToast('Logged in successfully!', 'success');
       router.refresh();
     } catch (err) {
       setError((err as Error).message || 'Failed to log in');
+      showToast((err as Error).message || 'Failed to log in', 'error');
     } finally {
       setLoading(false);
     }

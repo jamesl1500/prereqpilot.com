@@ -5,6 +5,7 @@ import type { Institution, UserRole } from '@/types/institution';
 import Link from 'next/link';
 import { useState } from 'react';
 import styles from '@/styles/modules/pages/institution-dashboard.module.scss';
+import { Course, Program } from '@/types';
 
 interface InstitutionDashboardProps {
   institution: Institution;
@@ -16,8 +17,8 @@ interface InstitutionDashboardProps {
     application_count?: number;
     active_students?: number;
   };
-  recentPrograms: any[];
-  recentCourses: any[];
+  recentPrograms: Program[];
+  recentCourses: Course[];
   pendingApplications: any[];
 }
 
@@ -30,7 +31,7 @@ export function InstitutionDashboard({
   recentCourses,
   pendingApplications,
 }: InstitutionDashboardProps) {
-  const [activeTab, setActiveTab] = useState<'overview' | 'programs' | 'courses' | 'applications'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'programs' | 'courses'>('overview');
 
   return (
     <div className={styles.container}>
@@ -75,12 +76,6 @@ export function InstitutionDashboard({
         >
           Courses ({stats.course_count || 0})
         </button>
-        <button
-          className={activeTab === 'applications' ? styles.active : ''}
-          onClick={() => setActiveTab('applications')}
-        >
-          Applications ({pendingApplications.length})
-        </button>
       </nav>
 
       {/* Content */}
@@ -115,35 +110,6 @@ export function InstitutionDashboard({
                 </div>
               </div>
 
-              <div className={styles.statCard}>
-                <div className={styles.statIcon}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </div>
-                <div className={styles.statInfo}>
-                  <div className={styles.statValue}>{stats.application_count || 0}</div>
-                  <div className={styles.statLabel}>{stats.application_count === 1 ? 'Application' : 'Applications'}</div>
-                </div>
-              </div>
-
-              <div className={styles.statCard}>
-                <div className={styles.statIcon}>
-                  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                </div>
-                <div className={styles.statInfo}>
-                  <div className={styles.statValue}>{stats.active_students || 0}</div>
-                  <div className={styles.statLabel}>{stats.active_students === 1 ? 'Active Student' : 'Active Students'}</div>
-                </div>
-              </div>
             </div>
 
             {/* Quick Actions */}
@@ -225,7 +191,7 @@ export function InstitutionDashboard({
                     <div className={styles.itemInfo}>
                       <div className={styles.itemName}>{program.name}</div>
                       <div className={styles.itemMeta}>
-                        {program.program_type} • {program.is_published ? 'Published' : 'Draft'}
+                        {program.program_type ?? 'Degree'} • {program.is_published ? 'Published' : 'Draft'}
                       </div>
                     </div>
                     <Link href={`/institution/programs/${program.id}`} className={styles.itemLink}>
@@ -266,35 +232,6 @@ export function InstitutionDashboard({
               </div>
             ) : (
               <p className={styles.emptyState}>No courses yet. Add your first course to get started.</p>
-            )}
-          </div>
-        )}
-
-        {activeTab === 'applications' && (
-          <div className={styles.applications}>
-            <h2 className={styles.sectionTitle}>Recent Applications</h2>
-            {pendingApplications.length > 0 ? (
-              <div className={styles.applicationsList}>
-                {pendingApplications.map((app) => (
-                  <div key={app.id} className={styles.applicationItem}>
-                    <div className={styles.appInfo}>
-                      <div className={styles.appProgram}>{app.program_requirements?.name}</div>
-                      <div className={styles.appStudent}>{app.profiles?.full_name || app.profiles?.email}</div>
-                    </div>
-                    <div className={styles.appMeta}>
-                      <span className={styles.appStatus}>{app.status}</span>
-                      <span className={styles.appDate}>
-                        {new Date(app.submitted_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <Link href={`/institution/applications/${app.id}`} className={styles.appLink}>
-                      Review
-                    </Link>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className={styles.emptyState}>No applications yet</p>
             )}
           </div>
         )}
