@@ -43,13 +43,21 @@ export default function CoursesListPage({ institution, courses: initialCourses, 
 
   // Get unique departments for filter
   const departments = useMemo(() => {
-    const depts = new Set(courses.map(c => c.department).filter(Boolean));
+    const depts = new Set(
+      courses
+        .map(c => c.department)
+        .filter((dept): dept is string => Boolean(dept))
+    );
     return Array.from(depts).sort();
   }, [courses]);
 
   // Get unique levels for filter
   const levels = useMemo(() => {
-    const lvls = new Set(courses.map(c => c.level).filter(Boolean));
+    const lvls = new Set(
+      courses
+        .map(c => c.level)
+        .filter((level): level is string => Boolean(level))
+    );
     return Array.from(lvls).sort();
   }, [courses]);
 

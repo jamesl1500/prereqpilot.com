@@ -224,7 +224,7 @@
 
 .actions{
 
-  @media (min-width: $breakpoint-tablet) {
+  @media (max-width: $breakpoint-tablet) {
     display: none;
   }
 

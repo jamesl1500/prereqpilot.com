@@ -13,7 +13,9 @@ import NoTermsPrompt from '@/components/modals/NoTermsPrompt';
 import TutorialTooltip from '@/components/onboarding/TutorialTooltip';
 import OnboardingModal from '@/components/onboarding/OnboardingModal';
 import styles from '@/styles/modules/pages/classes.module.scss';
-import type { Course } from '@/types/course';
+import type { Course, CourseData } from '@/types/course';
+import type { InstitutionData } from '@/types/institution';
+import type { TermData } from '@/types/term';
 import type { Term } from '@/types/term';
 import type { Institution } from '@/types/institution';
 
@@ -23,9 +25,15 @@ interface OnboardingData {
   steps_completed: string[];
 }
 
+type CourseWithDetails = Course & {
+  course?: CourseData;
+  institution?: InstitutionData;
+  term?: TermData;
+};
+
 interface ClassesPageProps {
   user: User;
-  takenCourses: Course[];
+  takenCourses: CourseWithDetails[];
   terms: Term[];
   institutions: Institution[];
   onboarding: OnboardingData | null;
@@ -37,7 +45,7 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<Course | undefined>();
+  const [selectedCourse, setSelectedCourse] = useState<CourseWithDetails | undefined>();
   const [isTermModalOpen, setIsTermModalOpen] = useState(false);
   const [isManageTermsModalOpen, setIsManageTermsModalOpen] = useState(false);
   const [isNoTermsPromptOpen, setIsNoTermsPromptOpen] = useState(false);
@@ -97,12 +105,12 @@ export default function ClassesPage({ user, takenCourses, terms, institutions, o
     setIsTermModalOpen(true);
   };
 
-  const handleEditCourse = (course: Course) => {
+  const handleEditCourse = (course: CourseWithDetails) => {
     setSelectedCourse(course);
     setIsModalOpen(true);
   };
 
-  const handleDeleteCourse = (course: Course) => {
+  const handleDeleteCourse = (course: CourseWithDetails) => {
     setSelectedCourse(course);
     setIsDeleteModalOpen(true);
   };

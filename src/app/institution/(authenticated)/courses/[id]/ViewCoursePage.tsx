@@ -33,7 +33,7 @@ interface ProgramUsage {
   program_requirements: {
     id: string;
     name: string;
-  } | null;
+  }[] | null;
 }
 
 interface ViewCoursePageProps {
@@ -223,15 +223,21 @@ export default function ViewCoursePage({ user, institution, course, programUsage
           </div>
         ) : (
           <div className={styles.programsList}>
-            {programUsages.map((usage) => (
-              usage.program_requirements && (
+            {programUsages.map((usage) => {
+              const requirement = usage.program_requirements?.[0];
+
+              if (!requirement) {
+                return null;
+              }
+
+              return (
                 <div key={usage.id} className={styles.programCard}>
                   <div className={styles.programHeader}>
                     <Link
-                      href={`/institution/programs/${usage.program_requirements.id}`}
+                      href={`/institution/programs/${requirement.id}`}
                       className={styles.programName}
                     >
-                      {usage.program_requirements.name}
+                      {requirement.name}
                     </Link>
                     <div className={styles.programBadges}>
                       {usage.is_required ? (
@@ -254,8 +260,8 @@ export default function ViewCoursePage({ user, institution, course, programUsage
                     )}
                   </div>
                 </div>
-              )
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
