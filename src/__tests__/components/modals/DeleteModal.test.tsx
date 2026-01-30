@@ -3,32 +3,39 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders } from '@/__tests__/utils/test-helpers';
 import DeleteModal from '@/components/modals/DeleteModal';
 import axios from 'axios';
 
 jest.mock('axios');
+
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+
+// Create mock router functions that we can reference
+const mockRefresh = jest.fn();
+const mockPush = jest.fn();
+
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    refresh: mockRefresh,
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    replace: jest.fn(),
+  }),
+}));
 
 describe('DeleteModal Component', () => {
   const mockOnClose = jest.fn();
-  const mockRefresh = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(require('next/navigation'), 'useRouter').mockReturnValue({
-      push: jest.fn(),
-      refresh: mockRefresh,
-      prefetch: jest.fn(),
-      back: jest.fn(),
-      pathname: '/',
-      query: {},
-      asPath: '/',
-    });
   });
 
   it('should not render when isOpen is false', () => {
-    const { container } = render(
+    renderWithProviders(
       <DeleteModal
         isOpen={false}
         onClose={mockOnClose}
@@ -37,11 +44,11 @@ describe('DeleteModal Component', () => {
         itemName="Test Course"
       />
     );
-    expect(container.firstChild).toBeNull();
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument();
   });
 
   it('should render when isOpen is true', () => {
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}
@@ -62,7 +69,7 @@ describe('DeleteModal Component', () => {
       ['course', 'institution', 'program', 'scenario', 'term'];
 
     itemTypes.forEach(itemType => {
-      const { rerender } = render(
+      const { unmount } = renderWithProviders(
         <DeleteModal
           isOpen={true}
           onClose={mockOnClose}
@@ -74,12 +81,12 @@ describe('DeleteModal Component', () => {
 
       expect(screen.getByText(`Delete ${itemType}`)).toBeInTheDocument();
       
-      rerender(<div />); // Cleanup
+      unmount();
     });
   });
 
   it('should call onClose when cancel button is clicked', () => {
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}
@@ -96,7 +103,7 @@ describe('DeleteModal Component', () => {
   });
 
   it('should call onClose when close button (×) is clicked', () => {
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}
@@ -113,7 +120,7 @@ describe('DeleteModal Component', () => {
   });
 
   it('should call onClose when overlay is clicked', () => {
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}
@@ -131,7 +138,7 @@ describe('DeleteModal Component', () => {
   });
 
   it('should not close when modal content is clicked', () => {
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}
@@ -151,7 +158,7 @@ describe('DeleteModal Component', () => {
   it('should successfully delete course and close modal', async () => {
     mockedAxios.delete.mockResolvedValue({});
 
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}
@@ -186,7 +193,7 @@ describe('DeleteModal Component', () => {
     ];
 
     for (const testCase of testCases) {
-      const { rerender } = render(
+      const { unmount } = renderWithProviders(
         <DeleteModal
           isOpen={true}
           onClose={mockOnClose}
@@ -203,7 +210,7 @@ describe('DeleteModal Component', () => {
         expect(mockedAxios.delete).toHaveBeenCalledWith(testCase.endpoint);
       });
 
-      rerender(<div />); // Cleanup
+      unmount(); // Cleanup
       mockedAxios.delete.mockClear();
     }
   });
@@ -218,7 +225,7 @@ describe('DeleteModal Component', () => {
     });
     mockedAxios.isAxiosError = jest.fn().mockReturnValue(true);
 
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}
@@ -232,7 +239,10 @@ describe('DeleteModal Component', () => {
     fireEvent.click(deleteButton);
 
     await waitFor(() => {
-      expect(screen.getByText('Failed to delete item')).toBeInTheDocument();
+      // Look for all alerts and find the one with aria-live="assertive"
+      const errorDivs = screen.getAllByRole('alert', { hidden: false });
+      const modalErrorDiv = errorDivs.find(el => el.getAttribute('aria-live') === 'assertive');
+      expect(modalErrorDiv).toHaveTextContent('Failed to delete item');
     });
 
     expect(mockOnClose).not.toHaveBeenCalled();
@@ -241,7 +251,7 @@ describe('DeleteModal Component', () => {
   it('should show loading state during deletion', async () => {
     mockedAxios.delete.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
 
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}
@@ -262,7 +272,7 @@ describe('DeleteModal Component', () => {
   it('should handle generic error when axios error is not recognized', async () => {
     mockedAxios.delete.mockRejectedValue(new Error('Network error'));
 
-    render(
+    renderWithProviders(
       <DeleteModal
         isOpen={true}
         onClose={mockOnClose}

@@ -6,15 +6,20 @@
 import React from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { ToastProvider } from '@/components/shared/Toast';
 
 // Custom render function with providers
 export function renderWithProviders(
   ui: React.ReactElement,
   options?: Omit<RenderOptions, 'wrapper'>
 ) {
+  function Wrapper({ children }: { children: React.ReactNode }) {
+    return <ToastProvider>{children}</ToastProvider>;
+  }
+
   return {
     user: userEvent.setup(),
-    ...render(ui, options),
+    ...render(ui, { wrapper: Wrapper, ...options }),
   };
 }
 
