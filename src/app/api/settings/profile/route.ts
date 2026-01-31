@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { updateUserProfile, getUserProfile } from '@/services/settings-service';
+import { logApiError } from '@/lib/error_logs';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,6 +23,13 @@ export async function GET(request: NextRequest) {
     const result = await getUserProfile(request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'GET',
+        userId: user.id,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -30,7 +38,11 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: result.data });
   } catch (error) {
-    console.error('Error fetching profile:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'GET',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -54,6 +66,14 @@ export async function PUT(request: NextRequest) {
     const result = await updateUserProfile(user.id, body, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'PUT',
+        userId: user.id,
+        payloadSent: body,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -62,7 +82,11 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error updating profile:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'PUT',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

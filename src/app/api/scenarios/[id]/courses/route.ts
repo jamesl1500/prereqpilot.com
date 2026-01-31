@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
+import { logApiError } from '@/lib/error_logs';
 
 export async function POST(
   request: NextRequest,
@@ -33,6 +34,13 @@ export async function POST(
       .single();
 
     if (scenarioError || scenario?.user_id !== user.id) {
+      await logApiError({
+        request,
+        error: scenarioError ?? 'Scenario not found',
+        functionName: 'POST',
+        userId: user.id,
+        payloadSent: body,
+      });
       return NextResponse.json(
         { error: 'Scenario not found' },
         { status: 404 }
@@ -86,7 +94,11 @@ export async function POST(
 
     return NextResponse.json({ success: true, data: result.data });
   } catch (error) {
-    console.error('Error updating scenario course:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'POST',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -128,6 +140,13 @@ export async function DELETE(
       .single();
 
     if (scenarioError || scenario?.user_id !== user.id) {
+      await logApiError({
+        request,
+        error: scenarioError ?? 'Scenario not found',
+        functionName: 'DELETE',
+        userId: user.id,
+        payloadReceived: { scenarioId, takenCourseId },
+      });
       return NextResponse.json(
         { error: 'Scenario not found' },
         { status: 404 }
@@ -144,7 +163,11 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting scenario course:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'DELETE',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { deleteUserAccount } from '@/services/settings-service';
+import { logApiError } from '@/lib/error_logs';
 
 export async function DELETE(request: NextRequest) {
   try {
@@ -22,6 +23,13 @@ export async function DELETE(request: NextRequest) {
     const result = await deleteUserAccount(user.id, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'DELETE',
+        userId: user.id,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -30,7 +38,11 @@ export async function DELETE(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting account:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'DELETE',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -5,6 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { updateInstitution, deleteInstitution } from '@/services/institution-service';
+import { logApiError } from '@/lib/error_logs';
 
 export async function PUT(
   request: NextRequest,
@@ -16,6 +17,13 @@ export async function PUT(
     const result = await updateInstitution(id, body, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'PUT',
+        payloadSent: body,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -23,7 +31,12 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'PUT',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -40,6 +53,12 @@ export async function DELETE(
     const result = await deleteInstitution(id, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'DELETE',
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -47,7 +66,12 @@ export async function DELETE(
     }
 
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'DELETE',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

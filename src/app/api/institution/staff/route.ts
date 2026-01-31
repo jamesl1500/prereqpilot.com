@@ -1,5 +1,6 @@
 import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
+import { logApiError } from '@/lib/error_logs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -73,6 +74,13 @@ export async function POST(request: NextRequest) {
       });
 
       if (signUpError || !newUser.user) {
+        await logApiError({
+          request,
+          error: signUpError ?? 'Failed to create user account',
+          functionName: 'POST',
+          userId: user.id,
+          payloadSent: body,
+        });
         return NextResponse.json(
           { error: 'Failed to create user account' },
           { status: 500 }
@@ -90,6 +98,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (roleError) {
+      await logApiError({
+        request,
+        error: roleError,
+        functionName: 'POST',
+        userId: user.id,
+        payloadSent: body,
+      });
       return NextResponse.json({ error: 'Failed to assign role to user' }, { status: 500 });
     }
 
@@ -98,7 +113,11 @@ export async function POST(request: NextRequest) {
       message: 'Staff member invited successfully',
     });
   } catch (error) {
-    console.error('Error inviting staff:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'POST',
+    });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -144,12 +163,22 @@ export async function GET(request: NextRequest) {
       .order('created_at', { ascending: false });
 
     if (error) {
+      await logApiError({
+        request,
+        error,
+        functionName: 'GET',
+        userId: user.id,
+      });
       return NextResponse.json({ error: 'Failed to fetch staff members' }, { status: 500 });
     }
 
     return NextResponse.json({ success: true, data: staffMembers });
   } catch (error) {
-    console.error('Error fetching staff:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'GET',
+    });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

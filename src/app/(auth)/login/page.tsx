@@ -7,6 +7,7 @@ import type { LoginFormData } from '@/lib/schemas/auth.schema';
 import { signIn } from '@/lib/supabase/auth';
 import { createClient } from '@/lib/supabase/client';
 import { useToast } from '@/components/shared/Toast';
+import { logError } from '@/lib/error_logs';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -47,6 +48,19 @@ export default function LoginPage() {
     } catch (err) {
       setError((err as Error).message || 'Failed to log in');
       showToast((err as Error).message || 'Failed to log in', 'error');
+
+      // Log the error
+      await logError({
+        type: 'login_error',
+        error_desc: (err as Error).message || 'Unknown error during login',
+        severity: 2,
+        payload_sent: JSON.stringify({ email: data.email }),
+        payload_received: null,
+        page: '/login',
+        route: '/login',
+        function: 'handleLogin',
+        user: null,
+      });
     } finally {
       setLoading(false);
     }
