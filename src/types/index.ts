@@ -37,3 +37,6 @@ export type {
   ScenarioModalProps,
   TermModalProps,
 } from './modal';
+
+//Error Logs
+export * from './error_logs';

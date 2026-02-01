@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getTutorialProgress, markTutorialComplete } from '@/services/onboarding-service';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
+import { logApiError } from '@/lib/error_logs';
 
 export async function GET(request: NextRequest) {
   try {
@@ -17,6 +18,13 @@ export async function GET(request: NextRequest) {
     const result = await getTutorialProgress(user.id, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'GET',
+        userId: user.id,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 500 }
@@ -24,7 +32,12 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ data: result.data });
-  } catch {
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'GET',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -50,6 +63,14 @@ export async function POST(request: NextRequest) {
     const result = await markTutorialComplete(user.id, tutorial_type, skipped || false, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'POST',
+        userId: user.id,
+        payloadSent: body,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -57,7 +78,12 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, data: result.data }, { status: 201 });
-  } catch {
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'POST',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

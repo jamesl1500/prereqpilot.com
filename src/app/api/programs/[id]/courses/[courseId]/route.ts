@@ -9,6 +9,7 @@ import {
   updateRequiredCourse,
   deleteRequiredCourse,
 } from '@/services/program-requirement-service';
+import { logApiError } from '@/lib/error_logs';
 
 export async function PUT(
   request: NextRequest,
@@ -21,6 +22,13 @@ export async function PUT(
     const result = await updateRequiredCourse(courseId, body, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'PUT',
+        payloadSent: body,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { success: false, error: result.error },
         { status: result.error === 'Unauthorized' ? 401 : 400 }
@@ -28,7 +36,12 @@ export async function PUT(
     }
 
     return NextResponse.json({ success: true, data: result.data });
-  } catch {
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'PUT',
+    });
     return NextResponse.json(
       { success: false, error: 'Invalid request body' },
       { status: 400 }
@@ -40,15 +53,33 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string; courseId: string }> }
 ) {
-  const { courseId } = await params;
-  const result = await deleteRequiredCourse(courseId, request);
+  try {
+    const { courseId } = await params;
+    const result = await deleteRequiredCourse(courseId, request);
 
-  if (!result.success) {
+    if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'DELETE',
+        payloadReceived: result,
+      });
+      return NextResponse.json(
+        { success: false, error: result.error },
+        { status: result.error === 'Unauthorized' ? 401 : 400 }
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'DELETE',
+    });
     return NextResponse.json(
-      { success: false, error: result.error },
-      { status: result.error === 'Unauthorized' ? 401 : 400 }
+      { error: 'Internal server error' },
+      { status: 500 }
     );
   }
-
-  return NextResponse.json({ success: true });
 }

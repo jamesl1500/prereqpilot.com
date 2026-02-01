@@ -12,6 +12,11 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('ScenarioModal', () => {
   const mockOnClose = jest.fn();
+  const waitForProgramsLoad = async () => {
+    await waitFor(() => {
+      expect(mockedAxios.get).toHaveBeenCalled();
+    });
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -27,13 +32,15 @@ describe('ScenarioModal', () => {
   });
 
   describe('Create Mode', () => {
-    it('should render create scenario form', () => {
+    it('should render create scenario form', async () => {
       renderWithProviders(
         <ScenarioModal
           isOpen={true}
           onClose={mockOnClose}
         />
       );
+
+      await waitForProgramsLoad();
 
       expect(screen.getAllByText(/create scenario/i).length).toBeGreaterThan(0);
       expect(screen.getByLabelText(/scenario name/i)).toBeInTheDocument();
@@ -48,6 +55,8 @@ describe('ScenarioModal', () => {
           onClose={mockOnClose}
         />
       );
+
+      await waitForProgramsLoad();
 
       const createButton = screen.getByRole('button', { name: /create/i });
       await user.click(createButton);
@@ -66,6 +75,8 @@ describe('ScenarioModal', () => {
           onClose={mockOnClose}
         />
       );
+
+      await waitForProgramsLoad();
 
       await user.type(screen.getByLabelText(/scenario name/i), 'Graduate Early');
       await user.selectOptions(screen.getByLabelText(/program/i), '1');
@@ -90,6 +101,8 @@ describe('ScenarioModal', () => {
         />
       );
 
+      await waitForProgramsLoad();
+
       await user.type(screen.getByLabelText(/scenario name/i), 'Test Scenario');
       await user.selectOptions(screen.getByLabelText(/program/i), '1');
       await user.click(screen.getByRole('button', { name: /create/i }));
@@ -107,6 +120,8 @@ describe('ScenarioModal', () => {
         />
       );
 
+      await waitForProgramsLoad();
+
       await user.type(screen.getByLabelText(/scenario name/i), 'Test Scenario');
       await user.selectOptions(screen.getByLabelText(/program/i), '1');
       await user.click(screen.getByRole('button', { name: /create/i }));
@@ -121,7 +136,7 @@ describe('ScenarioModal', () => {
   });
 
   describe('Edit Mode', () => {
-    it('should render edit form with pre-filled data', () => {
+    it('should render edit form with pre-filled data', async () => {
       renderWithProviders(
         <ScenarioModal
           isOpen={true}
@@ -129,6 +144,8 @@ describe('ScenarioModal', () => {
           scenario={{ ...mockScenario, program_id: 'program-123' }}
         />
       );
+
+      await waitForProgramsLoad();
 
       expect(screen.getByText(/edit scenario/i)).toBeInTheDocument();
       expect(screen.getByDisplayValue(mockScenario.name)).toBeInTheDocument();
@@ -147,6 +164,8 @@ describe('ScenarioModal', () => {
           scenario={{ ...mockScenario, program_id: 'program-123' }}
         />
       );
+
+      await waitForProgramsLoad();
 
       const nameInput = screen.getByLabelText(/scenario name/i);
       await user.clear(nameInput);
@@ -169,6 +188,8 @@ describe('ScenarioModal', () => {
           scenario={{ ...mockScenario, program_id: 'program-123' }}
         />
       );
+
+      await waitForProgramsLoad();
 
       const nameInput = screen.getByLabelText(/scenario name/i);
       await user.clear(nameInput);
@@ -205,6 +226,8 @@ describe('ScenarioModal', () => {
         />
       );
 
+      await waitForProgramsLoad();
+
       await user.click(screen.getByRole('button', { name: /cancel/i }));
 
       expect(mockOnClose).toHaveBeenCalled();
@@ -218,18 +241,22 @@ describe('ScenarioModal', () => {
         />
       );
 
+      await waitForProgramsLoad();
+
       const backdrop = screen.getByRole('dialog');
       await user.click(backdrop);
       expect(mockOnClose).toHaveBeenCalled();
     });
 
-    it('should trap focus inside modal', () => {
+    it('should trap focus inside modal', async () => {
       renderWithProviders(
         <ScenarioModal
           isOpen={true}
           onClose={mockOnClose}
         />
       );
+
+      await waitForProgramsLoad();
 
       const modal = screen.getByRole('dialog');
       expect(modal).toHaveAttribute('aria-modal', 'true');
@@ -247,6 +274,8 @@ describe('ScenarioModal', () => {
         />
       );
 
+      await waitForProgramsLoad();
+
       await user.type(screen.getByLabelText(/scenario name/i), '  Test Scenario  ');
       await user.selectOptions(screen.getByLabelText(/program/i), '1');
       await user.click(screen.getByRole('button', { name: /create/i }));
@@ -259,13 +288,15 @@ describe('ScenarioModal', () => {
   });
 
   describe('Accessibility', () => {
-    it('should have proper ARIA labels', () => {
+    it('should have proper ARIA labels', async () => {
       renderWithProviders(
         <ScenarioModal
           isOpen={true}
           onClose={mockOnClose}
         />
       );
+
+      await waitForProgramsLoad();
 
       expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby');
       expect(screen.getByLabelText(/scenario name/i)).toBeInTheDocument();
@@ -280,6 +311,8 @@ describe('ScenarioModal', () => {
         />
       );
 
+      await waitForProgramsLoad();
+
       // First tab goes to close button
       await user.tab();
       expect(screen.getByLabelText(/close modal/i)).toHaveFocus();
@@ -289,13 +322,15 @@ describe('ScenarioModal', () => {
       expect(screen.getByLabelText(/scenario name/i)).toHaveFocus();
     });
 
-    it('should have focus trap capability', () => {
+    it('should have focus trap capability', async () => {
       renderWithProviders(
         <ScenarioModal
           isOpen={true}
           onClose={mockOnClose}
         />
       );
+
+      await waitForProgramsLoad();
 
       const dialog = screen.getByRole('dialog');
       expect(dialog).toHaveAttribute('aria-modal', 'true');

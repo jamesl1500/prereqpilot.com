@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createCourse, getUserCourses } from '@/services/course-service';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
+import { logApiError } from '@/lib/error_logs';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,6 +23,13 @@ export async function GET(request: NextRequest) {
     const result = await getUserCourses(user.id, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'GET',
+        userId: user.id,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 500 }
@@ -30,6 +38,11 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ data: result.data });
   } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'GET',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -53,6 +66,14 @@ export async function POST(request: NextRequest) {
     const result = await createCourse(user.id, body, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'POST',
+        userId: user.id,
+        payloadSent: body,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -61,6 +82,11 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'POST',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

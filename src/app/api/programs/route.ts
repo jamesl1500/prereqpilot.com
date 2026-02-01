@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createProgram, getAllPrograms } from '@/services/program-service';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
+import { logApiError } from '@/lib/error_logs';
 import {
   getAllProgramRequirements,
   createProgramRequirement,
@@ -21,6 +22,12 @@ export async function GET(request: NextRequest) {
     if (type === 'requirements') {
       const result = await getAllProgramRequirements(request);
       if (!result.success) {
+        await logApiError({
+          request,
+          error: result.error,
+          functionName: 'GET',
+          payloadReceived: result,
+        });
         return NextResponse.json(
           { error: result.error },
           { status: result.error === 'Unauthorized' ? 401 : 500 }
@@ -31,9 +38,17 @@ export async function GET(request: NextRequest) {
 
     // Default to programs
     const result = await getAllPrograms(request, filter);
-    console.log("API GET /programs result:", result);
+    if (process.env.NODE_ENV !== 'test') {
+      console.log('API GET /programs result:', result);
+    }
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'GET',
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 500 }
@@ -41,7 +56,12 @@ export async function GET(request: NextRequest) {
     }
 
     return NextResponse.json({ data: result.data });
-  } catch {
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'GET',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -70,6 +90,14 @@ export async function POST(request: NextRequest) {
     if (type === 'requirement') {
       const result = await createProgramRequirement(body, request);
       if (!result.success) {
+        await logApiError({
+          request,
+          error: result.error,
+          functionName: 'POST',
+          userId: user.id,
+          payloadSent: body,
+          payloadReceived: result,
+        });
         return NextResponse.json(
           { error: result.error },
           { status: result.error === 'Unauthorized' ? 401 : 400 }
@@ -82,6 +110,14 @@ export async function POST(request: NextRequest) {
     const result = await createProgram(user.id, body, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'POST',
+        userId: user.id,
+        payloadSent: body,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -89,7 +125,12 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true }, { status: 201 });
-  } catch {
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'POST',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

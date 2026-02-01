@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { parseTranscriptWithAI, importTranscriptData } from '@/services/transcript-service';
+import { logApiError } from '@/lib/error_logs';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -115,6 +116,13 @@ export async function POST(request: NextRequest) {
     const parseResult = await parseTranscriptWithAI(text);
 
     if (!parseResult.success || !parseResult.data) {
+      await logApiError({
+        request,
+        error: parseResult.error || 'Failed to parse transcript',
+        functionName: 'POST',
+        userId: user.id,
+        payloadReceived: parseResult,
+      });
       return NextResponse.json(
         { error: parseResult.error || 'Failed to parse transcript' },
         { status: 400 }
@@ -125,6 +133,13 @@ export async function POST(request: NextRequest) {
     const importResult = await importTranscriptData(user.id, parseResult.data, request);
 
     if (!importResult.success) {
+      await logApiError({
+        request,
+        error: importResult.error || 'Failed to import transcript data',
+        functionName: 'POST',
+        userId: user.id,
+        payloadReceived: importResult,
+      });
       return NextResponse.json(
         { error: importResult.error || 'Failed to import transcript data' },
         { status: 400 }
@@ -137,7 +152,11 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Transcript parsing error:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'POST',
+    });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Internal server error' },
       { status: 500 }

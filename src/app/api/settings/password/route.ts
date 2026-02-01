@@ -6,6 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { updateUserPassword } from '@/services/settings-service';
+import { logApiError } from '@/lib/error_logs';
 
 export async function PUT(request: NextRequest) {
   try {
@@ -38,6 +39,14 @@ export async function PUT(request: NextRequest) {
     const result = await updateUserPassword(body, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'PUT',
+        userId: user.id,
+        payloadSent: body,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { error: result.error },
         { status: 400 }
@@ -46,7 +55,11 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error updating password:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'PUT',
+    });
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

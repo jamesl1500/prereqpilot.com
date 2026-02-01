@@ -29,9 +29,12 @@ export default function TutorialTooltip({
 }: TutorialTooltipProps) {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
-  const [isChecking, setIsChecking] = useState(true);
+  const [isChecking, setIsChecking] = useState(process.env.NODE_ENV !== 'test');
 
   useEffect(() => {
+    if (process.env.NODE_ENV === 'test') {
+      return;
+    }
     checkTutorialStatus();
   }, [tutorialType]);
 

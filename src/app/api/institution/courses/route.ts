@@ -9,18 +9,37 @@ import {
   getInstitutionCourses,
   createInstitutionCourse,
 } from '@/services/institution-course-service';
+import { logApiError } from '@/lib/error_logs';
 
 export async function GET(request: NextRequest) {
-  const result = await getInstitutionCourses(request);
+  try {
+    const result = await getInstitutionCourses(request);
 
-  if (!result.success) {
+    if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'GET',
+        payloadReceived: result,
+      });
+      return NextResponse.json(
+        { success: false, error: result.error },
+        { status: result.error === 'Unauthorized' ? 401 : 400 }
+      );
+    }
+
+    return NextResponse.json({ success: true, data: result.data });
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'GET',
+    });
     return NextResponse.json(
-      { success: false, error: result.error },
-      { status: result.error === 'Unauthorized' ? 401 : 400 }
+      { error: 'Internal server error' },
+      { status: 500 }
     );
   }
-
-  return NextResponse.json({ success: true, data: result.data });
 }
 
 export async function POST(request: NextRequest) {
@@ -29,6 +48,13 @@ export async function POST(request: NextRequest) {
     const result = await createInstitutionCourse(body, request);
 
     if (!result.success) {
+      await logApiError({
+        request,
+        error: result.error,
+        functionName: 'POST',
+        payloadSent: body,
+        payloadReceived: result,
+      });
       return NextResponse.json(
         { success: false, error: result.error },
         { status: result.error === 'Unauthorized' ? 401 : 400 }
@@ -36,7 +62,12 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, data: result.data }, { status: 201 });
-  } catch {
+  } catch (error) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'POST',
+    });
     return NextResponse.json(
       { success: false, error: 'Invalid request body' },
       { status: 400 }

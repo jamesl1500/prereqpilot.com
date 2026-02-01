@@ -1,5 +1,6 @@
 import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
+import { logApiError } from '@/lib/error_logs';
 
 export async function DELETE(
   request: NextRequest,
@@ -56,6 +57,13 @@ export async function DELETE(
     const { error: deleteError } = await supabase.from('user_roles').delete().eq('id', id);
 
     if (deleteError) {
+      await logApiError({
+        request,
+        error: deleteError,
+        functionName: 'DELETE',
+        userId: user.id,
+        payloadReceived: { id },
+      });
       return NextResponse.json({ error: 'Failed to remove staff member' }, { status: 500 });
     }
 
@@ -64,7 +72,11 @@ export async function DELETE(
       message: 'Staff member removed successfully',
     });
   } catch (error) {
-    console.error('Error removing staff:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'DELETE',
+    });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
@@ -125,6 +137,13 @@ export async function PUT(
       .eq('id', id);
 
     if (updateError) {
+      await logApiError({
+        request,
+        error: updateError,
+        functionName: 'PUT',
+        userId: user.id,
+        payloadSent: body,
+      });
       return NextResponse.json({ error: 'Failed to update staff role' }, { status: 500 });
     }
 
@@ -133,7 +152,11 @@ export async function PUT(
       message: 'Staff role updated successfully',
     });
   } catch (error) {
-    console.error('Error updating staff:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'PUT',
+    });
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

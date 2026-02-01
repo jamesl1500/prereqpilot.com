@@ -13,7 +13,9 @@ export async function createScenario(userId: string, data: Omit<Scenario, 'id' |
     if (error) throw error;
     return { success: true, data: scenario };
   } catch (error) {
-    console.log("Create scenario error:", error);
+    if (process.env.NODE_ENV !== 'test') {
+      console.error('Create scenario error:', error);
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to create scenario',

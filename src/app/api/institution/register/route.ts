@@ -2,6 +2,7 @@ import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import type { InstitutionSignupData } from '@/types/institution';
 import crypto from 'crypto';
+import { logApiError } from '@/lib/error_logs';
 
 export async function POST(request: Request) {
   try {
@@ -68,6 +69,12 @@ export async function POST(request: Request) {
     });
 
     if (authError) {
+      await logApiError({
+        request,
+        error: authError,
+        functionName: 'POST',
+        payloadSent: body,
+      });
       return NextResponse.json(
         { error: authError.message },
         { status: 400 }
@@ -88,7 +95,12 @@ export async function POST(request: Request) {
     });
 
     if (signInError) {
-      console.error('Failed to sign in after registration:', signInError);
+      await logApiError({
+        request,
+        error: signInError,
+        functionName: 'POST',
+        payloadSent: { email: adminEmail },
+      });
       // Don't fail the registration, user can log in manually
     }
 
@@ -121,6 +133,13 @@ export async function POST(request: Request) {
     if (institutionError) {
       // Rollback: Delete the user if institution creation fails
       await supabase.auth.admin.deleteUser(authData.user.id);
+
+      await logApiError({
+        request,
+        error: institutionError,
+        functionName: 'POST',
+        payloadSent: body,
+      });
       
       return NextResponse.json(
         { error: `Failed to create institution record: ${institutionError.message}` },
@@ -138,7 +157,12 @@ export async function POST(request: Request) {
       });
 
     if (roleError) {
-      console.error('Failed to create user role:', roleError);
+      await logApiError({
+        request,
+        error: roleError,
+        functionName: 'POST',
+        payloadSent: { user_id: authData.user.id, institution_id: institution.id },
+      });
       // Continue anyway - can be fixed manually
     }
 
@@ -153,7 +177,11 @@ export async function POST(request: Request) {
     });
 
   } catch (error: unknown) {
-    console.error('Institution registration error:', error);
+    await logApiError({
+      request,
+      error,
+      functionName: 'POST',
+    });
     const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     return NextResponse.json(
       { error: errorMessage },

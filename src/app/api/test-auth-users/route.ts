@@ -1,6 +1,7 @@
 import { createServiceRoleClient } from '@/lib/supabase/server';
+import { logApiError } from '@/lib/error_logs';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const serviceRoleClient = createServiceRoleClient();
     
@@ -10,6 +11,11 @@ export async function GET() {
       .limit(5);
 
     if (error) {
+      await logApiError({
+        request,
+        error,
+        functionName: 'GET',
+      });
       return Response.json({ error: error.message }, { status: 400 });
     }
 
@@ -19,6 +25,11 @@ export async function GET() {
       authUsers
     });
   } catch (error: any) {
+    await logApiError({
+      request,
+      error,
+      functionName: 'GET',
+    });
     return Response.json({ 
       error: error.message,
       stack: error.stack
