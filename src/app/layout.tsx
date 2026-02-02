@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { Space_Grotesk, Space_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/shared/Toast";
 import RouteChangeLoader from "@/components/shared/RouteChangeLoader";
@@ -68,7 +69,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${spaceMono.variable}`}>
         <ToastProvider>
-          <RouteChangeLoader />
+          <Suspense fallback={null}>
+            <RouteChangeLoader />
+          </Suspense>
           {children}
         </ToastProvider>
       </body>
