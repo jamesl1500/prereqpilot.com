@@ -41,8 +41,8 @@
 }
 
 .footerLogo {
-  width: 36px;
-  height: 36px;
+  width: 45px;
+  height: 45px;
   object-fit: contain;
 }
 
@@ -50,7 +50,13 @@
   font-family: $font-grotesk;
   font-size: 1.5rem;
   font-weight: $font-weight-bold;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0px !important;
+}
+
+.footerVersion {
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  color: $color-text-light;
 }
 
 .footerDescription {

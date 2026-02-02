@@ -6,9 +6,10 @@ import { useRouter } from 'next/navigation';
 import { PenTool, ChevronDown } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import styles from '@/styles/modules/components/Header.module.scss';
+import Image from 'next/image';
 
 interface InstitutionHeaderProps {
-  user: User;
+    user: User;
 }
 
 export default function InstitutionHeader({ user }: InstitutionHeaderProps) {
@@ -21,7 +22,7 @@ export default function InstitutionHeader({ user }: InstitutionHeaderProps) {
             const response = await fetch('/api/auth/logout', {
                 method: 'POST',
             });
-            
+
             if (response.ok) {
                 router.push('/');
                 router.refresh();
@@ -46,7 +47,13 @@ export default function InstitutionHeader({ user }: InstitutionHeaderProps) {
         <header className={styles.header}>
             <div className={styles.container}>
                 <Link href="/institution/dashboard" className={styles.logo}>
-                    <PenTool size={24} strokeWidth={2} />
+                    <Image
+                        src="/primary_logo.png"
+                        alt="PrereqPilot Logo"
+                        width={32}
+                        height={32}
+                        className={styles.logoImage}
+                    />
                     <span>PREREQPILOT</span>
                     <span className={styles.badge}>Admin</span>
                 </Link>
@@ -64,10 +71,10 @@ export default function InstitutionHeader({ user }: InstitutionHeaderProps) {
                     <Link href="/institution/courses" className={styles.navLink}>
                         Courses
                     </Link>
-                    
+
                     {/* Dropdown for More Options */}
                     <div className={styles.dropdown} ref={dropdownRef}>
-                        <button 
+                        <button
                             className={`${styles.navLink} ${styles.dropdownToggle}`}
                             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                         >
