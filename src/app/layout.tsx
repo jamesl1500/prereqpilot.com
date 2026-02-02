@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, Space_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/shared/Toast";
+import RouteChangeLoader from "@/components/shared/RouteChangeLoader";
 import "@/styles/main.scss";
 
 const spaceGrotesk = Space_Grotesk({
@@ -67,6 +68,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${spaceGrotesk.variable} ${spaceMono.variable}`}>
         <ToastProvider>
+          <RouteChangeLoader />
           {children}
         </ToastProvider>
       </body>

@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import styles from '@/styles/modules/components/public-footer.module.scss';
-import { APP_VERSION_STATUS, APP_VERSION } from '@/lib/config';
+import styles from '@/styles/modules/components/institution-footer.module.scss';
+import { APP_VERSION, APP_VERSION_STATUS } from '@/lib/config';
 
-export default function PublicFooter() {
+export function InstitutionFooter() {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
@@ -22,34 +22,34 @@ export default function PublicFooter() {
             </div>
           </div>
           <p className={styles.footerDescription}>
-            Your academic planning companion
+            Institution Management Portal
           </p>
         </div>
 
         <div className={styles.footerSection}>
-          <h4 className={styles.footerHeading}>Product</h4>
+          <h4 className={styles.footerHeading}>Management</h4>
           <ul className={styles.footerLinks}>
-            <li><Link href="/programs">Programs</Link></li>
-            <li><Link href="/about">About Us</Link></li>
-            <li><Link href="/help">Help Center</Link></li>
+            <li><Link href="/institution/dashboard">Dashboard</Link></li>
+            <li><Link href="/institution/programs">Programs</Link></li>
+            <li><Link href="/institution/courses">Courses</Link></li>
           </ul>
         </div>
 
         <div className={styles.footerSection}>
-          <h4 className={styles.footerHeading}>For Institutions</h4>
+          <h4 className={styles.footerHeading}>Administration</h4>
           <ul className={styles.footerLinks}>
-            <li><Link href="/institutions">Learn More</Link></li>
-            <li><Link href="/institution/signup">Register Institution</Link></li>
-            <li><Link href="/institution/dashboard">Dashboard</Link></li>
+            <li><Link href="/institution/staff">Staff</Link></li>
+            <li><Link href="/institution/profile">Profile</Link></li>
+            <li><Link href="/institution/settings">Settings</Link></li>
           </ul>
         </div>
 
         <div className={styles.footerSection}>
           <h4 className={styles.footerHeading}>Support</h4>
           <ul className={styles.footerLinks}>
-            <li><Link href="/contact">Contact</Link></li>
-            <li><Link href="/privacy">Privacy Policy</Link></li>
-            <li><Link href="/terms">Terms of Service</Link></li>
+            <li><Link href="/help">Help Center</Link></li>
+            <li><Link href="/contact">Contact Us</Link></li>
+            <li><Link href="/institution/documentation">Documentation</Link></li>
           </ul>
         </div>
       </div>

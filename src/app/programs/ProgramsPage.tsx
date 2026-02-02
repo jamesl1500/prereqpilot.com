@@ -74,7 +74,7 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
       <div className={styles.container}>
         <div className={styles.header}>
           <div>
-            <h1 className={styles.title}>Program Requirements</h1>
+            <h1 className={styles.title}>Programs</h1>
             <p className={styles.subtitle}>
               Track your progress toward program completion
             </p>
@@ -214,12 +214,16 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
                         <button className={styles.primaryAction} onClick={() => handleViewProgram(program.id)}>
                           View Details
                         </button>
-                        <button className={styles.secondaryAction} onClick={() => handleEditProgram(program.id)}>
-                          Edit
-                        </button>
-                        <button className={styles.secondaryAction} onClick={() => handleDeleteProgram(program)}>
-                          Delete
-                        </button>
+                        {program.is_official === false && (
+                          <>
+                            <button className={styles.secondaryAction} onClick={() => handleEditProgram(program.id)}>
+                              Edit
+                            </button>
+                            <button className={styles.secondaryAction} onClick={() => handleDeleteProgram(program)}>
+                              Delete
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   ))}

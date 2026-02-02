@@ -2,6 +2,7 @@
 
 import type { User } from '@supabase/supabase-js';
 import InstitutionHeader from '@/components/shared/InstitutionHeader';
+import { InstitutionFooter } from '@/components/InstitutionFooter';
 
 interface InstitutionAdminLayoutProps {
   user: User;
@@ -16,6 +17,7 @@ export default function InstitutionAdminLayout({ children, user }: InstitutionAd
         {/* Main Content */}
         <main className="website-main-full">{children}</main>
       </div>
+      <InstitutionFooter />
     </>
   );
 }

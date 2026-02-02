@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from '@/styles/modules/components/auth-footer.module.scss';
+import { APP_VERSION, APP_VERSION_STATUS } from '@/lib/config';
 
 export function AuthFooter() {
   return (
@@ -15,7 +16,10 @@ export function AuthFooter() {
               height={40}
               className={styles.footerLogo}
             />
-            <h3 className={styles.footerTitle}>PrereqPilot</h3>
+            <div className={styles.footerBrandText}>
+              <h3 className={styles.footerTitle}>PrereqPilot</h3>
+              <p className={styles.footerVersion}>{APP_VERSION_STATUS} ({APP_VERSION})</p>
+            </div>
           </div>
           <p className={styles.footerDescription}>
             Your academic planning companion
@@ -51,7 +55,7 @@ export function AuthFooter() {
       </div>
 
       <div className={styles.footerBottom}>
-        <p>&copy; 2026 PrereqPilot. All rights reserved.</p>
+        <p>&copy; 2026 PrereqPilot {APP_VERSION_STATUS} ({APP_VERSION}). All rights reserved.</p>
       </div>
     </footer>
   );
