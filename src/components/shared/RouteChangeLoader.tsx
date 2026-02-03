@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import styles from '@/styles/modules/shared/RouteChangeLoader.module.scss';
 
@@ -28,9 +28,15 @@ export default function RouteChangeLoader() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isNavigating, setIsNavigating] = useState(false);
+  const navigationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Always reset loader when route changes
   useEffect(() => {
     setIsNavigating(false);
+    if (navigationTimeoutRef.current) {
+      clearTimeout(navigationTimeoutRef.current);
+      navigationTimeoutRef.current = null;
+    }
   }, [pathname, searchParams]);
 
   useEffect(() => {
@@ -82,6 +88,10 @@ export default function RouteChangeLoader() {
 
     const handlePopState = () => {
       setIsNavigating(true);
+      // Ensure we reset after a timeout if pathname doesn't change (e.g., same-site popstate)
+      navigationTimeoutRef.current = setTimeout(() => {
+        setIsNavigating(false);
+      }, 1000);
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -90,6 +100,9 @@ export default function RouteChangeLoader() {
       history.pushState = originalPushState;
       history.replaceState = originalReplaceState;
       window.removeEventListener('popstate', handlePopState);
+      if (navigationTimeoutRef.current) {
+        clearTimeout(navigationTimeoutRef.current);
+      }
     };
   }, []);
 

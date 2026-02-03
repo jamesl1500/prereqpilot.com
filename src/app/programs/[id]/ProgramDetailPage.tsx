@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Plus, Edit, Trash2, BookOpen, GraduationCap, Target } from 'lucide-react';
+import { ArrowLeft, Plus, Edit, Trash2, BookOpen, GraduationCap, Target, Link } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import type { ProgramRequirementWithDetails, ProgramRequiredCourse } from '@/services/program-requirement-service';
@@ -67,7 +67,7 @@ export default function ProgramDetailPage({ program, isOwner, user }: ProgramDet
         <div className={styles.headerContent}>
           <h1 className={styles.programName}>{program.name}</h1>
           {program.institution?.name && (
-            <p className={styles.institution}>{program.institution.name}</p>
+            <p className={styles.institution}>{program.institution.name} ({program.institution.short_code})</p>
           )}
           <div className={styles.metadata}>
             {program.min_prereq_gpa && (

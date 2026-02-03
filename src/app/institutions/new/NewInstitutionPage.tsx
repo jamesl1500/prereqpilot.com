@@ -93,8 +93,7 @@ export default function NewInstitutionPage({ user }: NewInstitutionPageProps) {
             <h3 className={styles.infoTitle}>Why add a custom institution?</h3>
             <p className={styles.infoText}>
               Add institutions where you've taken courses or plan to take courses. This helps organize 
-              your transcript and track prerequisites. Official institutions are already verified and 
-              available in the system.
+              your transcript and track prerequisites. {!process.env.NEXT_PUBLIC_OFFICIAL_INSTITUTIONS_MESSAGE || 'Official institutions are already verified and available in the system.'}
             </p>
           </div>
         </div>

@@ -44,6 +44,7 @@ interface ScenarioCourse {
 interface Scenario {
   id: string;
   name: string;
+  program_id: string;
   description: string | null;
   created_at: string;
 }
@@ -70,7 +71,7 @@ export default function ScenarioDetailPage({
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [isRetakeModalOpen, setIsRetakeModalOpen] = useState(false);
   const [isHypotheticalModalOpen, setIsHypotheticalModalOpen] = useState(false);
-  const [selectedProgram, setSelectedProgram] = useState<string>(programs[0]?.id || '');
+  const [selectedProgram, setSelectedProgram] = useState<string>(scenario.program_id || '');
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [selectedRequiredCourse, setSelectedRequiredCourse] = useState<ProgramRequiredCourse | null>(null);
   const [activeTab, setActiveTab] = useState<'requirements' | 'courses' | 'hypothetical'>('requirements');

@@ -31,13 +31,17 @@ export default async function Programs() {
     .select('*')
     .eq('user_id', user.id)
 
-  // Fetch all verified institutions
-  const { data: allInstitutions } = await supabase
-    .from('institutions')
-    .select('*')
-    .eq('is_official', true)
-    .eq('status', 'verified')
-    .order('name');
+  // Fetch all verified institutions (only if feature enabled)
+  let allInstitutions = [];
+  if (process.env.NEXT_ENABLE_OFFICIAL_INSTITUTIONS === 'true') {
+    const { data } = await supabase
+      .from('institutions')
+      .select('*')
+      .eq('is_official', true)
+      .eq('status', 'verified')
+      .order('name');
+    allInstitutions = data || [];
+  }
 
   return (
     <ProgramsPage 
