@@ -28,7 +28,8 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
     .from('program_requirements')
     .select(`
       *,
-      required_courses:program_required_courses(*)
+      required_courses:program_required_courses(*),
+      institution:institutions(*)
     `)
     .or(`user_id.is.null,user_id.eq.${user.id}`);
 

@@ -1,18 +1,18 @@
 /**
- * Scenario Courses API Route
- * Handles scenario course simulations (retakes and hypothetical courses)
+ * Scenario Course API Route (Individual Course)
+ * Handles update and delete operations for specific scenario courses
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { createRouteHandlerClient } from '@/lib/supabase/server';
 import { logApiError } from '@/lib/error_logs';
 
-export async function POST(
+export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string; courseId: string }> }
 ) {
   try {
-    const { id: scenarioId } = await params;
+    const { id: scenarioId, courseId } = await params;
     const supabase = createRouteHandlerClient(request);
     const { data: { user } } = await supabase.auth.getUser();
     
@@ -25,11 +25,8 @@ export async function POST(
 
     const body = await request.json();
     const { 
-      takenCourseId, 
       simulatedGrade, 
       simulatedGradeValue, 
-      isRepeat,
-      // For hypothetical courses
       simulatedCourseTitle,
       simulatedCredits,
     } = body;
@@ -45,7 +42,7 @@ export async function POST(
       await logApiError({
         request,
         error: scenarioError ?? 'Scenario not found',
-        functionName: 'POST',
+        functionName: 'PUT',
         userId: user.id,
         payloadSent: body,
       });
@@ -55,61 +52,28 @@ export async function POST(
       );
     }
 
-    // Check if simulation already exists
-    const { data: existing } = await supabase
+    // Update the scenario course
+    const { data, error } = await supabase
       .from('scenario_taken_courses')
-      .select('id')
+      .update({
+        simulated_grade: simulatedGrade,
+        simulated_grade_value: simulatedGradeValue,
+        simulated_course_title: simulatedCourseTitle || null,
+        simulated_credits: simulatedCredits || null,
+      })
+      .eq('id', courseId)
       .eq('scenario_id', scenarioId)
-      .eq('taken_course_id', takenCourseId || null)
-      .maybeSingle();
+      .select()
+      .single();
 
-    let result;
-    if (existing) {
-      // Update existing simulation
-      result = await supabase
-        .from('scenario_taken_courses')
-        .update({
-          simulated_grade: simulatedGrade,
-          simulated_grade_value: simulatedGradeValue,
-          simulated_course_title: simulatedCourseTitle || null,
-          simulated_credits: simulatedCredits || null,
-        })
-        .eq('id', existing.id)
-        .select()
-        .single();
-    } else {
-      // Create new simulation (either retake or hypothetical)
-      result = await supabase
-        .from('scenario_taken_courses')
-        .insert([{
-          scenario_id: scenarioId,
-          taken_course_id: takenCourseId || null,
-          simulated_grade: simulatedGrade,
-          simulated_grade_value: simulatedGradeValue,
-          simulated_course_title: simulatedCourseTitle || null,
-          simulated_credits: simulatedCredits || null,
-        }])
-        .select()
-        .single();
-    }
+    if (error) throw error;
 
-    if (result.error) throw result.error;
-
-    // If marking as repeat, update the taken_course
-    if (isRepeat && takenCourseId) {
-      await supabase
-        .from('taken_courses')
-        .update({ is_retaken: true })
-        .eq('id', takenCourseId)
-        .eq('user_id', user.id);
-    }
-
-    return NextResponse.json({ success: true, data: result.data });
+    return NextResponse.json({ success: true, data });
   } catch (error) {
     await logApiError({
       request,
       error,
-      functionName: 'POST',
+      functionName: 'PUT',
     });
     return NextResponse.json(
       { error: 'Internal server error' },
@@ -120,10 +84,10 @@ export async function POST(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string; courseId: string }> }
 ) {
   try {
-    const { id: scenarioId } = await params;
+    const { id: scenarioId, courseId } = await params;
     const supabase = createRouteHandlerClient(request);
     const { data: { user } } = await supabase.auth.getUser();
     
@@ -131,16 +95,6 @@ export async function DELETE(
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
-      );
-    }
-
-    const { searchParams } = new URL(request.url);
-    const takenCourseId = searchParams.get('takenCourseId');
-
-    if (!takenCourseId) {
-      return NextResponse.json(
-        { error: 'Missing takenCourseId' },
-        { status: 400 }
       );
     }
 
@@ -157,7 +111,7 @@ export async function DELETE(
         error: scenarioError ?? 'Scenario not found',
         functionName: 'DELETE',
         userId: user.id,
-        payloadReceived: { scenarioId, takenCourseId },
+        payloadReceived: { scenarioId, courseId },
       });
       return NextResponse.json(
         { error: 'Scenario not found' },
@@ -165,11 +119,12 @@ export async function DELETE(
       );
     }
 
+    // Delete the scenario course
     const { error } = await supabase
       .from('scenario_taken_courses')
       .delete()
-      .eq('scenario_id', scenarioId)
-      .eq('taken_course_id', takenCourseId);
+      .eq('id', courseId)
+      .eq('scenario_id', scenarioId);
 
     if (error) throw error;
 

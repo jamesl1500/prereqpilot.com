@@ -20,25 +20,16 @@ export default async function Programs() {
         prereq_group_courses(
           course:courses(*)
         )
-      )
+      ),
+      institution:institutions(*)
     `)
     .order('created_at', { ascending: false });
 
-  // Fetch user's institutions (from taken courses)
+  // Fetch user's institution
   const { data: userInstitutions } = await supabase
-    .from('taken_courses')
-    .select('institution:institutions(*)')
+    .from('institutions')
+    .select('*')
     .eq('user_id', user.id)
-    .not('institution_id', 'is', null);
-
-  // Deduplicate user institutions
-  const uniqueUserInstitutions = Array.from(
-    new Map(
-      userInstitutions
-        ?.filter((tc: any) => tc.institution)
-        .map((tc: any) => [tc.institution.id, tc.institution]) || []
-    ).values()
-  );
 
   // Fetch all verified institutions
   const { data: allInstitutions } = await supabase
@@ -52,7 +43,7 @@ export default async function Programs() {
     <ProgramsPage 
       user={user} 
       programs={programs || []}
-      userInstitutions={uniqueUserInstitutions}
+      userInstitutions={userInstitutions || []}
       allInstitutions={allInstitutions || []}
     />
   );

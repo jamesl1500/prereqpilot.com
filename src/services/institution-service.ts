@@ -23,7 +23,7 @@ export interface UpdateInstitutionData extends CreateInstitutionData {
 export async function createInstitution(
   data: CreateInstitutionData,
   request: Request
-): Promise<{ success: boolean; error?: string }> {
+): Promise<{ success: boolean; error?: string; id?: string }> {
   try {
     const supabase = createRouteHandlerClient(request);
 
@@ -41,13 +41,15 @@ export async function createInstitution(
       user_id: user.id, // Associate institution with user
     };
 
-    const { error } = await supabase
+    const { data: insertedData, error } = await supabase
       .from('institutions')
-      .insert([institutionData]);
+      .insert([institutionData])
+      .select('id')
+      .single();
 
     if (error) throw error;
 
-    return { success: true };
+    return { success: true, id: insertedData.id };
   } catch (error) {
     return {
       success: false,

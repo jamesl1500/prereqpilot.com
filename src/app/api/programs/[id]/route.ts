@@ -149,9 +149,14 @@ export async function DELETE(
           functionName: 'DELETE',
           payloadReceived: result,
         });
+        const status = result.error === 'Unauthorized'
+          ? 401
+          : result.error === 'Not found or not authorized'
+            ? 403
+            : 400;
         return NextResponse.json(
           { error: result.error },
-          { status: result.error === 'Unauthorized' ? 401 : 400 }
+          { status }
         );
       }
       return NextResponse.json({ success: true });
@@ -167,9 +172,14 @@ export async function DELETE(
         functionName: 'DELETE',
         payloadReceived: result,
       });
+      const status = result.error === 'Unauthorized'
+        ? 401
+        : result.error === 'Not found or not authorized'
+          ? 403
+          : 400;
       return NextResponse.json(
         { error: result.error },
-        { status: 400 }
+        { status }
       );
     }
 

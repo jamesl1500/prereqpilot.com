@@ -2,6 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import { resetPasswordSchema, type ResetPasswordFormData } from '@/lib/schemas/auth.schema';
 import styles from '@/styles/modules/components/AuthForm.module.scss';
 
@@ -98,6 +99,15 @@ export default function ResetPasswordForm({ onSubmit, isLoading, error }: ResetP
           {isLoading ? 'Updating password...' : 'Reset password'}
         </button>
       </form>
+
+      <div className={styles.footer}>
+        <p className={styles.footerText}>
+          Remember your password?{' '}
+          <Link href="/login" className={styles.link}>
+            Sign in
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

@@ -18,6 +18,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://prereqpilot.com"),
   title: "PrereqPilot - Academic Planning Assistant",
   description: "Track courses, calculate GPAs, and plan your path to success",
   applicationName: "PrereqPilot",
