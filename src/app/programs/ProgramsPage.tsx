@@ -38,7 +38,6 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
   const { customPrograms, officialPrograms } = useMemo(() => {
     const custom = programs.filter((p) => p.is_official === false || p.user_id);
     const official = programs.filter((p) => p.is_official === true || (!p.user_id && p.institution_id));
-    console.log({ custom, official });
     return { customPrograms: custom, officialPrograms: official };
   }, [programs]);
 
@@ -155,6 +154,7 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
               )}
             </section>
 
+            {process.env.NEXT_PUBLIC_ENABLE_OFFICIAL_PROGRAMS === 'true' && (
             <section className={styles.section}>
               <div className={styles.sectionHeader}>
                 <div>
@@ -234,6 +234,7 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
                 </div>
               )}
             </section>
+            )}
           </>
         )}
 

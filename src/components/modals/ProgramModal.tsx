@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -50,11 +50,14 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
   const [error, setError] = useState<string | null>(null);
   const [showCustomInstitution, setShowCustomInstitution] = useState(false);
   const [isCreatingInstitution, setIsCreatingInstitution] = useState(false);
+  const [localUserInstitutions, setLocalUserInstitutions] = useState<Institution[]>(userInstitutions);
+  const [localAllInstitutions, setLocalAllInstitutions] = useState<Institution[]>(allInstitutions);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
     reset,
     setValue,
     watch,
@@ -81,9 +84,17 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
 
   const selectedInstitutionId = watch('institution_id');
 
+  useEffect(() => {
+    if (!isOpen) return;
+    setLocalUserInstitutions(userInstitutions);
+    setLocalAllInstitutions(allInstitutions);
+  }, [isOpen, userInstitutions, allInstitutions]);
+
   const onSubmitCustomInstitution = async (data: CustomInstitutionFormData) => {
     setIsCreatingInstitution(true);
     setError(null);
+
+    const currentValues = getValues();
 
     try {
       const institutionData = {
@@ -95,18 +106,36 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
 
       const response = await axios.post('/api/institutions', institutionData);
       const newInstitutionId = response.data.id;
+      const newInstitution: Institution = {
+        id: newInstitutionId,
+        name: institutionData.name,
+        short_code: institutionData.short_code,
+        country: institutionData.country,
+        status: 'pending',
+        is_official: false,
+        logo_url: null,
+      };
+
+      setLocalUserInstitutions((prev) => [...prev, newInstitution]);
+      setLocalAllInstitutions((prev) => {
+        if (prev.some((inst) => inst.id === newInstitutionId)) {
+          return prev;
+        }
+        return [...prev, newInstitution];
+      });
 
       showToast('Institution created successfully', 'success');
       
       // Set the newly created institution as selected
-      setValue('institution_id', newInstitutionId);
+      const nextValues = {
+        ...currentValues,
+        institution_id: newInstitutionId,
+      };
+      reset(nextValues, { keepErrors: true, keepTouched: true, keepDirty: true });
       
       // Hide the custom institution form
       setShowCustomInstitution(false);
       resetCustomInst();
-      
-      // Refresh to get the updated institution list
-      router.refresh();
     } catch (err) {
       if (axios.isAxiosError(err)) {
         setError(err.response?.data?.error || 'Failed to create institution');
@@ -237,9 +266,9 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
             >
               <option value="">Select an institution</option>
               
-              {userInstitutions.length > 0 && (
+              {localUserInstitutions.length > 0 && (
                 <optgroup label="Your Institutions">
-                  {userInstitutions.map((inst) => (
+                  {localUserInstitutions.map((inst) => (
                     <option key={inst.id} value={inst.id}>
                       {inst.name}
                     </option>
@@ -247,10 +276,10 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
                 </optgroup>
               )}
               
-              {allInstitutions.length > 0 && (
+              {process.env.NEXT_ENABLE_OFFICIAL_INSTITUTIONS === 'true' && localAllInstitutions.length > 0 && (
                 <optgroup label="Available Institutions">
-                  {allInstitutions
-                    .filter(inst => !userInstitutions.some(ui => ui.id === inst.id))
+                  {localAllInstitutions
+                    .filter(inst => !localUserInstitutions.some(ui => ui.id === inst.id))
                     .map((inst) => (
                       <option key={inst.id} value={inst.id}>
                         {inst.name}

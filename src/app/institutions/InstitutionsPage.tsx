@@ -201,98 +201,100 @@ export default function InstitutionsPage({ user, userInstitutions, officialInsti
                 )}
 
                 {/* Official Institutions Section */}
-                <div className={styles.section}>
-                    <h2 className={styles.sectionTitle}>
-                        <Globe size={24} />
-                        Official Institutions
-                    </h2>
-                    <p className={styles.sectionDescription}>
-                        Verified institutions with official course catalogs and programs
-                    </p>
-                    
-                    <div className={styles.resultsCount}>
-                        {filteredOfficialInstitutions.length} institution{filteredOfficialInstitutions.length !== 1 ? 's' : ''} found
-                    </div>
-                    
-                    {filteredOfficialInstitutions.length === 0 ? (
-                        <div className={styles.empty}>
-                            <Building2 size={64} strokeWidth={1.5} />
-                            <h3>No institutions found</h3>
-                            <p>Try adjusting your search or filters</p>
+                {process.env.NEXT_ENABLE_OFFICIAL_INSTITUTIONS === 'true' && (
+                    <div className={styles.section}>
+                        <h2 className={styles.sectionTitle}>
+                            <Globe size={24} />
+                            Official Institutions
+                        </h2>
+                        <p className={styles.sectionDescription}>
+                            Verified institutions with official course catalogs and programs
+                        </p>
+                        
+                        <div className={styles.resultsCount}>
+                            {filteredOfficialInstitutions.length} institution{filteredOfficialInstitutions.length !== 1 ? 's' : ''} found
                         </div>
-                    ) : (
-                        <div className={styles.institutionsGrid}>
-                            {filteredOfficialInstitutions.map((institution) => (
-                                <div 
-                                    key={institution.id} 
-                                    className={styles.institutionCard}
-                                    onClick={() => handleViewInstitution(institution.id)}
-                                >
-                                    <div className={styles.cardHeader}>
-                                        {institution.logo_url ? (
-                                            <Image 
-                                                src={institution.logo_url} 
-                                                alt={institution.name}
-                                                width={64}
-                                                height={64}
-                                                className={styles.institutionLogo}
-                                            />
-                                        ) : (
-                                            <div className={styles.institutionIcon}>
-                                                <Building2 size={32} />
+                        
+                        {filteredOfficialInstitutions.length === 0 ? (
+                            <div className={styles.empty}>
+                                <Building2 size={64} strokeWidth={1.5} />
+                                <h3>No institutions found</h3>
+                                <p>Try adjusting your search or filters</p>
+                            </div>
+                        ) : (
+                            <div className={styles.institutionsGrid}>
+                                {filteredOfficialInstitutions.map((institution) => (
+                                    <div 
+                                        key={institution.id} 
+                                        className={styles.institutionCard}
+                                        onClick={() => handleViewInstitution(institution.id)}
+                                    >
+                                        <div className={styles.cardHeader}>
+                                            {institution.logo_url ? (
+                                                <Image 
+                                                    src={institution.logo_url} 
+                                                    alt={institution.name}
+                                                    width={64}
+                                                    height={64}
+                                                    className={styles.institutionLogo}
+                                                />
+                                            ) : (
+                                                <div className={styles.institutionIcon}>
+                                                    <Building2 size={32} />
+                                                </div>
+                                            )}
+                                            <div className={`${styles.badge} ${styles.verified}`}>
+                                                Verified
                                             </div>
-                                        )}
-                                        <div className={`${styles.badge} ${styles.verified}`}>
-                                            Verified
                                         </div>
-                                    </div>
-                                    
-                                    <div className={styles.cardContent}>
-                                        <h3 className={styles.institutionName}>
-                                            {institution.name}
-                                        </h3>
-                                        {institution.short_code && (
-                                            <p className={styles.institutionCode}>
-                                                {institution.short_code}
-                                            </p>
-                                        )}
                                         
-                                        <div className={styles.institutionMeta}>
-                                            {institution.country && (
-                                                <div className={styles.metaItem}>
-                                                    <MapPin size={16} />
-                                                    {institution.country}
-                                                </div>
+                                        <div className={styles.cardContent}>
+                                            <h3 className={styles.institutionName}>
+                                                {institution.name}
+                                            </h3>
+                                            {institution.short_code && (
+                                                <p className={styles.institutionCode}>
+                                                    {institution.short_code}
+                                                </p>
                                             )}
-                                            {institution.website && (
-                                                <div className={styles.metaItem}>
-                                                    <Globe size={16} />
-                                                    Website
-                                                </div>
+                                            
+                                            <div className={styles.institutionMeta}>
+                                                {institution.country && (
+                                                    <div className={styles.metaItem}>
+                                                        <MapPin size={16} />
+                                                        {institution.country}
+                                                    </div>
+                                                )}
+                                                {institution.website && (
+                                                    <div className={styles.metaItem}>
+                                                        <Globe size={16} />
+                                                        Website
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        
+                                        <div className={styles.cardFooter}>
+                                            {institution.courses && institution.courses[0]?.count > 0 && (
+                                                <span className={styles.courseCount}>
+                                                    {institution.courses[0].count} course{institution.courses[0].count !== 1 ? 's' : ''}
+                                                </span>
                                             )}
                                         </div>
+                                        <div className={styles.cardActions}>
+                                            <button 
+                                                className={styles.viewButton}
+                                                onClick={() => handleViewInstitution(institution.id)}
+                                            >
+                                                View Details
+                                            </button>
+                                        </div>
                                     </div>
-                                    
-                                    <div className={styles.cardFooter}>
-                                        {institution.courses && institution.courses[0]?.count > 0 && (
-                                            <span className={styles.courseCount}>
-                                                {institution.courses[0].count} course{institution.courses[0].count !== 1 ? 's' : ''}
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className={styles.cardActions}>
-                                        <button 
-                                            className={styles.viewButton}
-                                            onClick={() => handleViewInstitution(institution.id)}
-                                        >
-                                            View Details
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </DashboardLayout>
     );

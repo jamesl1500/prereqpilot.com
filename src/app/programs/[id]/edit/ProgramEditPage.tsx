@@ -24,6 +24,7 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
   const [showAddCourseModal, setShowAddCourseModal] = useState(false);
   const [editingCourse, setEditingCourse] = useState<ProgramRequiredCourse | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<'program' | 'courses'>('program');
 
   // Program form state
   const [programForm, setProgramForm] = useState({
@@ -106,179 +107,209 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
         </div>
       </div>
 
-      {/* Program Details Form */}
       <div className={styles.section}>
-        <h2 className={styles.sectionTitle}>Program Information</h2>
-        <div className={styles.form}>
-          <div className={styles.formGroup}>
-            <label htmlFor="name">Program Name *</label>
-            <input
-              type="text"
-              id="name"
-              value={programForm.name}
-              onChange={(e) => setProgramForm({ ...programForm, name: e.target.value })}
-              placeholder="e.g., Nursing School - ADN Program"
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="institution_id">Institution</label>
-            <select
-              id="institution_id"
-              value={programForm.institution_id}
-              onChange={(e) => setProgramForm({ ...programForm, institution_id: e.target.value })}
-              className={styles.select}
-            >
-              <option value="">Select institution...</option>
-              {userInstitutions.length > 0 && (
-                <optgroup label="Your Institutions">
-                  {userInstitutions.map(inst => (
-                    <option key={inst.id} value={inst.id}>
-                      {inst.name} {inst.short_code ? `(${inst.short_code})` : ''}
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-              {officialInstitutions.length > 0 && (
-                <optgroup label="Official Institutions">
-                  {officialInstitutions.map(inst => (
-                    <option key={inst.id} value={inst.id}>
-                      {inst.name} {inst.short_code ? `(${inst.short_code})` : ''}
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
-          </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label htmlFor="min_prereq_gpa">Minimum Prerequisite GPA</label>
-              <input
-                type="number"
-                id="min_prereq_gpa"
-                value={programForm.min_prereq_gpa}
-                onChange={(e) => setProgramForm({ ...programForm, min_prereq_gpa: e.target.value })}
-                step="0.01"
-                min="0"
-                max="4"
-                placeholder="e.g., 3.00"
-              />
-              <span className={styles.fieldHint}>GPA required for prerequisite courses</span>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="min_overall_gpa">Minimum Overall GPA</label>
-              <input
-                type="number"
-                id="min_overall_gpa"
-                value={programForm.min_overall_gpa}
-                onChange={(e) => setProgramForm({ ...programForm, min_overall_gpa: e.target.value })}
-                step="0.01"
-                min="0"
-                max="4"
-                placeholder="e.g., 2.75"
-              />
-              <span className={styles.fieldHint}>Overall cumulative GPA required</span>
-            </div>
-          </div>
-
-          <button
-            onClick={handleSaveProgram}
-            className={styles.saveButton}
-            disabled={isSaving || !programForm.name}
-          >
-            <Save size={20} />
-            {isSaving ? 'Saving...' : 'Save Program Info'}
-          </button>
-        </div>
-      </div>
-
-      {/* Required Courses Section */}
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <h2 className={styles.sectionTitle}>Required Courses (Prerequisites)</h2>
-          <button
-            onClick={() => setShowAddCourseModal(true)}
-            className={styles.addButton}
-          >
-            <Plus size={20} />
-            Add Course
-          </button>
-        </div>
-
-        {Object.keys(coursesByCategory).length === 0 ? (
-          <div className={styles.emptyState}>
-            <p>No required courses added yet.</p>
+        <div role="tablist" aria-label="Program editor tabs" className={styles.sectionHeader}>
+          <div className={styles.sectionTitle}>Edit Program</div>
+          <div>
             <button
-              onClick={() => setShowAddCourseModal(true)}
-              className={styles.emptyAddButton}
+              type="button"
+              onClick={() => setActiveTab('program')}
+              aria-controls="program-info-panel"
+              id="program-info-tab"
+              className={styles.addButton}
+              style={activeTab === 'program' ? undefined : { opacity: 0.6 }}
             >
-              Add Your First Course
+              Program Information
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('courses')}
+              aria-controls="courses-panel"
+              id="courses-tab"
+              className={styles.addButton}
+              style={activeTab === 'courses' ? undefined : { opacity: 0.6, marginLeft: '0.75rem' }}
+            >
+              Courses
             </button>
           </div>
-        ) : (
-          Object.entries(coursesByCategory).map(([category, courses]) => (
-            <div key={category} className={styles.categoryBlock}>
-              <h3 className={styles.categoryTitle}>{category}</h3>
-              
-              <table className={styles.coursesTable}>
-                <thead>
-                  <tr>
-                    <th>Course</th>
-                    <th>Code</th>
-                    <th>Credits</th>
-                    <th>Min Grade</th>
-                    <th>Type</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {courses.map((course) => (
-                    <tr key={course.id}>
-                      <td>
-                        <div className={styles.courseTitle}>
-                          {course.course_title}
-                          {course.description && (
-                            <span className={styles.courseDescription}>
-                              {course.description}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                      <td>{course.course_code || '—'}</td>
-                      <td>{course.credits.toFixed(1)}</td>
-                      <td>{course.min_grade || '—'}</td>
-                      <td>
-                        <span className={course.is_required ? styles.requiredBadge : styles.optionalBadge}>
-                          {course.is_required ? 'Required' : 'Optional'}
-                        </span>
-                      </td>
-                      <td>
-                        <div className={styles.courseActions}>
-                          <button
-                            onClick={() => setEditingCourse(course)}
-                            className={styles.editButton}
-                            title="Edit course"
-                          >
-                            <Edit size={16} />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteCourse(course.id)}
-                            className={styles.deleteButton}
-                            title="Delete course"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+        </div>
+
+        {activeTab === 'program' && (
+          <div id="program-info-panel" role="tabpanel" aria-labelledby="program-info-tab">
+            <h2 className={styles.sectionTitle}>Program Information</h2>
+            <div className={styles.form}>
+              <div className={styles.formGroup}>
+                <label htmlFor="name">Program Name *</label>
+                <input
+                  type="text"
+                  id="name"
+                  value={programForm.name}
+                  onChange={(e) => setProgramForm({ ...programForm, name: e.target.value })}
+                  placeholder="e.g., Nursing School - ADN Program"
+                  required
+                />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label htmlFor="institution_id">Institution</label>
+                <select
+                  id="institution_id"
+                  value={programForm.institution_id}
+                  onChange={(e) => setProgramForm({ ...programForm, institution_id: e.target.value })}
+                  className={styles.select}
+                >
+                  <option value="">Select institution...</option>
+                  {userInstitutions.length > 0 && (
+                    <optgroup label="Your Institutions">
+                      {userInstitutions.map(inst => (
+                        <option key={inst.id} value={inst.id}>
+                          {inst.name} {inst.short_code ? `(${inst.short_code})` : ''}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                  {process.env.NEXT_ENABLE_OFFICIAL_INSTITUTIONS === 'true' && officialInstitutions.length > 0 && (
+                    <optgroup label="Official Institutions">
+                      {officialInstitutions.map(inst => (
+                        <option key={inst.id} value={inst.id}>
+                          {inst.name} {inst.short_code ? `(${inst.short_code})` : ''}
+                        </option>
+                      ))}
+                    </optgroup>
+                  )}
+                </select>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label htmlFor="min_prereq_gpa">Minimum Prerequisite GPA</label>
+                  <input
+                    type="number"
+                    id="min_prereq_gpa"
+                    value={programForm.min_prereq_gpa}
+                    onChange={(e) => setProgramForm({ ...programForm, min_prereq_gpa: e.target.value })}
+                    step="0.01"
+                    min="0"
+                    max="4"
+                    placeholder="e.g., 3.00"
+                  />
+                  <span className={styles.fieldHint}>GPA required for prerequisite courses</span>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label htmlFor="min_overall_gpa">Minimum Overall GPA</label>
+                  <input
+                    type="number"
+                    id="min_overall_gpa"
+                    value={programForm.min_overall_gpa}
+                    onChange={(e) => setProgramForm({ ...programForm, min_overall_gpa: e.target.value })}
+                    step="0.01"
+                    min="0"
+                    max="4"
+                    placeholder="e.g., 2.75"
+                  />
+                  <span className={styles.fieldHint}>Overall cumulative GPA required</span>
+                </div>
+              </div>
+
+              <button
+                onClick={handleSaveProgram}
+                className={styles.saveButton}
+                disabled={isSaving || !programForm.name}
+              >
+                <Save size={20} />
+                {isSaving ? 'Saving...' : 'Save Program Info'}
+              </button>
             </div>
-          ))
+          </div>
+        )}
+
+        {activeTab === 'courses' && (
+          <div id="courses-panel" role="tabpanel" aria-labelledby="courses-tab">
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Required Courses (Prerequisites)</h2>
+              <button
+                onClick={() => setShowAddCourseModal(true)}
+                className={styles.addButton}
+              >
+                <Plus size={20} />
+                Add Course
+              </button>
+            </div>
+
+            {Object.keys(coursesByCategory).length === 0 ? (
+              <div className={styles.emptyState}>
+                <p>No required courses added yet.</p>
+                <button
+                  onClick={() => setShowAddCourseModal(true)}
+                  className={styles.emptyAddButton}
+                >
+                  Add Your First Course
+                </button>
+              </div>
+            ) : (
+              Object.entries(coursesByCategory).map(([category, courses]) => (
+                <div key={category} className={styles.categoryBlock}>
+                  <h3 className={styles.categoryTitle}>{category}</h3>
+                  
+                  <table className={styles.coursesTable}>
+                    <thead>
+                      <tr>
+                        <th>Course</th>
+                        <th>Code</th>
+                        <th>Credits</th>
+                        <th>Min Grade</th>
+                        <th>Type</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {courses.map((course) => (
+                        <tr key={course.id}>
+                          <td>
+                            <div className={styles.courseTitle}>
+                              {course.course_title}
+                              {course.description && (
+                                <span className={styles.courseDescription}>
+                                  {course.description}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td>{course.course_code || '—'}</td>
+                          <td>{course.credits.toFixed(1)}</td>
+                          <td>{course.min_grade || '—'}</td>
+                          <td>
+                            <span className={course.is_required ? styles.requiredBadge : styles.optionalBadge}>
+                              {course.is_required ? 'Required' : 'Optional'}
+                            </span>
+                          </td>
+                          <td>
+                            <div className={styles.courseActions}>
+                              <button
+                                onClick={() => setEditingCourse(course)}
+                                className={styles.editButton}
+                                title="Edit course"
+                              >
+                                <Edit size={16} />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteCourse(course.id)}
+                                className={styles.deleteButton}
+                                title="Delete course"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ))
+            )}
+          </div>
         )}
       </div>
 

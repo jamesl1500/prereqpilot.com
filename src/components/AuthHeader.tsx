@@ -9,7 +9,7 @@ export function AuthHeader() {
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <Link href="/dashboard" className={styles.logo}>
+        <Link href="/" className={styles.logo}>
           <Image
             src="/primary_logo.png"
             alt="PrereqPilot Logo"

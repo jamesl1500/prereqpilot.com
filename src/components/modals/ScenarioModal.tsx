@@ -43,21 +43,6 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
 
   useEffect(() => {
     if (isOpen) {
-      // Reset form with scenario data when modal opens
-      if (scenario) {
-        reset({
-          name: scenario.name,
-          program_id: scenario.program_id || '',
-          description: scenario.description || '',
-        });
-      } else {
-        reset({
-          name: '',
-          program_id: '',
-          description: '',
-        });
-      }
-
       (async () => {
         try {
           const userRes = await axios.get('/api/programs?filter=user');
@@ -70,6 +55,21 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
           setOfficialPrograms(officialRes.data.data || []);
         } catch {
           setOfficialPrograms([]);
+        }
+
+        // Reset form with scenario data after programs are loaded
+        if (scenario) {
+          reset({
+            name: scenario.name,
+            program_id: scenario.program_id || '',
+            description: scenario.description || '',
+          });
+        } else {
+          reset({
+            name: '',
+            program_id: '',
+            description: '',
+          });
         }
       })();
     }
@@ -194,14 +194,16 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
                   ))}
                 </optgroup>
               )}
-              {officialPrograms.length > 0 && (
-                <optgroup label="Official Programs">
-                  {officialPrograms.map((program) => (
-                    <option key={program.id} value={program.id}>
-                      {program.name}
-                    </option>
-                  ))}
-                </optgroup>
+              {process.env.NEXT_PUBLIC_ENABLE_OFFICIAL_PROGRAMS === 'true' && (
+                officialPrograms.length > 0 && (
+                  <optgroup label="Official Programs">
+                    {officialPrograms.map((program) => (
+                      <option key={program.id} value={program.id}>
+                        {program.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                )
               )}
             </select>
             {errors.program_id && (
