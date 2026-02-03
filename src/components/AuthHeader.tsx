@@ -5,10 +5,11 @@ import Image from 'next/image';
 import styles from '@/styles/modules/components/auth-header.module.scss';
 
 export function AuthHeader() {
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
-        <Link href="/" className={styles.logo}>
+        <Link href="/dashboard" className={styles.logo}>
           <Image
             src="/primary_logo.png"
             alt="PrereqPilot Logo"

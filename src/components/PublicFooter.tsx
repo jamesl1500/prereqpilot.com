@@ -29,18 +29,9 @@ export default function PublicFooter() {
         <div className={styles.footerSection}>
           <h4 className={styles.footerHeading}>Product</h4>
           <ul className={styles.footerLinks}>
-            <li><Link href="/programs">Programs</Link></li>
+            <li><Link href="/features">Features</Link></li>
             <li><Link href="/about">About Us</Link></li>
             <li><Link href="/help">Help Center</Link></li>
-          </ul>
-        </div>
-
-        <div className={styles.footerSection}>
-          <h4 className={styles.footerHeading}>For Institutions</h4>
-          <ul className={styles.footerLinks}>
-            <li><Link href="/institutions">Learn More</Link></li>
-            <li><Link href="/institution/signup">Register Institution</Link></li>
-            <li><Link href="/institution/dashboard">Dashboard</Link></li>
           </ul>
         </div>
 

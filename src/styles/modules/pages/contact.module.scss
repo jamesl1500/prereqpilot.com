@@ -238,10 +238,18 @@
   padding: 0.75rem 1rem;
   border: 2px solid $color-black;
   transition: all 0.2s;
+  background: white;
+  color: #000;
+
+  &:autofill {
+    box-shadow: 0 0 0px 1000px $color-white inset;
+    -webkit-text-fill-color: #000;
+  }
 
   &:focus {
     outline: none;
     box-shadow: 4px 4px 0 $color-black;
+    background: white;
     transform: translate(-2px, -2px);
   }
 }
@@ -283,6 +291,22 @@
   &:active {
     transform: translateY(0);
     box-shadow: none;
+  }
+}
+
+.formStatus {
+  margin: 1rem 0;
+  font-family: $font-mono;
+  font-size: $font-size-sm;
+  text-align: center;
+  color: $color-black;
+
+  &[data-status='error'] {
+    color: $color-error;
+  }
+
+  &[data-status='success'] {
+    color: $color-primary;
   }
 }
 

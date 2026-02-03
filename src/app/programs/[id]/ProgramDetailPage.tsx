@@ -66,8 +66,8 @@ export default function ProgramDetailPage({ program, isOwner, user }: ProgramDet
         </div>
         <div className={styles.headerContent}>
           <h1 className={styles.programName}>{program.name}</h1>
-          {program.institution && (
-            <p className={styles.institution}>{program.institution}</p>
+          {program.institution?.name && (
+            <p className={styles.institution}>{program.institution.name}</p>
           )}
           <div className={styles.metadata}>
             {program.min_prereq_gpa && (

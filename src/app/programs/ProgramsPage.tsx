@@ -38,14 +38,18 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
   const { customPrograms, officialPrograms } = useMemo(() => {
     const custom = programs.filter((p) => p.is_official === false || p.user_id);
     const official = programs.filter((p) => p.is_official === true || (!p.user_id && p.institution_id));
+    console.log({ custom, official });
     return { customPrograms: custom, officialPrograms: official };
   }, [programs]);
 
   const filteredOfficial = useMemo(() => {
     return officialPrograms.filter((p) => {
-      const matchesSearch = [p.name, p.institution]
+      const institutionName = typeof p.institution === 'string'
+        ? p.institution
+        : p.institution?.name;
+      const matchesSearch = [p.name, institutionName]
         .filter(Boolean)
-        .some((field) => field!.toLowerCase().includes(searchTerm.toLowerCase()));
+        .some((field) => String(field).toLowerCase().includes(searchTerm.toLowerCase()));
       const matchesInstitution = !institutionFilter || p.institution_id === institutionFilter;
       return matchesSearch && matchesInstitution;
     });
@@ -114,8 +118,8 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
                     <div key={program.id} className={styles.programCard}>
                       <div className={styles.programHeader}>
                         <h3 className={styles.programName}>{program.name}</h3>
-                        {program.institution && (
-                          <p className={styles.programInstitution}>{program.institution}</p>
+                        {program.institution?.name && (
+                          <p className={styles.programInstitution}>{program.institution.name}</p>
                         )}
                       </div>
 
@@ -190,8 +194,8 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
                     <div key={program.id} className={styles.programCard}>
                       <div className={styles.programHeader}>
                         <h3 className={styles.programName}>{program.name}</h3>
-                        {program.institution && (
-                          <p className={styles.programInstitution}>{program.institution}</p>
+                        {program.institution?.name && (
+                          <p className={styles.programInstitution}>{program.institution.name}</p>
                         )}
                       </div>
 

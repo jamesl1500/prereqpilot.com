@@ -10,10 +10,17 @@ export interface ProgramRequirement {
   id: string;
   user_id: string | null;
   name: string;
-  institution: string | null;
+  institution_id: string | null;
   min_prereq_gpa: number | null;
   min_overall_gpa: number | null;
   created_at: string;
+  institution?: {
+    id: string;
+    name: string;
+    short_code: string | null;
+    country: string | null;
+    logo_url: string | null;
+  };
 }
 
 export interface ProgramRequiredCourse {
@@ -161,14 +168,19 @@ export async function deleteProgramRequirement(id: string, request: NextRequest)
     return { success: false, error: 'Unauthorized' };
   }
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('program_requirements')
     .delete()
     .eq('id', id)
-    .eq('user_id', user.id);
+    .eq('user_id', user.id)
+    .select('id');
 
   if (error) {
     return { success: false, error: error.message };
+  }
+
+  if (!data || data.length === 0) {
+    return { success: false, error: 'Not found or not authorized' };
   }
 
   return { success: true };

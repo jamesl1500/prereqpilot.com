@@ -3,6 +3,7 @@ import styles from '@/styles/modules/pages/contact.module.scss';
 import type { Metadata } from 'next';
 import PublicHeader from '@/components/PublicHeader';
 import PublicFooter from '@/components/PublicFooter';
+import ContactForm from '../../components/forms/ContactForm';
 
 export const metadata: Metadata = {
   title: 'Contact Us - PrereqPilot',
@@ -10,6 +11,7 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  
   return (
     <div className={styles.container}>
       <PublicHeader />
@@ -118,86 +120,7 @@ export default function ContactPage() {
               Fill out the form below and we'll get back to you within 24 hours.
             </p>
           </div>
-
-          <form className={styles.form}>
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label htmlFor="name" className={styles.label}>
-                  Name *
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  className={styles.input}
-                  required
-                />
-              </div>
-
-              <div className={styles.formGroup}>
-                <label htmlFor="email" className={styles.label}>
-                  Email *
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className={styles.input}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="inquiry-type" className={styles.label}>
-                Inquiry Type *
-              </label>
-              <select
-                id="inquiry-type"
-                name="inquiryType"
-                className={styles.select}
-                required
-              >
-                <option value="">Select an option</option>
-                <option value="student-support">Student Support</option>
-                <option value="institution-partnership">Institution Partnership</option>
-                <option value="technical-issue">Technical Issue</option>
-                <option value="feature-request">Feature Request</option>
-                <option value="press-media">Press & Media</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="subject" className={styles.label}>
-                Subject *
-              </label>
-              <input
-                type="text"
-                id="subject"
-                name="subject"
-                className={styles.input}
-                required
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="message" className={styles.label}>
-                Message *
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                className={styles.textarea}
-                rows={8}
-                required
-              />
-            </div>
-
-            <button type="submit" className={styles.submitButton}>
-              SEND MESSAGE
-            </button>
-          </form>
+          <ContactForm />
         </div>
       </section>
 

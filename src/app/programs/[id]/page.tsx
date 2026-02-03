@@ -18,7 +18,10 @@ export default async function ProgramDetail({
   // Fetch program requirement
   const { data: program, error } = await supabase
     .from('program_requirements')
-    .select('*')
+    .select(
+      `*,
+      institution:institutions(*)`
+    )
     .eq('id', id)
     .single();
 

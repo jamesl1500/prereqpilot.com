@@ -10,6 +10,7 @@ import styles from '@/styles/modules/pages/settings.module.scss';
 export default function SettingsPage() {
   const router = useRouter();
   const { showToast } = useToast();
+  const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'danger'>('profile');
   
   // Profile state
   const [name, setName] = useState('');
@@ -141,202 +142,233 @@ export default function SettingsPage() {
         </div>
       </div>
 
-      {/* Profile Section */}
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <UserIcon size={24} strokeWidth={2} />
-          <h2 className={styles.sectionTitle}>Profile Information</h2>
-        </div>
-        
-        <form onSubmit={handleProfileUpdate} className={styles.form}>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Name</label>
-            <input
-              type="text"
-              className={styles.input}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name"
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Email</label>
-            <div className={styles.inputGroup}>
-              <Mail size={20} strokeWidth={2} />
-              <input
-                type="email"
-                className={styles.input}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="your.email@example.com"
-                required
-              />
-            </div>
-            <p className={styles.hint}>
-              Changing your email will require verification
-            </p>
-          </div>
-
-          {profileError && (
-            <div className={styles.error}>
-              <AlertCircle size={16} />
-              <span>{profileError}</span>
-            </div>
-          )}
-
-          {profileSuccess && (
-            <div className={styles.success}>
-              <CheckCircle size={16} />
-              <span>{profileSuccess}</span>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className={styles.primaryButton}
-            disabled={profileLoading}
-          >
-            {profileLoading ? 'Saving...' : 'Save Changes'}
-          </button>
-        </form>
+      {/* Tab Navigation */}
+      <div className={styles.tabNav}>
+        <button
+          className={`${styles.tabButton} ${activeTab === 'profile' ? styles.tabButtonActive : ''}`}
+          onClick={() => setActiveTab('profile')}
+        >
+          <UserIcon size={20} strokeWidth={2} />
+          <span>Profile</span>
+        </button>
+        <button
+          className={`${styles.tabButton} ${activeTab === 'password' ? styles.tabButtonActive : ''}`}
+          onClick={() => setActiveTab('password')}
+        >
+          <Lock size={20} strokeWidth={2} />
+          <span>Password</span>
+        </button>
+        <button
+          className={`${styles.tabButton} ${activeTab === 'danger' ? styles.tabButtonActive : ''}`}
+          onClick={() => setActiveTab('danger')}
+        >
+          <Trash2 size={20} strokeWidth={2} />
+          <span>Danger Zone</span>
+        </button>
       </div>
 
-      {/* Password Section */}
-      <div className={styles.section}>
-        <div className={styles.sectionHeader}>
-          <Lock size={24} strokeWidth={2} />
-          <h2 className={styles.sectionTitle}>Change Password</h2>
-        </div>
-
-        <form onSubmit={handlePasswordUpdate} className={styles.form}>
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Current Password</label>
-            <input
-              type="password"
-              className={styles.input}
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="Enter current password"
-              required
-            />
+      {/* Profile Tab */}
+      {activeTab === 'profile' && (
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <UserIcon size={24} strokeWidth={2} />
+            <h2 className={styles.sectionTitle}>Profile Information</h2>
           </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>New Password</label>
-            <input
-              type="password"
-              className={styles.input}
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Enter new password"
-              required
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Confirm New Password</label>
-            <input
-              type="password"
-              className={styles.input}
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm new password"
-              required
-            />
-          </div>
-
-          {passwordError && (
-            <div className={styles.error}>
-              <AlertCircle size={16} />
-              <span>{passwordError}</span>
-            </div>
-          )}
-
-          {passwordSuccess && (
-            <div className={styles.success}>
-              <CheckCircle size={16} />
-              <span>{passwordSuccess}</span>
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className={styles.primaryButton}
-            disabled={passwordLoading}
-          >
-            {passwordLoading ? 'Updating...' : 'Update Password'}
-          </button>
-        </form>
-      </div>
-
-      {/* Danger Zone */}
-      <div className={`${styles.section} ${styles.dangerSection}`}>
-        <div className={styles.sectionHeader}>
-          <Trash2 size={24} strokeWidth={2} />
-          <h2 className={styles.sectionTitle}>Danger Zone</h2>
-        </div>
-
-        <div className={styles.dangerContent}>
-          <p className={styles.dangerText}>
-            Once you delete your account, there is no going back. This action cannot be undone.
-            All your data including courses, institutions, and scenarios will be permanently deleted.
-          </p>
-
-          {!showDeleteConfirm ? (
-            <button
-              type="button"
-              className={styles.dangerButton}
-              onClick={() => setShowDeleteConfirm(true)}
-            >
-              Delete Account
-            </button>
-          ) : (
-            <div className={styles.deleteConfirmation}>
-              <p className={styles.deleteWarning}>
-                Type <strong>DELETE</strong> to confirm account deletion
-              </p>
+          
+          <form onSubmit={handleProfileUpdate} className={styles.form}>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Name</label>
               <input
                 type="text"
                 className={styles.input}
-                value={deleteConfirmation}
-                onChange={(e) => setDeleteConfirmation(e.target.value)}
-                placeholder="Type DELETE"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Your name"
               />
-
-              {deleteError && (
-                <div className={styles.error}>
-                  <AlertCircle size={16} />
-                  <span>{deleteError}</span>
-                </div>
-              )}
-
-              <div className={styles.buttonGroup}>
-                <button
-                  type="button"
-                  className={styles.secondaryButton}
-                  onClick={() => {
-                    setShowDeleteConfirm(false);
-                    setDeleteConfirmation('');
-                    setDeleteError('');
-                  }}
-                  disabled={deleteLoading}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  className={styles.dangerButton}
-                  onClick={handleDeleteAccount}
-                  disabled={deleteLoading || deleteConfirmation !== 'DELETE'}
-                >
-                  {deleteLoading ? 'Deleting...' : 'Permanently Delete Account'}
-                </button>
-              </div>
             </div>
-          )}
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Email</label>
+              <div className={styles.inputGroup}>
+                <Mail size={20} strokeWidth={2} />
+                <input
+                  type="email"
+                  className={styles.input}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your.email@example.com"
+                  required
+                />
+              </div>
+              <p className={styles.hint}>
+                Changing your email will require verification
+              </p>
+            </div>
+
+            {profileError && (
+              <div className={styles.error}>
+                <AlertCircle size={16} />
+                <span>{profileError}</span>
+              </div>
+            )}
+
+            {profileSuccess && (
+              <div className={styles.success}>
+                <CheckCircle size={16} />
+                <span>{profileSuccess}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className={styles.primaryButton}
+              disabled={profileLoading}
+            >
+              {profileLoading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </form>
         </div>
-      </div>
+      )}
+
+      {/* Password Tab */}
+      {activeTab === 'password' && (
+        <div className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <Lock size={24} strokeWidth={2} />
+            <h2 className={styles.sectionTitle}>Change Password</h2>
+          </div>
+
+          <form onSubmit={handlePasswordUpdate} className={styles.form}>
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Current Password</label>
+              <input
+                type="password"
+                className={styles.input}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder="Enter current password"
+                required
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>New Password</label>
+              <input
+                type="password"
+                className={styles.input}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                required
+              />
+            </div>
+
+            <div className={styles.formGroup}>
+              <label className={styles.label}>Confirm New Password</label>
+              <input
+                type="password"
+                className={styles.input}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                required
+              />
+            </div>
+
+            {passwordError && (
+              <div className={styles.error}>
+                <AlertCircle size={16} />
+                <span>{passwordError}</span>
+              </div>
+            )}
+
+            {passwordSuccess && (
+              <div className={styles.success}>
+                <CheckCircle size={16} />
+                <span>{passwordSuccess}</span>
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className={styles.primaryButton}
+              disabled={passwordLoading}
+            >
+              {passwordLoading ? 'Updating...' : 'Update Password'}
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* Danger Zone Tab */}
+      {activeTab === 'danger' && (
+        <div className={`${styles.section} ${styles.dangerSection}`}>
+          <div className={styles.sectionHeader}>
+            <Trash2 size={24} strokeWidth={2} />
+            <h2 className={styles.sectionTitle}>Danger Zone</h2>
+          </div>
+
+          <div className={styles.dangerContent}>
+            <p className={styles.dangerText}>
+              Once you delete your account, there is no going back. This action cannot be undone.
+              All your data including courses, institutions, and scenarios will be permanently deleted.
+            </p>
+
+            {!showDeleteConfirm ? (
+              <button
+                type="button"
+                className={styles.dangerButton}
+                onClick={() => setShowDeleteConfirm(true)}
+              >
+                Delete Account
+              </button>
+            ) : (
+              <div className={styles.deleteConfirmation}>
+                <p className={styles.deleteWarning}>
+                  Type <strong>DELETE</strong> to confirm account deletion
+                </p>
+                <input
+                  type="text"
+                  className={styles.input}
+                  value={deleteConfirmation}
+                  onChange={(e) => setDeleteConfirmation(e.target.value)}
+                  placeholder="Type DELETE"
+                />
+
+                {deleteError && (
+                  <div className={styles.error}>
+                    <AlertCircle size={16} />
+                    <span>{deleteError}</span>
+                  </div>
+                )}
+
+                <div className={styles.buttonGroup}>
+                  <button
+                    type="button"
+                    className={styles.secondaryButton}
+                    onClick={() => {
+                      setShowDeleteConfirm(false);
+                      setDeleteConfirmation('');
+                      setDeleteError('');
+                    }}
+                    disabled={deleteLoading}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.dangerButton}
+                    onClick={handleDeleteAccount}
+                    disabled={deleteLoading || deleteConfirmation !== 'DELETE'}
+                  >
+                    {deleteLoading ? 'Deleting...' : 'Permanently Delete Account'}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -19,6 +19,46 @@
     @include page-subtitle;
 }
 
+.tabNav {
+    display: flex;
+    gap: $spacing-lg;
+    border-bottom: 2px solid #e5e5e5;
+    margin-bottom: $spacing-2xl;
+    margin-top: $spacing-2xl;
+    flex-wrap: wrap;
+}
+
+.tabButton {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-lg $spacing-xl;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: #666;
+    font-family: var(--font-space-mono), monospace;
+    font-size: $font-size-base;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: -2px;
+
+    svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    &:hover {
+        color: #000;
+    }
+
+    &.tabButtonActive {
+        color: #000;
+        border-bottom-color: #000;
+    }
+}
+
 .section {
     @include section-container;
 }

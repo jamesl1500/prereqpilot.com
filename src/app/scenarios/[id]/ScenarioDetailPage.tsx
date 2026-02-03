@@ -6,6 +6,7 @@ import { ArrowLeft, TrendingUp, RefreshCw, Plus, Check, X, Link as LinkIcon } fr
 import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import SimulateRetakeModal from '@/components/modals/SimulateRetakeModal';
+import AddHypotheticalCourseModal from '@/components/modals/AddHypotheticalCourseModal';
 import { calculateOverallGPA } from '@/services/course-service';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/scenario-detail.module.scss';
@@ -68,10 +69,12 @@ export default function ScenarioDetailPage({
   const { showToast } = useToast();
   const [selectedCourses, setSelectedCourses] = useState<Set<string>>(new Set());
   const [isRetakeModalOpen, setIsRetakeModalOpen] = useState(false);
+  const [isHypotheticalModalOpen, setIsHypotheticalModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<string>(programs[0]?.id || '');
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [selectedRequiredCourse, setSelectedRequiredCourse] = useState<ProgramRequiredCourse | null>(null);
-  const [activeTab, setActiveTab] = useState<'requirements' | 'courses'>('requirements');
+  const [activeTab, setActiveTab] = useState<'requirements' | 'courses' | 'hypothetical'>('requirements');
+  const [editingHypothetical, setEditingHypothetical] = useState<ScenarioCourse | null>(null);
 
   // Create a map of overridden courses
   const overrideMap = new Map(
@@ -84,20 +87,30 @@ export default function ScenarioDetailPage({
     coursesWithGrades.map(c => ({ grade: c.grade!, credits: c.credits }))
   );
 
-  // Calculate scenario GPA (with simulated changes)
-  const scenarioCoursesForGPA = takenCourses.map(course => {
-    const override = overrideMap.get(course.id);
-    if (override) {
+  // Calculate scenario GPA (with simulated changes and hypothetical courses)
+  const scenarioCoursesForGPA = [
+    // Include actual courses with overrides
+    ...takenCourses.map(course => {
+      const override = overrideMap.get(course.id);
+      if (override) {
+        return {
+          grade: override.simulated_grade || course.grade || '',
+          credits: override.simulated_credits || course.credits,
+        };
+      }
       return {
-        grade: override.simulated_grade || course.grade || '',
-        credits: override.simulated_credits || course.credits,
+        grade: course.grade || '',
+        credits: course.credits,
       };
-    }
-    return {
-      grade: course.grade || '',
-      credits: course.credits,
-    };
-  }).filter(c => c.grade);
+    }),
+    // Include hypothetical courses (those without taken_course_id)
+    ...scenarioCourses
+      .filter(sc => !sc.taken_course_id && sc.simulated_grade)
+      .map(sc => ({
+        grade: sc.simulated_grade!,
+        credits: sc.simulated_credits || 0,
+      }))
+  ].filter(c => c.grade);
 
   const scenarioGPA = calculateOverallGPA(scenarioCoursesForGPA);
 
@@ -126,14 +139,35 @@ export default function ScenarioDetailPage({
     return takenCourses.filter(c => selectedCourses.has(c.id));
   };
 
+  const handleDeleteHypothetical = async (courseId: string) => {
+    if (!confirm('Are you sure you want to delete this hypothetical course?')) return;
+
+    try {
+      const response = await fetch(`/api/scenarios/${scenario.id}/courses/${courseId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        showToast('Hypothetical course deleted', 'success');
+        router.refresh();
+      } else {
+        const error = await response.json();
+        showToast(error.error || 'Failed to delete course', 'error');
+      }
+    } catch (error) {
+      console.error('Error deleting hypothetical course:', error);
+      showToast('Failed to delete course', 'error');
+    }
+  };
+
   return (
     <DashboardLayout user={user}>
       <div className={styles.container}>
+        <button className={styles.backButton} onClick={() => router.push('/scenarios')}>
+          <ArrowLeft size={20} strokeWidth={2} />
+          <span>Back to Scenarios</span>
+        </button>
         <div className={styles.header}>
-          <button className={styles.backButton} onClick={() => router.push('/scenarios')}>
-            <ArrowLeft size={20} strokeWidth={2} />
-            <span>Back to Scenarios</span>
-          </button>
           <div className={styles.titleSection}>
             <h1 className={styles.title}>{scenario.name}</h1>
             {scenario.description && (
@@ -169,7 +203,10 @@ export default function ScenarioDetailPage({
             <RefreshCw size={20} strokeWidth={2} />
             <span>Simulate Retake ({selectedCourses.size})</span>
           </button>
-          <button className={styles.secondaryButton}>
+          <button 
+            className={styles.secondaryButton}
+            onClick={() => setIsHypotheticalModalOpen(true)}
+          >
             <Plus size={20} strokeWidth={2} />
             <span>Add Hypothetical Course</span>
           </button>
@@ -188,6 +225,12 @@ export default function ScenarioDetailPage({
             onClick={() => setActiveTab('courses')}
           >
             Your Courses
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'hypothetical' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('hypothetical')}
+          >
+            Hypothetical Courses ({scenarioCourses.filter(sc => !sc.taken_course_id).length})
           </button>
         </div>
 
@@ -273,6 +316,76 @@ export default function ScenarioDetailPage({
           </div>
         )}
 
+        {/* Hypothetical Courses Tab */}
+        {activeTab === 'hypothetical' && (
+          <div className={styles.hypotheticalSection}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>Hypothetical Courses</h2>
+              <button 
+                className={styles.primaryButton}
+                onClick={() => setIsHypotheticalModalOpen(true)}
+              >
+                <Plus size={20} strokeWidth={2} />
+                <span>Add Hypothetical Course</span>
+              </button>
+            </div>
+            
+            {scenarioCourses.filter(sc => !sc.taken_course_id).length === 0 ? (
+              <div className={styles.emptyState}>
+                <p>No hypothetical courses yet. Add a "what-if" course to see how it would impact your GPA.</p>
+              </div>
+            ) : (
+              <div className={styles.hypotheticalList}>
+                {scenarioCourses
+                  .filter(sc => !sc.taken_course_id)
+                  .map((course) => (
+                    <div key={course.id} className={styles.hypotheticalCard}>
+                      <div className={styles.cardContent}>
+                        <div className={styles.cardHeader}>
+                          <h3 className={styles.cardTitle}>{course.simulated_course_title}</h3>
+                          <span className={styles.hypotheticalBadge}>Hypothetical</span>
+                        </div>
+                        <div className={styles.cardDetails}>
+                          <div className={styles.detail}>
+                            <span className={styles.detailLabel}>Credits:</span>
+                            <span className={styles.detailValue}>{course.simulated_credits}</span>
+                          </div>
+                          <div className={styles.detail}>
+                            <span className={styles.detailLabel}>Expected Grade:</span>
+                            <span className={styles.detailValue}>{course.simulated_grade}</span>
+                          </div>
+                          <div className={styles.detail}>
+                            <span className={styles.detailLabel}>Grade Points:</span>
+                            <span className={styles.detailValue}>{course.simulated_grade_value?.toFixed(2)}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className={styles.cardActions}>
+                        <button
+                          onClick={() => {
+                            setEditingHypothetical(course);
+                            setIsHypotheticalModalOpen(true);
+                          }}
+                          className={styles.editButton}
+                          title="Edit course"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteHypothetical(course.id)}
+                          className={styles.deleteButton}
+                          title="Delete course"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Program Requirements Section */}
         {activeTab === 'requirements' && programs.length > 0 && (
           <div className={styles.requirementsSection}>
@@ -289,7 +402,7 @@ export default function ScenarioDetailPage({
                 >
                   {programs.map((program) => (
                     <option key={program.id} value={program.id}>
-                      {program.name} {program.institution && `(${program.institution})`}
+                      {program.name} {program.institution?.name && `(${program.institution.name})`}
                     </option>
                   ))}
                 </select>
@@ -307,6 +420,20 @@ export default function ScenarioDetailPage({
         scenarioId={scenario.id}
         courses={getSelectedCoursesData()}
         onSuccess={handleRetakeSuccess}
+      />
+
+      <AddHypotheticalCourseModal
+        isOpen={isHypotheticalModalOpen}
+        onClose={() => {
+          setIsHypotheticalModalOpen(false);
+          setEditingHypothetical(null);
+        }}
+        scenarioId={scenario.id}
+        editingCourse={editingHypothetical}
+        onSuccess={() => {
+          setEditingHypothetical(null);
+          router.refresh();
+        }}
       />
 
       {showMatchModal && selectedRequiredCourse && (

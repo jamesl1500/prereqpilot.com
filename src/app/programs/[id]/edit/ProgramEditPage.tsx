@@ -28,7 +28,7 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
   // Program form state
   const [programForm, setProgramForm] = useState({
     name: program.name || '',
-    institution: program.institution || '',
+    institution_id: program.institution_id || '',
     min_prereq_gpa: program.min_prereq_gpa?.toString() || '',
     min_overall_gpa: program.min_overall_gpa?.toString() || '',
   });
@@ -41,7 +41,7 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: programForm.name,
-          institution: programForm.institution || null,
+          institution_id: programForm.institution_id || null,
           min_prereq_gpa: programForm.min_prereq_gpa ? parseFloat(programForm.min_prereq_gpa) : null,
           min_overall_gpa: programForm.min_overall_gpa ? parseFloat(programForm.min_overall_gpa) : null,
         }),
@@ -123,18 +123,18 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
           </div>
 
           <div className={styles.formGroup}>
-            <label htmlFor="institution">Institution</label>
+            <label htmlFor="institution_id">Institution</label>
             <select
-              id="institution"
-              value={programForm.institution}
-              onChange={(e) => setProgramForm({ ...programForm, institution: e.target.value })}
+              id="institution_id"
+              value={programForm.institution_id}
+              onChange={(e) => setProgramForm({ ...programForm, institution_id: e.target.value })}
               className={styles.select}
             >
               <option value="">Select institution...</option>
               {userInstitutions.length > 0 && (
                 <optgroup label="Your Institutions">
                   {userInstitutions.map(inst => (
-                    <option key={inst.id} value={inst.name}>
+                    <option key={inst.id} value={inst.id}>
                       {inst.name} {inst.short_code ? `(${inst.short_code})` : ''}
                     </option>
                   ))}
@@ -143,7 +143,7 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
               {officialInstitutions.length > 0 && (
                 <optgroup label="Official Institutions">
                   {officialInstitutions.map(inst => (
-                    <option key={inst.id} value={inst.name}>
+                    <option key={inst.id} value={inst.id}>
                       {inst.name} {inst.short_code ? `(${inst.short_code})` : ''}
                     </option>
                   ))}

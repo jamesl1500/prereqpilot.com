@@ -44,14 +44,36 @@ export async function updateProgram(programId: string, userId: string, data: Par
 export async function deleteProgram(programId: string, request: Request) {
   try {
     const supabase = createRouteHandlerClient(request);
-    const { error } = await supabase
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return { success: false, error: 'Unauthorized' };
+    }
+
+    const { data, error } = await supabase
       .from('program_requirements')
       .delete()
-      .eq('id', programId);
+      .eq('id', programId)
+      .select('id');
     
-    if (error) throw error;
+    if (error) {
+      return {
+        success: false,
+        error: error.message || 'Failed to delete program',
+      };
+    }
+
+    if (!data || data.length === 0) {
+      return {
+        success: false,
+        error: 'Not found or not authorized',
+      };
+    }
     return { success: true };
   } catch (error) {
+    if (error && typeof error === 'object' && 'message' in error && typeof error.message === 'string') {
+      return { success: false, error: error.message };
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Failed to delete program',

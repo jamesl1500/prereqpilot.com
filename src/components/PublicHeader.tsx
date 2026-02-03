@@ -31,8 +31,8 @@ export default function PublicHeader({ user }: PublicHeaderProps) {
 
         {/* Desktop Navigation */}
         <nav className={styles.nav}>
-          <Link href="/programs" className={styles.navLink}>
-            Programs
+          <Link href="/features" className={styles.navLink}>
+            Features
           </Link>
           <Link href="/about" className={styles.navLink}>
             About
@@ -40,8 +40,8 @@ export default function PublicHeader({ user }: PublicHeaderProps) {
           <Link href="/help" className={styles.navLink}>
             Help
           </Link>
-          <Link href="/forinstitutions" className={styles.navLink}>
-            For Institutions
+          <Link href="/contact" className={styles.navLink}>
+            Contact
           </Link>
         </nav>
 
@@ -83,11 +83,11 @@ export default function PublicHeader({ user }: PublicHeaderProps) {
       {mobileMenuOpen && (
         <div className={styles.mobileMenu}>
           <Link
-            href="/programs"
+            href="/features"
             className={styles.mobileNavLink}
             onClick={() => setMobileMenuOpen(false)}
           >
-            Programs
+            Features
           </Link>
           <Link
             href="/about"
@@ -103,13 +103,7 @@ export default function PublicHeader({ user }: PublicHeaderProps) {
           >
             Help
           </Link>
-          <Link
-            href="/institutions"
-            className={styles.mobileNavLink}
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            For Institutions
-          </Link>
+
           <div className={styles.mobileDivider}></div>
           {user ? (
             <>
