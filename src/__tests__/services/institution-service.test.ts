@@ -31,7 +31,7 @@ describe('Institution Service', () => {
   describe('createInstitution', () => {
     it('should successfully create an institution', async () => {
       const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.insert.mockResolvedValue({ error: null });
+      mockQueryBuilder.single.mockResolvedValue({ data: { id: 'inst-123' }, error: null });
       mockSupabase.from.mockReturnValue(mockQueryBuilder);
       mockSupabase.auth.getUser.mockResolvedValue({
         data: { user: mockData.user },
@@ -80,7 +80,7 @@ describe('Institution Service', () => {
 
     it('should handle null optional fields', async () => {
       const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.insert.mockResolvedValue({ error: null });
+      mockQueryBuilder.single.mockResolvedValue({ data: { id: 'inst-123' }, error: null });
       mockSupabase.from.mockReturnValue(mockQueryBuilder);
       mockSupabase.auth.getUser.mockResolvedValue({
         data: { user: mockData.user },
@@ -108,7 +108,8 @@ describe('Institution Service', () => {
 
     it('should handle database errors', async () => {
       const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.insert.mockResolvedValue({
+      mockQueryBuilder.single.mockResolvedValue({
+        data: null,
         error: new Error('Database error'),
       });
       mockSupabase.from.mockReturnValue(mockQueryBuilder);
