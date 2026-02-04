@@ -7,6 +7,8 @@ import type { User } from '@supabase/supabase-js';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProgramModal from '@/components/modals/ProgramModal';
 import DeleteModal from '@/components/modals/DeleteModal';
+import TutorialTooltip from '@/components/onboarding/TutorialTooltip';
+import OnboardingModal from '@/components/onboarding/OnboardingModal';
 import styles from '@/styles/modules/pages/programs.module.scss';
 import type { Program } from '@/types/program';
 
@@ -25,15 +27,31 @@ interface ProgramsPageProps {
   programs: Array<Program & { is_official?: boolean | null; institution_id?: string | null; user_id?: string | null }>;
   userInstitutions: Institution[];
   allInstitutions: Institution[];
+  onboarding: {
+    onboarding_completed: boolean;
+    current_step: string | null;
+    steps_completed: string[];
+  } | null;
 }
 
-export default function ProgramsPage({ user, programs, userInstitutions, allInstitutions }: ProgramsPageProps) {
+export default function ProgramsPage({ user, programs, userInstitutions, allInstitutions, onboarding }: ProgramsPageProps) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<Program | undefined>();
   const [searchTerm, setSearchTerm] = useState('');
   const [institutionFilter, setInstitutionFilter] = useState<string>('');
+
+  const showOnboarding = !!(
+    onboarding &&
+    !onboarding.onboarding_completed &&
+    onboarding.current_step === 'programs' &&
+    !onboarding.steps_completed.includes('programs')
+  );
+
+  const handleOnboardingComplete = () => {
+    router.refresh();
+  };
 
   const { customPrograms, officialPrograms } = useMemo(() => {
     const custom = programs.filter((p) => p.is_official === false || p.user_id);
@@ -252,6 +270,19 @@ export default function ProgramsPage({ user, programs, userInstitutions, allInst
           itemType="program"
           itemId={selectedProgram?.id || ''}
           itemName={selectedProgram?.name || ''}
+        />
+
+        <TutorialTooltip
+          tutorialType="programs"
+          title="Add Your Target Program"
+          description="Create the program you're aiming for so we can track prerequisites and GPA requirements." 
+          position="bottom"
+        />
+
+        <OnboardingModal
+          isOpen={showOnboarding}
+          currentStep={onboarding?.current_step || 'dashboard_intro'}
+          onComplete={handleOnboardingComplete}
         />
       </div>
     </DashboardLayout>

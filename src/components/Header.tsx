@@ -15,14 +15,14 @@ export default function Header() {
     const primaryLinks: NavLink[] = [
         { href: '/dashboard', label: 'Dashboard' },
         { href: '/programs', label: 'Programs' },
-        { href: '/plans', label: 'Plans' },
+        { href: '/scenarios', label: 'Scenarios' },
     ];
 
     const dropdownLinks: NavLink[] = [
         { href: '/classes', label: 'Classes' },
-        { href: '/transcript', label: 'Transcript' },
         { href: '/institutions', label: 'Institutions' },
-        { href: '/scenarios', label: 'Scenarios' },
+        { href: '/plans', label: 'Plans' },
+        { href: '/transcript', label: 'Transcript' },
         { href: '/settings', label: 'Settings' },
     ];
 

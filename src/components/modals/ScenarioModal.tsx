@@ -80,6 +80,26 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
     setError(null);
 
     try {
+      if (!scenario) {
+        const [coursesResponse, institutionsResponse, programsResponse] = await Promise.all([
+          axios.get('/api/courses'),
+          axios.get('/api/institutions'),
+          axios.get('/api/programs?filter=user'),
+        ]);
+
+        const courses = coursesResponse.data?.data || [];
+        const institutions = institutionsResponse.data?.data || [];
+        const userInstitutions = institutions.filter((inst: { user_id?: string | null }) => Boolean(inst.user_id));
+        const programs = programsResponse.data?.data || [];
+
+        if (courses.length === 0 || userInstitutions.length === 0 || programs.length === 0) {
+          const message = 'Please add at least one institution, one course, and one program before creating a scenario.';
+          setError(message);
+          showToast(message, 'error');
+          return;
+        }
+      }
+
       const scenarioData = {
         name: data.name,
         program_id: data.program_id,

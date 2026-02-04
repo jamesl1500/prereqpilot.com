@@ -31,10 +31,18 @@ export default async function Institutions() {
         .eq('status', 'verified')
         .order('name');
 
+    // Fetch onboarding status
+    const { data: onboarding } = await supabase
+        .from('user_onboarding')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
     // Return page
     return <InstitutionsPage 
         user={user} 
         userInstitutions={userInstitutions || []} 
         officialInstitutions={officialInstitutions || []}
+        onboarding={onboarding || null}
     />;
 }

@@ -52,6 +52,8 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
   const [isCreatingInstitution, setIsCreatingInstitution] = useState(false);
   const [localUserInstitutions, setLocalUserInstitutions] = useState<Institution[]>(userInstitutions);
   const [localAllInstitutions, setLocalAllInstitutions] = useState<Institution[]>(allInstitutions);
+  const [importUrl, setImportUrl] = useState('');
+  const [isImporting, setIsImporting] = useState(false);
 
   const {
     register,
@@ -167,6 +169,32 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
       } else {
         await axios.post('/api/programs', programData);
         showToast('Program created successfully', 'success');
+
+        try {
+          const onboardingResponse = await axios.get('/api/onboarding');
+          const onboarding = onboardingResponse.data?.data;
+
+          if (
+            onboarding &&
+            !onboarding.onboarding_completed &&
+            onboarding.current_step === 'programs' &&
+            !onboarding.steps_completed?.includes('programs')
+          ) {
+            const updatedSteps = [...(onboarding.steps_completed || []), 'programs'];
+            await axios.put('/api/onboarding', {
+              step: 'scenarios',
+              steps_completed: updatedSteps,
+            });
+
+            reset();
+            onClose();
+            router.push('/scenarios');
+            router.refresh();
+            return;
+          }
+        } catch (onboardingError) {
+          console.warn('Failed to update onboarding after program creation:', onboardingError);
+        }
       }
 
       reset();
@@ -182,6 +210,41 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
       }
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleImportFromUrl = async () => {
+    if (!importUrl.trim()) {
+      setError('Please enter a valid website URL.');
+      return;
+    }
+
+    setIsImporting(true);
+    setError(null);
+
+    try {
+      const response = await axios.post('/api/programs/import', {
+        url: importUrl.trim(),
+      });
+
+      showToast(
+        `Imported program "${response.data?.programName || 'Program'}" successfully`,
+        'success'
+      );
+      setImportUrl('');
+      reset();
+      router.refresh();
+      onClose();
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.error || 'Failed to import program');
+        showToast(err.response?.data?.error || 'Failed to import program', 'error');
+      } else {
+        setError('Failed to import program');
+        showToast('Failed to import program', 'error');
+      }
+    } finally {
+      setIsImporting(false);
     }
   };
 
@@ -225,6 +288,34 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
           {error && (
             <div className={styles.error} role="alert" aria-live="assertive">
               {error}
+            </div>
+          )}
+
+          {!program && (
+            <div className={styles.importSection}>
+              <h3 className={styles.importTitle}>Import from program page</h3>
+              <p className={styles.importSubtitle}>
+                Paste a school program link and we’ll extract the institution, program details, and prerequisites.
+              </p>
+              <div className={styles.importRow}>
+                <input
+                  type="url"
+                  value={importUrl}
+                  onChange={(event) => setImportUrl(event.target.value)}
+                  className={styles.input}
+                  placeholder="https://www.university.edu/programs/nursing"
+                  aria-label="Program webpage URL"
+                />
+                <button
+                  type="button"
+                  onClick={handleImportFromUrl}
+                  className={styles.importButton}
+                  disabled={isImporting}
+                >
+                  {isImporting ? 'Importing...' : 'Import'}
+                </button>
+              </div>
+              <div className={styles.importDivider}>or enter details manually</div>
             </div>
           )}
 
