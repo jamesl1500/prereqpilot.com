@@ -27,6 +27,16 @@ describe('ScenarioModal', () => {
           data: { data: [{ ...mockProgram, id: '1' }] }
         });
       }
+      if (url.includes('/api/courses')) {
+        return Promise.resolve({
+          data: { data: [{ id: 'course-1', course_title: 'Biology 101' }] }
+        });
+      }
+      if (url.includes('/api/institutions')) {
+        return Promise.resolve({
+          data: { data: [{ id: 'inst-1', name: 'Test University', user_id: 'user-123' }] }
+        });
+      }
       return Promise.reject(new Error('Not found'));
     });
   });

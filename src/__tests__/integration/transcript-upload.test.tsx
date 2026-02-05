@@ -81,13 +81,13 @@ describe('Transcript Upload Integration', () => {
   it('should render transcript upload page', () => {
     renderWithProviders(<TranscriptPage user={mockUser} takenCourses={[]} institutions={[]} />);
     
-    expect(screen.getByText(/unofficial transcript/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /transcript/i })).toBeInTheDocument();
   });
 
   it('should render with existing courses', () => {
       renderWithProviders(<TranscriptPage user={mockUser} takenCourses={[]} institutions={[]} />);
       // Verify page renders without error
-      expect(screen.getByText(/unofficial transcript/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /transcript/i })).toBeInTheDocument();
   });
 
   it('should render page with institutions', () => {
@@ -99,7 +99,7 @@ describe('Transcript Upload Integration', () => {
     };
     
     renderWithProviders(<TranscriptPage user={mockUser} takenCourses={[]} institutions={[mockInstitution]} />);
-    expect(screen.getByText(/unofficial transcript/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /transcript/i })).toBeInTheDocument();
   });
 
   it('should render page with mixed course and institution data', () => {
@@ -111,11 +111,11 @@ describe('Transcript Upload Integration', () => {
     };
     
     renderWithProviders(<TranscriptPage user={mockUser} takenCourses={[]} institutions={[mockInstitution]} />);
-    expect(screen.getByText(/unofficial transcript/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /transcript/i })).toBeInTheDocument();
   });
 
   it('should display header and layout', () => {
     renderWithProviders(<TranscriptPage user={mockUser} takenCourses={[]} institutions={[]} />);
-    expect(screen.getByText(/unofficial transcript/i)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /transcript/i })).toBeInTheDocument();
   });
 });

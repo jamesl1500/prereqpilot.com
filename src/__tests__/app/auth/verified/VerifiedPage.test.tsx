@@ -35,7 +35,7 @@ describe('VerifiedPage (client)', () => {
     expect(screen.getByText('January 15, 2023')).toBeInTheDocument();
     expect(
       screen.getByText(
-        'Your email has been successfully verified. You can now access all features of PreReq Pilot.'
+        'Your email has been successfully verified. You can now access all features of PreReqPilot.'
       )
     ).toBeInTheDocument();
   });

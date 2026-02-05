@@ -87,7 +87,7 @@ describe('Header Component', () => {
     // Check for primary navigation links
     expect(screen.getByText('Dashboard')).toBeInTheDocument();
     expect(screen.getByText('Programs')).toBeInTheDocument();
-    expect(screen.getByText('Plans')).toBeInTheDocument();
+    expect(screen.getByText('Scenarios')).toBeInTheDocument();
   });
 
   it('should render logout button', () => {
