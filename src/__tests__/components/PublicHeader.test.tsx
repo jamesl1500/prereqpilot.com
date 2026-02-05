@@ -76,9 +76,10 @@ describe('PublicHeader', () => {
     
     // Check for main navigation links
     expect(screen.getByText('PREREQPILOT')).toBeInTheDocument();
-    expect(screen.getByText('Programs')).toBeInTheDocument();
+    expect(screen.getByText('Features')).toBeInTheDocument();
     expect(screen.getByText('About')).toBeInTheDocument();
     expect(screen.getByText('Help')).toBeInTheDocument();
+    expect(screen.getByText('Contact')).toBeInTheDocument();
   });
 
   it('should show navigation links when authenticated', () => {
@@ -96,7 +97,8 @@ describe('PublicHeader', () => {
     
     // Check for navigation structure
     expect(screen.getByText('PREREQPILOT')).toBeInTheDocument();
-    expect(screen.getByText('Programs')).toBeInTheDocument();
+    expect(screen.getByText('Features')).toBeInTheDocument();
+    expect(screen.getByText('Contact')).toBeInTheDocument();
   });
 
   it('should show mobile menu button', () => {

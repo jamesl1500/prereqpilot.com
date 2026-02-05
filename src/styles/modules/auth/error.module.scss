@@ -50,7 +50,7 @@
 
 .message {
   font-size: $font-size-lg;
-  color: $color-text-light;
+  color: #000;
   margin-bottom: $spacing-xl;
   line-height: 1.6;
 }
@@ -60,15 +60,15 @@
   list-style: none;
   margin-bottom: $spacing-3xl;
   padding: $spacing-xl;
-  background: rgba($color-error, 0.05);
+  background: rgba(#000, 0.05);
   border-radius: $radius-sm;
-  border: 1px solid rgba($color-error, 0.1);
+  border: 1px solid rgba(#000, 0.1);
   
   li {
     position: relative;
     padding-left: $spacing-xl;
     margin-bottom: $spacing-md;
-    color: $color-text-light;
+    color: #000;
     font-size: $font-size-sm;
     
     &:last-child {
@@ -98,10 +98,14 @@
 
 .primaryButton {
   @include button-base;
-  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
   color: white;
-  @include hover-lift;
   text-align: center;
+  background: #000;
+  border-radius: 0px;
+  padding: 1rem 2rem;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.95rem;
+  text-transform: uppercase;
   
   &:hover {
     box-shadow: 0 4px 12px rgba($color-primary, 0.4);
@@ -111,13 +115,18 @@
 .secondaryButton {
   @include button-base;
   background: transparent;
-  color: $color-primary;
-  border: 2px solid $color-primary;
-  text-align: center;
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 0px;
+  padding: 1rem 2rem;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.95rem;
+  text-transform: uppercase;
   @include smooth-transition(all);
   
   &:hover {
-    background: rgba($color-primary, 0.1);
-    transform: translateY(-1px);
+    background: #000;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 }

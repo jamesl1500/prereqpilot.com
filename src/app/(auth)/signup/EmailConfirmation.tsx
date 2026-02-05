@@ -38,8 +38,8 @@ export default function EmailConfirmation({ email }: EmailConfirmationProps) {
           />
           <defs>
             <linearGradient id="gradient" x1="0" y1="0" x2="80" y2="80">
-              <stop offset="0%" stopColor="#3b82f6"/>
-              <stop offset="100%" stopColor="#8b5cf6"/>
+              <stop offset="0%" stopColor="#000"/>
+              <stop offset="100%" stopColor="#000"/>
             </linearGradient>
           </defs>
         </svg>

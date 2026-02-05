@@ -50,6 +50,30 @@ export default function NewInstitutionPage({ user }: NewInstitutionPageProps) {
       };
 
       await axios.post('/api/institutions', institutionData);
+
+      try {
+        const onboardingResponse = await axios.get('/api/onboarding');
+        const onboarding = onboardingResponse.data?.data;
+
+        if (
+          onboarding &&
+          !onboarding.onboarding_completed &&
+          onboarding.current_step === 'institutions' &&
+          !onboarding.steps_completed?.includes('institutions')
+        ) {
+          const updatedSteps = [...(onboarding.steps_completed || []), 'institutions'];
+          await axios.put('/api/onboarding', {
+            step: 'courses',
+            steps_completed: updatedSteps,
+          });
+
+          router.push('/classes');
+          router.refresh();
+          return;
+        }
+      } catch (onboardingError) {
+        console.warn('Failed to update onboarding after institution creation:', onboardingError);
+      }
       
       // Navigate back to institutions page
       router.push('/institutions');

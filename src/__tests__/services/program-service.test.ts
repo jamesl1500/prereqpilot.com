@@ -24,6 +24,9 @@ describe('Program Service', () => {
     mockRequest = createMockRequest();
     mockSupabase = {
       from: jest.fn(),
+      auth: {
+        getUser: jest.fn(),
+      },
     };
     (createRouteHandlerClient as jest.Mock).mockReturnValue(mockSupabase);
   });
@@ -114,8 +117,12 @@ describe('Program Service', () => {
   describe('deleteProgram', () => {
     it('should successfully delete a program', async () => {
       const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.eq.mockResolvedValue({ error: null });
+      mockQueryBuilder.select.mockResolvedValue({ data: [{ id: 'program-123' }], error: null });
       mockSupabase.from.mockReturnValue(mockQueryBuilder);
+      mockSupabase.auth.getUser.mockResolvedValue({
+        data: { user: mockData.user },
+        error: null,
+      });
 
       const result = await deleteProgram('program-123', mockRequest);
 
@@ -127,8 +134,12 @@ describe('Program Service', () => {
 
     it('should handle errors when deleting a program', async () => {
       const mockQueryBuilder = createMockQueryBuilder();
-      mockQueryBuilder.eq.mockResolvedValue({ error: new Error('Delete failed') });
+      mockQueryBuilder.select.mockResolvedValue({ data: null, error: new Error('Delete failed') });
       mockSupabase.from.mockReturnValue(mockQueryBuilder);
+      mockSupabase.auth.getUser.mockResolvedValue({
+        data: { user: mockData.user },
+        error: null,
+      });
 
       const result = await deleteProgram('program-123', mockRequest);
 

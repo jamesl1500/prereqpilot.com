@@ -39,6 +39,14 @@ const ONBOARDING_STEPS: OnboardingStep[] = [
     actionPath: '/classes'
   },
   {
+    id: 'programs',
+    title: 'Choose a Target Program',
+    description: 'Add the program you\'re aiming for so we can track your prerequisites and GPA requirements.',
+    action: 'navigate',
+    actionLabel: 'Add Program',
+    actionPath: '/programs'
+  },
+  {
     id: 'scenarios',
     title: 'Plan What-If Scenarios',
     description: 'Create scenarios to see how retaking courses or earning different grades would affect your GPA for program requirements.',

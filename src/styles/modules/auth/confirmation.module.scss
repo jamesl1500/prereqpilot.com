@@ -8,6 +8,7 @@
 }
 
 .iconWrapper {
+  color: #000;
   margin-bottom: $spacing-3xl;
   animation: float 3s ease-in-out infinite;
 }
@@ -45,7 +46,7 @@
 .email {
   font-size: $font-size-lg;
   font-weight: $font-weight-semibold;
-  color: $color-primary;
+  color: #000;
   margin-bottom: $spacing-xl;
   word-break: break-word;
 }
@@ -58,16 +59,16 @@
 }
 
 .infoBox {
-  background: rgba($color-primary, 0.05);
-  border: 1px solid rgba($color-primary, 0.1);
+  background: rgba(#000, 0.05);
+  border: 1px solid rgba(#000, 0.1);
   border-radius: $radius-sm;
   padding: $spacing-xl;
   margin-bottom: $spacing-3xl;
   text-align: left;
   
   @media (prefers-color-scheme: dark) {
-    background: rgba($color-primary, 0.1);
-    border-color: rgba($color-primary, 0.2);
+    background: rgba(#000, 0.1);
+    border-color: rgba(#000, 0.2);
   }
 }
 
@@ -87,7 +88,7 @@
     position: relative;
     padding-left: $spacing-xl;
     margin-bottom: $spacing-sm;
-    color: $color-text-light;
+    color: #000;
     font-size: $font-size-sm;
     
     &:last-child {
@@ -98,7 +99,7 @@
       content: '•';
       position: absolute;
       left: 0;
-      color: $color-primary;
+      color: #000;
       font-weight: $font-weight-bold;
       font-size: $font-size-lg;
     }
@@ -110,7 +111,7 @@
 }
 
 .loginLink {
-  color: $color-primary;
+  color: #000;
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
   text-decoration: none;

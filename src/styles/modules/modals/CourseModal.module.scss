@@ -178,6 +178,76 @@
   font-style: italic;
 }
 
+.importSection {
+  margin-bottom: $spacing-xl;
+  padding: $spacing-lg;
+  border: 2px solid #000;
+  background: #f9f9f9;
+}
+
+.importTitle {
+  margin: 0 0 $spacing-sm 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  color: #000;
+}
+
+.importSubtitle {
+  margin: 0 0 $spacing-md 0;
+  font-size: $font-size-sm;
+  color: #333;
+}
+
+.importRow {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.importButton {
+  padding: 0.875rem 1.5rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background: #1f1f1f;
+    transform: translateY(-2px);
+    box-shadow: 4px 4px 0 #666;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.importDivider {
+  margin-top: $spacing-lg;
+  font-size: $font-size-xs;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-space-mono), monospace;
+  text-align: center;
+}
+
 .actions {
   display: flex;
   gap: $spacing-md;

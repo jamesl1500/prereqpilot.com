@@ -4,6 +4,7 @@ import { useState } from 'react';
 import SignupForm from '@/components/forms/SignupForm';
 import type { SignupFormData } from '@/lib/schemas/auth.schema';
 import { signUp } from '@/lib/supabase/auth';
+import { createClient } from '@/lib/supabase/client';
 import EmailConfirmation from './EmailConfirmation';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/SignupPage.module.scss';
@@ -23,6 +24,30 @@ export default function SignupPage() {
       const { user } = await signUp(data);
       
       if (user) {
+        // user_onboarding row is created automatically via database trigger
+        // Fallback: attempt to create it client-side in case the trigger fails
+        try {
+          const supabase = createClient();
+          const { error: onboardingError } = await supabase
+            .from('user_onboarding')
+            .insert([
+              {
+                user_id: user.id,
+                onboarding_completed: false,
+                current_step: 'dashboard_intro',
+                steps_completed: [],
+              },
+            ])
+            .select('id')
+            .single();
+
+          if (onboardingError && onboardingError.code !== '23505') {
+            console.warn('Failed to create user_onboarding row:', onboardingError.message);
+          }
+        } catch (fallbackError) {
+          console.warn('Failed to create user_onboarding row:', fallbackError);
+        }
+
         setUserEmail(data.email);
         setShowConfirmation(true);
         showToast('Account created! Please check your email.', 'success');

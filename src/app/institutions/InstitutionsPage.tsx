@@ -7,18 +7,36 @@ import { Search, Building2, Globe, MapPin, Plus } from 'lucide-react';
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { Institution } from "@/types";
 import { User } from "@supabase/supabase-js";
+import TutorialTooltip from '@/components/onboarding/TutorialTooltip';
+import OnboardingModal from '@/components/onboarding/OnboardingModal';
 import styles from '@/styles/modules/pages/institutions.module.scss';
 
 interface InstitutionsPageProps {
   user: User;
   userInstitutions: Institution[];
   officialInstitutions: Institution[];
+    onboarding: {
+        onboarding_completed: boolean;
+        current_step: string | null;
+        steps_completed: string[];
+    } | null;
 }
 
-export default function InstitutionsPage({ user, userInstitutions, officialInstitutions }: InstitutionsPageProps) {
+export default function InstitutionsPage({ user, userInstitutions, officialInstitutions, onboarding }: InstitutionsPageProps) {
     const router = useRouter();
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCountry, setSelectedCountry] = useState<string>('all');
+
+        const showOnboarding = !!(
+                onboarding &&
+                !onboarding.onboarding_completed &&
+                onboarding.current_step === 'institutions' &&
+                !onboarding.steps_completed.includes('institutions')
+        );
+
+        const handleOnboardingComplete = () => {
+                router.refresh();
+        };
 
     // Get unique countries from official institutions
     const countries = useMemo(() => {
@@ -113,6 +131,22 @@ export default function InstitutionsPage({ user, userInstitutions, officialInsti
                         ))}
                     </select>
                 </div>
+
+                {userInstitutions.length === 0 && (
+                    <div className={styles.emptyState}>
+                        <div className={styles.emptyIcon}>
+                            <Building2 size={64} strokeWidth={1.5} />
+                        </div>
+                        <h2 className={styles.emptyTitle}>No institutions yet</h2>
+                        <p className={styles.emptyText}>
+                            Add your first institution to start tracking your coursework and programs.
+                        </p>
+                        <button className={styles.addButton} onClick={handleAddInstitution}>
+                            <Plus size={20} />
+                            Add Your First Institution
+                        </button>
+                    </div>
+                )}
 
                 {/* Your Institutions Section */}
                 {userInstitutions.length > 0 && (
@@ -296,6 +330,19 @@ export default function InstitutionsPage({ user, userInstitutions, officialInsti
                     </div>
                 )}
             </div>
+
+            <TutorialTooltip
+                tutorialType="institutions"
+                title="Add Your Institutions"
+                description="Start by adding schools you've attended or plan to attend. This helps organize your courses and transcripts."
+                position="bottom"
+            />
+
+            <OnboardingModal
+                isOpen={showOnboarding}
+                currentStep={onboarding?.current_step || 'dashboard_intro'}
+                onComplete={handleOnboardingComplete}
+            />
         </DashboardLayout>
     );
 }

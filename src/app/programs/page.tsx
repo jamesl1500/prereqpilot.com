@@ -43,12 +43,20 @@ export default async function Programs() {
     allInstitutions = data || [];
   }
 
+  // Fetch onboarding status
+  const { data: onboarding } = await supabase
+    .from('user_onboarding')
+    .select('*')
+    .eq('user_id', user.id)
+    .single();
+
   return (
     <ProgramsPage 
       user={user} 
       programs={programs || []}
       userInstitutions={userInstitutions || []}
       allInstitutions={allInstitutions || []}
+      onboarding={onboarding || null}
     />
   );
 }
