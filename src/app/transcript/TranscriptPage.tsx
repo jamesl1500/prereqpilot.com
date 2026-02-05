@@ -109,7 +109,7 @@ export default function TranscriptPage({ takenCourses, institutions }: Transcrip
     <div className={styles.container}>
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Unofficial Transcript</h1>
+          <h1 className={styles.title}>Transcript</h1>
           <p className={styles.subtitle}>
             Academic record organized by institution
           </p>
