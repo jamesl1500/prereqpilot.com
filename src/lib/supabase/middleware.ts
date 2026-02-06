@@ -91,7 +91,8 @@ export async function updateSession(request: NextRequest) {
     const path = request.nextUrl.pathname;
     
     // Institution-only pages that students cannot access
-    if (path.startsWith('/institution') && path !== '/institutions') {
+    const isInstitutionAdminArea = path === '/institution' || path.startsWith('/institution/');
+    if (isInstitutionAdminArea) {
       const url = request.nextUrl.clone();
       url.pathname = '/dashboard';
       return NextResponse.redirect(url);
