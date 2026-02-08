@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
-import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { ArrowLeft, Edit, BookOpen, Trash2, GraduationCap, AlertCircle } from 'lucide-react';
 import { useToast } from '@/components/shared/Toast';
@@ -37,13 +36,12 @@ interface ProgramUsage {
 }
 
 interface ViewCoursePageProps {
-  user: User;
   institution: Institution;
   course: Course;
   programUsages: ProgramUsage[];
 }
 
-export default function ViewCoursePage({ user, institution, course, programUsages }: ViewCoursePageProps) {
+export default function ViewCoursePage({ institution, course, programUsages }: ViewCoursePageProps) {
   const router = useRouter();
   const { showToast } = useToast();
   const [isDeleting, setIsDeleting] = useState(false);

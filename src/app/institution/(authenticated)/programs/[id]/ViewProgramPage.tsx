@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { ArrowLeft, Edit, BookOpen, GraduationCap } from 'lucide-react';
 import styles from '@/styles/modules/pages/institution-program-view.module.scss';
@@ -28,13 +27,12 @@ interface RequiredCourse {
 }
 
 interface ViewProgramPageProps {
-  user: User;
   institution: Institution;
   program: Program;
   requiredCourses: RequiredCourse[];
 }
 
-export default function ViewProgramPage({ user, institution, program, requiredCourses }: ViewProgramPageProps) {
+export default function ViewProgramPage({ institution, program, requiredCourses }: ViewProgramPageProps) {
   const router = useRouter();
 
   const requiredCount = requiredCourses.filter(c => c.is_required).length;

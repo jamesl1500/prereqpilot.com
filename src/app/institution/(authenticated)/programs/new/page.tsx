@@ -21,5 +21,5 @@ export default async function NewProgram() {
     redirect('/institution/dashboard');
   }
 
-  return <CreateProgramPage user={user} institution={institution} />;
+  return <CreateProgramPage institution={institution} />;
 }

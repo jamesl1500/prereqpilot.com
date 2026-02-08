@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { Plus, Edit, Trash2, BookOpen, GraduationCap } from 'lucide-react';
 import { useToast } from '@/components/shared/Toast';
@@ -20,12 +19,11 @@ interface Program {
 }
 
 interface InstitutionProgramsPageProps {
-  user: User;
   institution: Institution;
   programs: Program[];
 }
 
-export default function InstitutionProgramsPage({ user, institution, programs }: InstitutionProgramsPageProps) {
+export default function InstitutionProgramsPage({ institution, programs }: InstitutionProgramsPageProps) {
   const router = useRouter();
   const { showToast } = useToast();
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);

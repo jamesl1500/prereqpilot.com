@@ -24,15 +24,15 @@ export async function GET(request: Request) {
       count: authUsers?.length,
       authUsers
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     await logApiError({
       request,
       error,
       functionName: 'GET',
     });
     return Response.json({ 
-      error: error.message,
-      stack: error.stack
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
     }, { status: 500 });
   }
 }

@@ -231,9 +231,7 @@ export function mockLocalStorage() {
 
 // Mock window.location
 export function mockWindowLocation(url: string) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delete (window as any).location;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   window.location = new URL(url) as any;
 }
 

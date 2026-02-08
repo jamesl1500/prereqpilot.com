@@ -27,5 +27,5 @@ export default async function NewCourse() {
     redirect('/institution/dashboard');
   }
 
-  return <CreateCoursePage user={user} institution={institution} />;
+  return <CreateCoursePage institution={institution} />;
 }

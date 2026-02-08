@@ -45,10 +45,6 @@ export default async function EditCourse({
   }
 
   return (
-    <EditCoursePage
-      user={user}
-      institution={institution}
-      course={course}
-    />
+    <EditCoursePage course={course} />
   );
 }

@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
-import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { ArrowLeft, Save, GraduationCap } from 'lucide-react';
 import styles from '@/styles/modules/pages/institution-program-form.module.scss';
@@ -22,11 +21,10 @@ const programSchema = z.object({
 type ProgramFormData = z.infer<typeof programSchema>;
 
 interface CreateProgramPageProps {
-  user: User;
   institution: Institution;
 }
 
-export default function CreateProgramPage({ user, institution }: CreateProgramPageProps) {
+export default function CreateProgramPage({ institution }: CreateProgramPageProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

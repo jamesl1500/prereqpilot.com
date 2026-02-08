@@ -12,7 +12,6 @@ import { createMockQueryBuilder, createMockRequest, mockData } from '../utils/te
 jest.mock('@/lib/supabase/server');
 
 describe('Institution Service', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockSupabase: any;
   let mockRequest: Request;
 

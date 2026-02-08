@@ -156,9 +156,10 @@ export default function InstitutionSignupPage() {
       // Redirect to pending verification page
       showToast('Institution registered successfully!', 'success');
       router.push('/institution/pending');
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during registration');
-      showToast(err.message || 'An error occurred during registration', 'error');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'An error occurred during registration';
+      setError(message);
+      showToast(message, 'error');
       console.error('Registration error:', err);
     } finally {
       setIsSubmitting(false);

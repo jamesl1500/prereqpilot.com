@@ -553,7 +553,7 @@ export default function EditProgramPage({ institution, program, requiredCourses,
                   <p>No required courses added yet</p>
                 </div>
               ) : (
-                courses.map((course, index) => (
+                courses.map((course) => (
                   <div key={course.id} className={styles.courseCard}>
                     <div className={styles.courseInfo}>
                       <div className={styles.courseHeader}>

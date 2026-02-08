@@ -55,7 +55,7 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
         const error = await response.json();
         showToast(error.error || 'Failed to update program', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Failed to update program', 'error');
     } finally {
       setIsSaving(false);
@@ -77,7 +77,7 @@ export default function ProgramEditPage({ program, requiredCourses, user, userIn
         const error = await response.json();
         showToast(error.error || 'Failed to delete course', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Failed to delete course', 'error');
     }
   };
@@ -385,7 +385,7 @@ function RequiredCourseModal({
         const error = await response.json();
         showToast(error.error || 'Failed to save course', 'error');
       }
-    } catch (error) {
+    } catch {
       showToast('Failed to save course', 'error');
     } finally {
       setIsSubmitting(false);

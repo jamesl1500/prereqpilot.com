@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { InstitutionDashboard } from './InstitutionDashboard';
+import type { Institution } from '@/types/institution';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ export default async function DashboardPage() {
     redirect('/institution/signup');
   }
 
-  const institution = userRole.institutions as any;
+  const institution = userRole.institutions as Institution;
 
   // If not verified yet, redirect to pending page
   if (institution.status !== 'verified') {

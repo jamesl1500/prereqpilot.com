@@ -1,23 +1,22 @@
 'use client';
 
-import type { User } from '@supabase/supabase-js';
 import InstitutionHeader from '@/components/shared/InstitutionHeader';
 import { InstitutionFooter } from '@/components/InstitutionFooter';
+import AuthenticatedProviders from '@/components/shared/AuthenticatedProviders';
 
 interface InstitutionAdminLayoutProps {
-  user: User;
   children: React.ReactNode;
 }
 
-export default function InstitutionAdminLayout({ children, user }: InstitutionAdminLayoutProps) {
+export default function InstitutionAdminLayout({ children }: InstitutionAdminLayoutProps) {
   return (
-    <>
-      <InstitutionHeader user={user} />
+    <AuthenticatedProviders>
+      <InstitutionHeader />
       <div className="website-layout-no-sidebar">
         {/* Main Content */}
         <main className="website-main-full">{children}</main>
       </div>
       <InstitutionFooter />
-    </>
+    </AuthenticatedProviders>
   );
 }

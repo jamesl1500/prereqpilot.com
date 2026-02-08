@@ -10,7 +10,6 @@ import {
   Building2, 
   Users, 
   BookOpen, 
-  FileText, 
   Settings,
   BarChart3
 } from 'lucide-react';

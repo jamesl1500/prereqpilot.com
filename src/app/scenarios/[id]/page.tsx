@@ -2,6 +2,17 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import ScenarioDetailPage from './ScenarioDetailPage';
 
+interface ProgramRequiredCourse {
+  credits?: number | null;
+  is_required?: boolean | null;
+}
+
+interface ProgramWithRequirements {
+  id: string;
+  required_courses?: ProgramRequiredCourse[] | null;
+  [key: string]: unknown;
+}
+
 export default async function ScenarioDetail({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -34,11 +45,11 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
     .or(`user_id.is.null,user_id.eq.${user.id}`);
 
   // Add computed fields to programs
-  const programsWithDetails = (programs || []).map(program => ({
+  const programsWithDetails = (programs || []).map((program: ProgramWithRequirements) => ({
     ...program,
-    total_credits: program.required_courses?.reduce((sum: number, c: any) => sum + Number(c.credits), 0) || 0,
-    required_count: program.required_courses?.filter((c: any) => c.is_required).length || 0,
-    optional_count: program.required_courses?.filter((c: any) => !c.is_required).length || 0,
+    total_credits: program.required_courses?.reduce((sum, course) => sum + Number(course.credits ?? 0), 0) || 0,
+    required_count: program.required_courses?.filter((course) => course.is_required).length || 0,
+    optional_count: program.required_courses?.filter((course) => !course.is_required).length || 0,
   }));
 
   // Fetch user's taken courses
@@ -54,7 +65,7 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
     .order('created_at', { ascending: false });
 
   // Fetch course mappings for all programs
-  const mappings: Record<string, any[]> = {};
+  const mappings: Record<string, Array<{ id: string }>> = {};
   for (const program of programsWithDetails) {
     const { data: programMappings } = await supabase
       .from('program_course_mappings')

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -40,7 +39,6 @@ interface CoursesPageProps {
 }
 
 export default function CoursesPage({ institution, courses: initialCourses }: CoursesPageProps) {
-  const router = useRouter();
   const { showToast } = useToast();
   const [courses, setCourses] = useState<Course[]>(initialCourses);
   const [showForm, setShowForm] = useState(false);

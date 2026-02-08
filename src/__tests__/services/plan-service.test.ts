@@ -45,7 +45,6 @@ describe('Plan Service', () => {
       mockSupabase.from = jest.fn(() => mockQueryBuilder);
       mockSupabase.auth = {
         getUser: jest.fn().mockResolvedValue({ data: { user: { id: 'user-123' } }, error: null }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any;
 
       const result = await createPlan(planData);
@@ -59,7 +58,6 @@ describe('Plan Service', () => {
       mockSupabase.from = jest.fn(() => mockQueryBuilder);
       mockSupabase.auth = {
         getUser: jest.fn().mockResolvedValue({ data: { user: { id: 'user-123' } }, error: null }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any;
 
       await expect(createPlan({ name: 'My Plan', program_id: 'prog-123' })).rejects.toThrow('DB error');
@@ -127,7 +125,6 @@ describe('Plan Service', () => {
       mockSupabase.from = jest.fn(() => mockQueryBuilder);
       mockSupabase.auth = {
         getUser: jest.fn().mockResolvedValue({ data: { user: { id: 'user-123' } }, error: null }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any;
 
       await expect(setActivePlan('plan-123')).resolves.not.toThrow();

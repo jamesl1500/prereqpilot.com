@@ -3,16 +3,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { PenTool, ChevronDown } from 'lucide-react';
-import type { User } from '@supabase/supabase-js';
+import { ChevronDown } from 'lucide-react';
 import styles from '@/styles/modules/components/Header.module.scss';
 import Image from 'next/image';
 
-interface InstitutionHeaderProps {
-    user: User;
-}
-
-export default function InstitutionHeader({ user }: InstitutionHeaderProps) {
+export default function InstitutionHeader() {
     const router = useRouter();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);

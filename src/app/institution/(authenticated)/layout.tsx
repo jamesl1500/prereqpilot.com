@@ -20,9 +20,5 @@ export default async function InstitutionAuthenticatedLayout({
     redirect('/dashboard');
   }
 
-  return (
-    <InstitutionAdminLayout user={user}>
-      {children}
-    </InstitutionAdminLayout>
-  );
+  return <InstitutionAdminLayout>{children}</InstitutionAdminLayout>;
 }

@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Search, Filter, GraduationCap, MapPin, Calendar, DollarSign, Users } from 'lucide-react';
+import { Search, Filter, GraduationCap, MapPin, Calendar, Users } from 'lucide-react';
 import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import DashboardLayout from '@/components/layout/DashboardLayout';
@@ -19,11 +20,11 @@ interface Program {
   description: string | null;
   min_prereq_gpa: number | null;
   min_overall_gpa: number | null;
-  application_deadline: any;
+  application_deadline: unknown;
   seats_available: number | null;
   acceptance_rate: number | null;
   avg_completion_time: number | null;
-  tuition_info: any;
+  tuition_info: unknown;
   is_published: boolean;
 }
 

@@ -1,6 +1,7 @@
 import { createClient, createServiceRoleClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { StaffPage } from './StaffPage';
+import type { Institution } from '@/types/institution';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -32,7 +33,7 @@ export default async function Page() {
     redirect('/institution/dashboard');
   }
 
-  const institution = userRole.institutions as any;
+  const institution = userRole.institutions as Institution;
 
   // If not verified yet, redirect to pending page
   if (institution.status !== 'verified') {
@@ -55,7 +56,7 @@ export default async function Page() {
   // (needed to access auth.users table with email)
   const userIds = staffMembers?.map(s => s.user_id) || [];
   
-  let usersMap: Record<string, any> = {};
+  let usersMap: Record<string, { id: string; email?: string | null; user_metadata: Record<string, unknown> }> = {};
   if (userIds.length > 0) {
     try {
       const serviceRoleClient = createServiceRoleClient();

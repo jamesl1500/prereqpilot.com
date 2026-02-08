@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { BookOpen, Plus, Edit2, Trash2, Eye, Search, Filter, GraduationCap } from 'lucide-react';
 import axios from 'axios';
@@ -25,14 +23,12 @@ interface Course {
 }
 
 interface CoursesListPageProps {
-  user: User;
   institution: Institution;
   courses: Course[];
   totalCourses: number;
 }
 
 export default function CoursesListPage({ institution, courses: initialCourses, totalCourses }: CoursesListPageProps) {
-  const router = useRouter();
   const { showToast } = useToast();
   const [courses, setCourses] = useState<Course[]>(initialCourses);
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,19 +47,9 @@ export default function CoursesListPage({ institution, courses: initialCourses, 
     return Array.from(depts).sort();
   }, [courses]);
 
-  // Get unique levels for filter
-  const levels = useMemo(() => {
-    const lvls = new Set(
-      courses
-        .map(c => c.level)
-        .filter((level): level is string => Boolean(level))
-    );
-    return Array.from(lvls).sort();
-  }, [courses]);
-
   // Filter and sort courses
   const filteredCourses = useMemo(() => {
-    let result = courses.filter(course => {
+    const result = courses.filter(course => {
       const matchesSearch = 
         course.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
         course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||

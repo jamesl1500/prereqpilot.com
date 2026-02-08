@@ -65,7 +65,7 @@ export interface Institution {
     agency: string;
     date: string;
   }> | null;
-  metadata?: Record<string, any> | null;
+  metadata?: Record<string, unknown> | null;
 }
 
 export interface InstitutionWithStats extends Institution {

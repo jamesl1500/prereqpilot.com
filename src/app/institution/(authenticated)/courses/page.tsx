@@ -54,7 +54,6 @@ export default async function Page() {
 
   return (
     <CoursesListPage
-      user={user}
       institution={institution}
       courses={courses || []}
       totalCourses={totalCourses || 0}

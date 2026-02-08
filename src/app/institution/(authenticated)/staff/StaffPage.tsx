@@ -41,7 +41,7 @@ interface StaffPageProps {
 export function StaffPage({ institution, staffMembers: initialStaffMembers }: StaffPageProps) {
   const router = useRouter();
   const { showToast } = useToast();
-  const [staffMembers, setStaffMembers] = useState<StaffMember[]>(initialStaffMembers);
+  const [staffMembers] = useState<StaffMember[]>(initialStaffMembers);
   const [isAddingStaff, setIsAddingStaff] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);

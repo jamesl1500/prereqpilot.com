@@ -6,8 +6,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
-import type { User } from '@supabase/supabase-js';
-import type { Institution } from '@/types/institution';
 import { ArrowLeft, Save, BookOpen } from 'lucide-react';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-course-form.module.scss';
@@ -40,12 +38,10 @@ interface Course {
 }
 
 interface EditCoursePageProps {
-  user: User;
-  institution: Institution;
   course: Course;
 }
 
-export default function EditCoursePage({ user, institution, course }: EditCoursePageProps) {
+export default function EditCoursePage({ course }: EditCoursePageProps) {
   const router = useRouter();
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);

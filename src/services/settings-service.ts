@@ -15,6 +15,13 @@ export interface UpdatePasswordData {
   newPassword: string;
 }
 
+export interface UserProfileData {
+  id: string;
+  email: string | null;
+  name: string;
+  created_at: string | null;
+}
+
 /**
  * Update user profile (name and/or email)
  */
@@ -126,7 +133,7 @@ export async function deleteUserAccount(
  */
 export async function getUserProfile(
   request: Request
-): Promise<{ success: boolean; data?: any; error?: string }> {
+): Promise<{ success: boolean; data?: UserProfileData; error?: string }> {
   try {
     const supabase = createRouteHandlerClient(request);
 

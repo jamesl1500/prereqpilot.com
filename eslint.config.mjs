@@ -10,6 +10,15 @@ const eslintConfig = defineConfig([
       'react/no-unescaped-entities': 'off',
     },
   },
+  {
+    files: ["**/__tests__/**", "jest.setup.ts"],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+      '@next/next/no-img-element': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

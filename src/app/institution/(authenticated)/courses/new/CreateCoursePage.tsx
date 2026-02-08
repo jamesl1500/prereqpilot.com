@@ -6,7 +6,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import axios from 'axios';
-import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { ArrowLeft, Save, BookOpen } from 'lucide-react';
 import { useToast } from '@/components/shared/Toast';
@@ -25,11 +24,10 @@ const courseSchema = z.object({
 type CourseFormData = z.infer<typeof courseSchema>;
 
 interface CreateCoursePageProps {
-  user: User;
   institution: Institution;
 }
 
-export default function CreateCoursePage({ user, institution }: CreateCoursePageProps) {
+export default function CreateCoursePage({ institution }: CreateCoursePageProps) {
   const router = useRouter();
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);

@@ -1,8 +1,7 @@
-'use client';
-
 import type { User } from '@supabase/supabase-js';
 import Header from '@/components/Header';
 import { AuthFooter } from '@/components/AuthFooter';
+import AuthenticatedProviders from '@/components/shared/AuthenticatedProviders';
 
 interface DashboardLayoutProps {
   user?: User;
@@ -10,12 +9,13 @@ interface DashboardLayoutProps {
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-      <Header />
-      <main style={{ flex: 1, paddingTop: '70px' }}>{children}</main>
-      <AuthFooter />
-    </div>
+    <AuthenticatedProviders>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Header />
+        <main style={{ flex: 1, paddingTop: '70px' }}>{children}</main>
+        <AuthFooter />
+      </div>
+    </AuthenticatedProviders>
   );
 }

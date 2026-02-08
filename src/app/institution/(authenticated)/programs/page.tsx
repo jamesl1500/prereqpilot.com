@@ -31,5 +31,5 @@ export default async function InstitutionPrograms() {
     .eq('institution', institution.name)
     .order('created_at', { ascending: false });
 
-  return <InstitutionProgramsPage user={user} institution={institution} programs={programs || []} />;
+  return <InstitutionProgramsPage institution={institution} programs={programs || []} />;
 }

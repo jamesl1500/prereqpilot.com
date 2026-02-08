@@ -47,7 +47,6 @@ export default async function ProgramDetail({
 
   return (
     <ViewProgramPage
-      user={user}
       institution={institution}
       program={program}
       requiredCourses={requiredCourses || []}

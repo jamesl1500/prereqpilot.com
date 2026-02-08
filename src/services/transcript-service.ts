@@ -23,6 +23,16 @@ interface ParsedData {
   courses: ParsedCourse[];
 }
 
+interface TranscriptImportResult {
+  institution: {
+    name: string;
+    short_code: string;
+  };
+  terms: Array<{ name: string; courses: number }>;
+  totalCourses: number;
+  totalCredits: number;
+}
+
 const gradeToGPA: Record<string, number> = {
   'A+': 4.0, 'A': 4.0, 'A-': 3.7,
   'B+': 3.3, 'B': 3.0, 'B-': 2.7,
@@ -141,7 +151,7 @@ export async function importTranscriptData(
   userId: string,
   data: ParsedData,
   request: Request
-): Promise<{ success: boolean; result?: any; error?: string }> {
+): Promise<{ success: boolean; result?: TranscriptImportResult; error?: string }> {
   try {
     const supabase = createRouteHandlerClient(request);
 

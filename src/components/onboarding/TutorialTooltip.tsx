@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lightbulb } from 'lucide-react';
 import axios from 'axios';
@@ -32,23 +32,16 @@ export default function TutorialTooltip({
   const [isVisible, setIsVisible] = useState(false);
   const [isChecking, setIsChecking] = useState(process.env.NODE_ENV !== 'test');
 
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'test') {
-      return;
-    }
-    checkTutorialStatus();
-  }, [tutorialType]);
-
-  const checkTutorialStatus = async () => {
+  const checkTutorialStatus = useCallback(async () => {
     try {
       const response = await axios.get('/api/onboarding/tutorials');
-      const tutorials = response.data.data || [];
-      
+      const tutorials: Array<{ tutorial_type?: string | null }> = response.data.data || [];
+
       // Check if this tutorial has been completed or skipped
       const tutorialProgress = tutorials.find(
-        (t: any) => t.tutorial_type === tutorialType
+        (tutorial) => tutorial.tutorial_type === tutorialType
       );
-      
+
       if (!tutorialProgress) {
         setIsVisible(true);
       }
@@ -57,7 +50,14 @@ export default function TutorialTooltip({
     } finally {
       setIsChecking(false);
     }
-  };
+  }, [tutorialType]);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'test') {
+      return;
+    }
+    checkTutorialStatus();
+  }, [checkTutorialStatus]);
 
   const handleDismiss = async (skipped: boolean) => {
     try {

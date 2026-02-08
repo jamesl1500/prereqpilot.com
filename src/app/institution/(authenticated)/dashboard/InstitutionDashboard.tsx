@@ -1,7 +1,8 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import type { User } from '@supabase/supabase-js';
-import type { Institution, UserRole } from '@/types/institution';
+import type { Institution } from '@/types/institution';
 import Link from 'next/link';
 import { useState } from 'react';
 import styles from '@/styles/modules/pages/institution-dashboard.module.scss';
@@ -19,7 +20,12 @@ interface InstitutionDashboardProps {
   };
   recentPrograms: Program[];
   recentCourses: Course[];
-  pendingApplications: any[];
+  pendingApplications: Array<{
+    id: string;
+    submitted_at: string;
+    program_requirements?: { name?: string | null } | null;
+    profiles?: { full_name?: string | null; email?: string | null } | null;
+  }>;
 }
 
 export function InstitutionDashboard({
