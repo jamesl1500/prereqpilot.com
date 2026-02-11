@@ -1,5 +1,6 @@
 import React from 'react';
 import { AuthHeader } from '@/components/AuthHeader';
+import { ToastProvider } from '@/components/shared/Toast';
 import styles from '@/styles/modules/auth/auth.module.scss';
 
 export default function AuthLayout({
@@ -8,7 +9,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <ToastProvider>
       <AuthHeader />
       <div className={styles.authContainer}>
         <div className={styles.backgroundPattern}></div>
@@ -16,6 +17,6 @@ export default function AuthLayout({
           {children}
         </div>
       </div>
-    </>
+    </ToastProvider>
   );
 }
