@@ -33,7 +33,13 @@ export default async function Page() {
     redirect('/institution/dashboard');
   }
 
-  const institution = userRole.institutions as Institution;
+  const institution = (Array.isArray(userRole.institutions)
+    ? userRole.institutions[0]
+    : userRole.institutions) as Institution | null;
+
+  if (!institution) {
+    redirect('/institution/dashboard');
+  }
 
   // If not verified yet, redirect to pending page
   if (institution.status !== 'verified') {
@@ -56,7 +62,7 @@ export default async function Page() {
   // (needed to access auth.users table with email)
   const userIds = staffMembers?.map(s => s.user_id) || [];
   
-  let usersMap: Record<string, { id: string; email?: string | null; user_metadata: Record<string, unknown> }> = {};
+  let usersMap: Record<string, { id: string; email: string; user_metadata: Record<string, unknown> }> = {};
   if (userIds.length > 0) {
     try {
       const serviceRoleClient = createServiceRoleClient();
@@ -69,7 +75,7 @@ export default async function Page() {
         } else {
           usersMap[id] = {
             id: user.user.id,
-            email: user.user.email,
+            email: user.user.email ?? '',
             user_metadata: user.user.user_metadata || {},
           };
         }

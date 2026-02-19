@@ -1,15 +1,18 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import ScenarioDetailPage from './ScenarioDetailPage';
-
-interface ProgramRequiredCourse {
-  credits?: number | null;
-  is_required?: boolean | null;
-}
+import type { ProgramRequirementWithDetails, ProgramRequiredCourse, ProgramCourseMapping } from '@/services/program-requirement-service';
 
 interface ProgramWithRequirements {
   id: string;
+  user_id: string | null;
+  name: string;
+  institution_id: string | null;
+  min_prereq_gpa: number | null;
+  min_overall_gpa: number | null;
+  created_at: string;
   required_courses?: ProgramRequiredCourse[] | null;
+  institution?: ProgramRequirementWithDetails['institution'];
   [key: string]: unknown;
 }
 
@@ -45,11 +48,12 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
     .or(`user_id.is.null,user_id.eq.${user.id}`);
 
   // Add computed fields to programs
-  const programsWithDetails = (programs || []).map((program: ProgramWithRequirements) => ({
+  const programsWithDetails: ProgramRequirementWithDetails[] = (programs || []).map((program: ProgramWithRequirements) => ({
     ...program,
     total_credits: program.required_courses?.reduce((sum, course) => sum + Number(course.credits ?? 0), 0) || 0,
     required_count: program.required_courses?.filter((course) => course.is_required).length || 0,
     optional_count: program.required_courses?.filter((course) => !course.is_required).length || 0,
+    required_courses: program.required_courses || [],
   }));
 
   // Fetch user's taken courses
@@ -65,7 +69,7 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
     .order('created_at', { ascending: false });
 
   // Fetch course mappings for all programs
-  const mappings: Record<string, Array<{ id: string }>> = {};
+  const mappings: Record<string, ProgramCourseMapping[]> = {};
   for (const program of programsWithDetails) {
     const { data: programMappings } = await supabase
       .from('program_course_mappings')
@@ -73,7 +77,7 @@ export default async function ScenarioDetail({ params }: { params: Promise<{ id:
       .eq('program_requirement_id', program.id)
       .eq('user_id', user.id);
     
-    mappings[program.id] = programMappings || [];
+    mappings[program.id] = (programMappings || []) as ProgramCourseMapping[];
   }
 
   // Fetch scenario overrides/simulated courses

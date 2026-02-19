@@ -33,7 +33,13 @@ export default async function PendingPage() {
     redirect('/institution/signup');
   }
 
-  const institution = userRole.institutions as Institution;
+  const institution = (Array.isArray(userRole.institutions)
+    ? userRole.institutions[0]
+    : userRole.institutions) as Institution | null;
+
+  if (!institution) {
+    redirect('/institution/signup');
+  }
 
   // If already verified, redirect to dashboard
   if (institution.status === 'verified') {
