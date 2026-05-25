@@ -46,7 +46,7 @@ export default function PublicFooter() {
       </div>
 
       <div className={styles.footerBottom}>
-        <p>&copy; 2026 PrereqPilot {APP_VERSION_STATUS} ({APP_VERSION}). All rights reserved.</p>
+        <p>&copy; 2026 PrereqPilot {APP_VERSION_STATUS} ({APP_VERSION}). All rights reserved. Created By <Link href="https://lattentechnologies.com">Latten Technologies, LLC</Link></p>
       </div>
     </footer>
   );
