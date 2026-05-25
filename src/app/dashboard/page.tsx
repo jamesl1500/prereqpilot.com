@@ -17,11 +17,11 @@ export default async function Dashboard() {
     .eq('user_id', user.id)
     .single();
 
-  // Fetch user stats
-  const [coursesResult, termsResult, auditsResult] = await Promise.all([
+  // Fetch user stats + programs + scenarios in parallel
+  const [coursesResult, termsResult, auditsResult, programsResult, scenariosResult] = await Promise.all([
     supabase
       .from('taken_courses')
-      .select('id, credits, grade_value')
+      .select('id, credits, grade_value, course_title')
       .eq('user_id', user.id),
     supabase
       .from('terms')
@@ -32,12 +32,31 @@ export default async function Dashboard() {
       .select('overall_gpa, prereq_gpa, computed_at')
       .eq('user_id', user.id)
       .order('computed_at', { ascending: false })
-      .limit(1)
+      .limit(1),
+    supabase
+      .from('program_requirements')
+      .select(`
+        id,
+        name,
+        min_overall_gpa,
+        min_prereq_gpa,
+        institution:institutions(name, short_code),
+        program_required_courses(id, course_title, is_required, min_grade, credits)
+      `)
+      .or(`user_id.is.null,user_id.eq.${user.id}`)
+      .order('created_at', { ascending: false })
+      .limit(6),
+    supabase
+      .from('scenarios')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id),
   ]);
 
   const courses = coursesResult.data || [];
   const terms = termsResult.data || [];
   const latestAudit = auditsResult.data?.[0];
+  const programs = programsResult.data || [];
+  const scenarioCount = scenariosResult.count ?? 0;
 
   // Calculate overall GPA from courses
   const coursesWithGrades = courses.filter(course => 
@@ -71,5 +90,14 @@ export default async function Dashboard() {
     prereqGPA: latestAudit?.prereq_gpa || null,
   };
 
-  return <DashboardPage user={user} stats={stats} onboarding={onboardingData} />;
+  return (
+    <DashboardPage
+      user={user}
+      stats={stats}
+      onboarding={onboardingData}
+      programs={programs}
+      takenCourses={courses}
+      scenarioCount={scenarioCount}
+    />
+  );
 }

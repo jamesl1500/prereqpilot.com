@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Calendar, BookOpen, GraduationCap, Search, School2, Pencil } from 'lucide-react';
+import { Calendar, BookOpen, GraduationCap, Search, School2, Pencil, Trash2, CheckSquare, Square } from 'lucide-react';
+import RetakeAnalyzer from '@/components/shared/RetakeAnalyzer';
 import CourseModal from '@/components/modals/CourseModal';
 import DeleteModal from '@/components/modals/DeleteModal';
 import TermModal from '@/components/modals/TermModal';
@@ -47,6 +48,10 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
   const [isDeleteTermModalOpen, setIsDeleteTermModalOpen] = useState(false);
   const [selectedTermForEdit, setSelectedTermForEdit] = useState<Term | undefined>();
   const [selectedTermForDelete, setSelectedTermForDelete] = useState<Term | undefined>();
+  const [gradeFilter, setGradeFilter] = useState<string>('all');
+  const [isBulkMode, setIsBulkMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
 
   const showOnboarding = !!(
     onboarding &&
@@ -59,11 +64,14 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
     router.refresh();
   };
 
+  const GRADE_OPTIONS = ['A+','A','A-','B+','B','B-','C+','C','C-','D+','D','D-','F','P'] as const;
+
   const filteredCourses = takenCourses.filter((course) => {
     const matchesTerm = selectedTerm === 'all' || course.term_id === selectedTerm;
     const matchesSearch = course.course_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       course.course?.code?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTerm && matchesSearch;
+    const matchesGrade = gradeFilter === 'all' || course.grade === gradeFilter;
+    return matchesTerm && matchesSearch && matchesGrade;
   });
 
   const totalCredits = filteredCourses.reduce((sum, course) => sum + Number(course.credits || 0), 0);
@@ -115,6 +123,48 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
     setIsDeleteModalOpen(true);
   };
 
+  const toggleBulkMode = () => {
+    setIsBulkMode((v) => !v);
+    setSelectedIds(new Set());
+  };
+
+  const toggleSelectCourse = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const selectAll = () => {
+    setSelectedIds(new Set(filteredCourses.map((c) => c.id)));
+  };
+
+  const deselectAll = () => {
+    setSelectedIds(new Set());
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`Delete ${selectedIds.size} selected course${selectedIds.size > 1 ? 's' : ''}? This cannot be undone.`)) return;
+    setIsBulkDeleting(true);
+    try {
+      const res = await fetch('/api/courses', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ids: Array.from(selectedIds) }),
+      });
+      if (res.ok) {
+        setIsBulkMode(false);
+        setSelectedIds(new Set());
+        router.refresh();
+      }
+    } finally {
+      setIsBulkDeleting(false);
+    }
+  };
+
   // Group courses by term
   const coursesByTerm = terms.map((term) => ({
     term,
@@ -123,7 +173,8 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
       const matchesSearch = !searchQuery ||
         course.course_title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         course.course?.code?.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesTerm && matchesSearch;
+      const matchesGrade = gradeFilter === 'all' || course.grade === gradeFilter;
+      return matchesTerm && matchesSearch && matchesGrade;
     }),
   })).filter((group) => selectedTerm === 'all' || group.term.id === selectedTerm);
 
@@ -140,6 +191,22 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
           <button className={styles.secondaryButton} onClick={handleManageTerms}>
             + Manage Terms
           </button>
+          <button
+            className={isBulkMode ? styles.bulkActiveButton : styles.secondaryButton}
+            onClick={toggleBulkMode}
+          >
+            {isBulkMode ? '✕ Cancel Select' : 'Select'}
+          </button>
+          {isBulkMode && selectedIds.size > 0 && (
+            <button
+              className={styles.bulkDeleteButton}
+              onClick={handleBulkDelete}
+              disabled={isBulkDeleting}
+            >
+              <Trash2 size={16} />
+              {isBulkDeleting ? 'Deleting…' : `Delete (${selectedIds.size})`}
+            </button>
+          )}
           <button className={styles.addButton} onClick={handleAddCourse}>
             + Add Course
           </button>
@@ -171,7 +238,28 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
             </option>
           ))}
         </select>
+
+        <select
+          value={gradeFilter}
+          onChange={(e) => setGradeFilter(e.target.value)}
+          className={styles.termSelect}
+          aria-label="Filter by grade"
+        >
+          <option value="all">All Grades</option>
+          {GRADE_OPTIONS.map((g) => (
+            <option key={g} value={g}>{g}</option>
+          ))}
+        </select>
       </div>
+
+      {/* Bulk select controls */}
+      {isBulkMode && filteredCourses.length > 0 && (
+        <div className={styles.bulkBar}>
+          <span className={styles.bulkCount}>{selectedIds.size} of {filteredCourses.length} selected</span>
+          <button className={styles.bulkSelectLink} onClick={selectAll}>Select All</button>
+          <button className={styles.bulkSelectLink} onClick={deselectAll}>Deselect All</button>
+        </div>
+      )}
 
       {/* Summary Stats */}
       <div className={styles.summary}>
@@ -248,9 +336,21 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
 
                 <div className={styles.coursesList}>
                   {courses.map((course) => (
-                    <div key={course.id} className={styles.courseCard}>
+                    <div
+                      key={course.id}
+                      className={`${styles.courseCard} ${isBulkMode && selectedIds.has(course.id) ? styles.courseCardSelected : ''}`}
+                      onClick={isBulkMode ? () => toggleSelectCourse(course.id) : undefined}
+                      style={isBulkMode ? { cursor: 'pointer' } : undefined}
+                    >
                       <div className={styles.courseHeader}>
-                        <div>
+                        {isBulkMode && (
+                          <span className={styles.bulkCheckbox}>
+                            {selectedIds.has(course.id)
+                              ? <CheckSquare size={20} strokeWidth={2.5} />
+                              : <Square size={20} strokeWidth={2} />}
+                          </span>
+                        )}
+                        <div style={{ flex: 1 }}>
                           <h3 className={styles.courseTitle}>{course.course_title}</h3>
                           {course.course?.code && (
                             <p className={styles.courseCode}>{course.course.code}</p>
@@ -282,7 +382,7 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
                         <p className={styles.courseNotes}>{course.notes}</p>
                       )}
 
-                      <div className={styles.courseActions}>
+                      <div className={styles.courseActions} onClick={(e) => isBulkMode && e.stopPropagation()}>
                         <button className={styles.actionButton} onClick={() => router.push(`/classes/${course.id}`)}>
                           View
                         </button>
@@ -346,6 +446,11 @@ export default function ClassesClient({ takenCourses, terms, institutions, onboa
         itemId={selectedTermForDelete?.id || ''}
         itemName={selectedTermForDelete?.name || ''}
       />
+
+      {/* Retake Impact Analyzer */}
+      {takenCourses.length > 0 && (
+        <RetakeAnalyzer courses={takenCourses} />
+      )}
 
       <TutorialTooltip
         tutorialType="courses"

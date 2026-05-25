@@ -285,3 +285,437 @@
     color: #9ca3af;
   }
 }
+
+// ============================================================
+// Program Match Widget
+// ============================================================
+.matchSection {
+  margin-bottom: $spacing-3xl * 2;
+}
+
+.matchHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-xl;
+}
+
+.matchViewAll {
+  font-size: $font-size-sm;
+  font-weight: 700;
+  color: #000;
+  text-decoration: none;
+  font-family: var(--font-space-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #000;
+  padding-bottom: 2px;
+  transition: opacity 0.2s;
+  &:hover { opacity: 0.6; }
+}
+
+.matchEmptyState {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-3xl;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-lg;
+  color: #666;
+  p { font-size: $font-size-sm; }
+}
+
+.matchEmptyLink {
+  font-size: $font-size-sm;
+  font-weight: 700;
+  color: #000;
+  text-decoration: none;
+  font-family: var(--font-space-mono), monospace;
+  border-bottom: 2px solid #000;
+}
+
+.matchGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: $spacing-xl;
+}
+
+.matchCard {
+  background: #fff;
+  border: 2px solid #000;
+  padding: $spacing-xl;
+  transition: all 0.2s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 8px 8px 0 #000;
+  }
+}
+
+.matchCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $spacing-lg;
+  margin-bottom: $spacing-lg;
+}
+
+.matchProgramName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  margin-bottom: $spacing-xs;
+}
+
+.matchInstitution {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.matchScore {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+  flex-shrink: 0;
+}
+
+.matchBarWrapper {
+  width: 100%;
+  height: 8px;
+  background: #f0f0f0;
+  border: 1px solid #000;
+  margin-bottom: $spacing-lg;
+  overflow: hidden;
+}
+
+.matchBar {
+  height: 100%;
+  background: #000;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.matchBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+}
+
+.matchBreakdownItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-size: 0.8rem;
+  color: #444;
+}
+
+.iconPass { color: #166534; }
+.iconWarn { color: #92400e; }
+.iconFail { color: #991b1b; }
+
+.matchMissing {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.matchMissingLabel {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+  color: #666;
+}
+
+.matchMissingBadge {
+  background: #f5f5f5;
+  border: 1px solid #000;
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 600;
+}
+
+.matchMissingMore {
+  font-size: 0.7rem;
+  color: #666;
+  font-style: italic;
+}
+
+.matchViewDetails {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #000;
+  text-decoration: none;
+  font-family: var(--font-space-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid #000;
+  padding-bottom: 2px;
+  transition: opacity 0.2s;
+  &:hover { opacity: 0.6; }
+}
+
+// ============================================================
+// GPA Projector
+// ============================================================
+.projectorSection {
+  background: #fff;
+  border: 2px solid #000;
+  margin-bottom: $spacing-3xl * 2;
+}
+
+.projectorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-xl;
+  cursor: pointer;
+  user-select: none;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.2s;
+  &:hover { background: #f9f9f9; }
+  &[aria-expanded="true"] { border-bottom-color: #000; }
+}
+
+.projectorTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.projectorTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.projectorBadge {
+  background: #000;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.projectorToggle {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.projectorBody {
+  padding: $spacing-xl;
+}
+
+.projectorStats {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2xl;
+  margin-bottom: $spacing-xl;
+  padding: $spacing-xl;
+  background: #f9f9f9;
+  border: 1px solid #e5e5e5;
+}
+
+.projectorStat {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.projectorStatLabel {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: #666;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.projectorStatValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #000;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.projectorArrow {
+  font-size: 1.5rem;
+  color: #999;
+}
+
+.projectorDelta {
+  margin-left: auto;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.projectorHint {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: $spacing-lg;
+}
+
+.projectorEmpty {
+  font-size: 0.85rem;
+  color: #999;
+  font-style: italic;
+  margin-bottom: $spacing-lg;
+}
+
+.projectorCourseList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.projectorCourseRow {
+  display: grid;
+  grid-template-columns: 1fr 80px 150px 40px;
+  gap: $spacing-md;
+  align-items: center;
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 1fr 70px;
+    grid-template-rows: auto auto;
+  }
+}
+
+.projectorInput,
+.projectorCreditsInput,
+.projectorGradeSelect {
+  padding: 0.6rem 0.75rem;
+  border: 2px solid #000;
+  background: #fff;
+  font-size: $font-size-sm;
+  font-family: inherit;
+  color: #000;
+  &:focus { outline: none; box-shadow: 3px 3px 0 #000; }
+}
+
+.projectorRemoveBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: transparent;
+  border: 2px solid #000;
+  cursor: pointer;
+  color: #000;
+  transition: all 0.2s;
+  &:hover { background: #000; color: #fff; }
+}
+
+.projectorAddBtn {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: 0.6rem 1.25rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-family: var(--font-space-mono), monospace;
+  transition: all 0.2s;
+  &:hover { background: #333; }
+}
+
+// ============================================================
+// Scenarios Banner
+// ============================================================
+.scenarioBanner {
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  padding: $spacing-2xl;
+  margin-bottom: $spacing-3xl * 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-2xl;
+  flex-wrap: wrap;
+}
+
+.scenarioBannerContent {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-xl;
+  flex: 1;
+}
+
+.scenarioBannerIcon {
+  flex-shrink: 0;
+  padding: $spacing-md;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scenarioBannerTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  margin-bottom: $spacing-sm;
+}
+
+.scenarioBannerText {
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.8);
+  line-height: 1.6;
+}
+
+.scenarioBannerActions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: $spacing-md;
+  flex-shrink: 0;
+}
+
+.scenarioBannerCount {
+  font-size: 0.75rem;
+  font-family: var(--font-space-mono), monospace;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.6);
+}
+
+.scenarioBannerBtn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+  transition: all 0.2s;
+  border: 2px solid #fff;
+  &:hover { background: transparent; color: #fff; }
+}

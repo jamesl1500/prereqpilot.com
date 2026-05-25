@@ -338,3 +338,244 @@
     transform: scale(1.1);
   }
 }
+
+// ============================================================
+// Bulk Select & Delete
+// ============================================================
+.bulkActiveButton {
+  padding: 0.875rem 1.5rem;
+  background: #000;
+  color: #fff;
+  border: 2px solid #000;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  font-family: var(--font-space-mono), monospace;
+  transition: all 0.2s;
+  &:hover { background: #333; }
+}
+
+.bulkDeleteButton {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: 0.875rem 1.25rem;
+  background: #991b1b;
+  color: #fff;
+  border: 2px solid #991b1b;
+  font-size: $font-size-sm;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  font-family: var(--font-space-mono), monospace;
+  transition: all 0.2s;
+  &:hover { background: #7f1d1d; border-color: #7f1d1d; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.bulkBar {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xl;
+  padding: $spacing-md $spacing-lg;
+  background: #f0f0f0;
+  border: 2px solid #000;
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.bulkCount {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #000;
+}
+
+.bulkSelectLink {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-space-mono), monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-decoration: underline;
+  padding: 0;
+  &:hover { opacity: 0.6; }
+}
+
+.courseCardSelected {
+  background: #f0f0f0 !important;
+  border-color: #000 !important;
+  box-shadow: 4px 4px 0 #000;
+}
+
+.bulkCheckbox {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: $spacing-sm;
+  color: #000;
+}
+
+// ============================================================
+// Retake Impact Analyzer
+// ============================================================
+.retakeSection {
+  background: #fff;
+  border: 2px solid #000;
+  margin-top: $spacing-3xl * 2;
+}
+
+.retakeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-xl;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.2s;
+  &:hover { background: #f9f9f9; }
+}
+
+.retakeTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.retakeTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--font-space-mono), monospace;
+}
+
+.retakeBadge {
+  background: #f0f0f0;
+  border: 1px solid #000;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: var(--font-space-mono), monospace;
+  color: #000;
+}
+
+.retakeToggle {
+  display: flex;
+  align-items: center;
+  color: #666;
+}
+
+.retakeBody {
+  padding: $spacing-xl;
+  border-top: 2px solid #000;
+}
+
+.retakeHint {
+  font-size: 0.875rem;
+  color: #555;
+  margin-bottom: $spacing-xl;
+  line-height: 1.5;
+}
+
+.retakeTable {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e0e0e0;
+  overflow-x: auto;
+}
+
+.retakeTableHead {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 2fr 1.5fr;
+  gap: 0;
+  background: #000;
+  color: #fff;
+  padding: $spacing-md $spacing-lg;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--font-space-mono), monospace;
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.retakeTableRow {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 2fr 1.5fr;
+  gap: 0;
+  padding: $spacing-md $spacing-lg;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 0.875rem;
+  align-items: center;
+  transition: background 0.15s;
+  &:hover { background: #f9f9f9; }
+  &:last-child { border-bottom: none; }
+
+  @media (max-width: $breakpoint-mobile) {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+.retakeCourseTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-weight: 600;
+  color: #000;
+}
+
+.retakeTopBadge {
+  background: #000;
+  color: #fff;
+  font-size: 0.55rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  font-family: var(--font-space-mono), monospace;
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+}
+
+.retakeAlreadyBadge {
+  background: #f0f9ff;
+  border: 1px solid #0284c7;
+  color: #0284c7;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  font-family: var(--font-space-mono), monospace;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.retakeCell {
+  color: #444;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.8rem;
+
+  @media (max-width: $breakpoint-mobile) {
+    &:nth-child(4), &:nth-child(5) { display: none; }
+  }
+}
+
+.retakeImpact {
+  color: #166534;
+  font-weight: 700;
+  font-family: var(--font-space-mono), monospace;
+  font-size: 0.9rem;
+}
