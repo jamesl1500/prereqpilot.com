@@ -55,7 +55,12 @@ export default async function Dashboard() {
   const courses = coursesResult.data || [];
   const terms = termsResult.data || [];
   const latestAudit = auditsResult.data?.[0];
-  const programs = programsResult.data || [];
+  const programs = (programsResult.data || []).map(p => ({
+    ...p,
+    institution: Array.isArray(p.institution)
+      ? (p.institution[0] ?? null)
+      : (p.institution ?? null),
+  }));
   const scenarioCount = scenariosResult.count ?? 0;
 
   // Calculate overall GPA from courses
