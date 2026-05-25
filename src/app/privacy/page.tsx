@@ -5,8 +5,9 @@ import PublicHeader from '@/components/PublicHeader';
 import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - PrereqPilot',
-  description: 'PrereqPilot Privacy Policy - Learn how we collect, use, and protect your personal information.',
+  title: 'Privacy Policy',
+  description: 'PrereqPilot Privacy Policy — Learn how we collect, use, and protect your personal information as you plan your academic journey.',
+  alternates: { canonical: 'https://prereqpilot.com/privacy' },
 };
 
 export default function PrivacyPage() {

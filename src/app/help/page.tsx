@@ -4,8 +4,10 @@ import PublicHeader from '@/components/PublicHeader';
 import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
-  title: 'Help Center - PrereqPilot',
-  description: 'Get help with PrereqPilot. Find answers to common questions about planning your academic journey.',
+  title: 'Help Center — How to Plan Your Grad School Path',
+  description:
+    'Get answers to common questions about using PrereqPilot to check grad school eligibility, track prerequisites, calculate GPA requirements, and plan your academic journey.',
+  alternates: { canonical: 'https://prereqpilot.com/help' },
 };
 
 export default function HelpPage() {

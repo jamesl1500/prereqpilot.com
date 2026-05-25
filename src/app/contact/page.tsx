@@ -6,8 +6,10 @@ import PublicFooter from '@/components/PublicFooter';
 import ContactForm from '../../components/forms/ContactForm';
 
 export const metadata: Metadata = {
-  title: 'Contact Us - PrereqPilot',
-  description: 'Get in touch with PrereqPilot. We\'re here to help students and institutions with questions, support, and partnerships.',
+  title: 'Contact Us',
+  description:
+    'Get in touch with the PrereqPilot team. We help college students with grad school planning questions, institutional partnerships, and platform support.',
+  alternates: { canonical: 'https://prereqpilot.com/contact' },
 };
 
 export default function ContactPage() {

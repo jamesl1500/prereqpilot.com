@@ -17,24 +17,45 @@ const spaceMono = Space_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://prereqpilot.com"),
-  title: "PrereqPilot - Academic Planning Assistant",
-  description: "Track courses, calculate GPAs, and plan your path to success",
+  title: {
+    default: "PrereqPilot — Plan Your Path to Grad School & College Programs",
+    template: "%s | PrereqPilot",
+  },
+  description:
+    "PrereqPilot helps college students check graduate school eligibility, track course prerequisites, calculate GPA requirements, and build a personalized academic roadmap to their dream program.",
   applicationName: "PrereqPilot",
   authors: [{ name: "James Latten", url: "https://jameslatten.com" }],
   creator: "James Latten",
   publisher: "James Latten",
   keywords: [
+    // Grad school / program admission
+    "grad school planner",
+    "graduate school requirements checker",
+    "graduate school eligibility",
+    "program admission requirements",
+    "grad school GPA requirements",
+    "check graduate school eligibility",
+    "plan grad school application",
+    "graduate program prerequisites",
+    "grad school preparation tool",
+    // Academic planning
+    "academic planning tool for college students",
+    "course prerequisite tracker",
+    "academic roadmap planner",
+    "college program requirements",
+    "academic transcript planner",
+    "GPA calculator for grad school",
+    // General
     "academic planning",
-    "course tracking",
-    "GPA calculator",
     "prerequisite management",
-    "student success",
-    "education tools",
-    "curriculum planning",
+    "student success tools",
+    "education planning platform",
   ],
+  category: "Education",
   openGraph: {
-    title: "PrereqPilot - Academic Planning Assistant",
-    description: "Track courses, calculate GPAs, and plan your path to success",
+    title: "PrereqPilot — Plan Your Path to Grad School & College Programs",
+    description:
+      "Check graduate school eligibility, track prerequisites, and build your academic roadmap — all in one free tool built for college students.",
     url: "https://prereqpilot.com",
     siteName: "PrereqPilot",
     images: [
@@ -42,7 +63,7 @@ export const metadata: Metadata = {
         url: "https://prereqpilot.com/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "PrereqPilot Open Graph Image",
+        alt: "PrereqPilot — Academic Planning Tool for Graduate School",
       },
     ],
     locale: "en_US",
@@ -50,12 +71,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PrereqPilot - Academic Planning Assistant",
-    description: "Track courses, calculate GPAs, and plan your path to success",
+    title: "PrereqPilot — Plan Your Path to Grad School & College Programs",
+    description:
+      "Check grad school eligibility, track prerequisites, and build your academic roadmap — free for college students.",
     images: ["https://prereqpilot.com/opengraph-image.png"],
   },
   icons: {
     icon: "/favicon.ico",
+  },
+  alternates: {
+    canonical: "https://prereqpilot.com",
   },
 };
 

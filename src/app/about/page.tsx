@@ -5,8 +5,17 @@ import PublicHeader from '@/components/PublicHeader';
 import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
-  title: 'About Us - PrereqPilot',
-  description: 'Learn about PrereqPilot\'s mission to simplify academic planning and help students achieve their educational goals.',
+  title: 'About PrereqPilot — Academic Planning for College Students',
+  description:
+    'PrereqPilot was built to eliminate confusion around grad school and program admission requirements. Learn how we help college students plan smarter and apply with confidence.',
+  alternates: { canonical: 'https://prereqpilot.com/about' },
+  openGraph: {
+    title: 'About PrereqPilot — Built for College Students Planning Grad School',
+    description:
+      'We built PrereqPilot to eliminate the confusion around graduate program requirements. Our mission: help every student plan their academic path with clarity.',
+    url: 'https://prereqpilot.com/about',
+    type: 'website',
+  },
 };
 
 export default function AboutPage() {

@@ -5,8 +5,17 @@ import PublicHeader from '@/components/PublicHeader';
 import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
-  title: 'For Institutions - PrereqPilot',
-  description: 'Partner with PrereqPilot to streamline admissions, reach qualified students, and showcase your programs.',
+  title: 'For Institutions — Connect with Qualified Graduate Applicants',
+  description:
+    'Partner with PrereqPilot to reach pre-qualified graduate school applicants, showcase your programs\' admission requirements, and streamline your enrollment funnel.',
+  alternates: { canonical: 'https://prereqpilot.com/forinstitutions' },
+  openGraph: {
+    title: 'For Institutions — Reach Qualified Grad School Applicants | PrereqPilot',
+    description:
+      'List your graduate and undergraduate programs on PrereqPilot and connect with students who already meet your admission requirements.',
+    url: 'https://prereqpilot.com/forinstitutions',
+    type: 'website',
+  },
 };
 
 export default function ForInstitutionsPage() {

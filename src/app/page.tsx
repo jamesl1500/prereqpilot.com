@@ -6,8 +6,82 @@ import PublicHeader from '@/components/PublicHeader';
 import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
-  title: 'PrereqPilot - Plan Your Academic Journey',
-  description: 'Discover programs you qualify for, plan your course path, and streamline your academic journey with PrereqPilot.',
+  title: 'Plan Your Path to Grad School & College Programs — Free Tool for Students',
+  description:
+    'PrereqPilot helps college students check graduate school eligibility, track prerequisite courses, and build a personalized roadmap to their dream program. Free to use.',
+  alternates: { canonical: 'https://prereqpilot.com' },
+  openGraph: {
+    title: 'Plan Your Path to Grad School — PrereqPilot',
+    description:
+      'Check grad school eligibility, track prerequisite requirements, and map out every course you need. Built for college students planning their next chapter.',
+    url: 'https://prereqpilot.com',
+    type: 'website',
+  },
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://prereqpilot.com/#website',
+      url: 'https://prereqpilot.com',
+      name: 'PrereqPilot',
+      description:
+        'Free academic planning tool that helps college students check graduate school eligibility, track prerequisite courses, and build a personalized path to their dream program.',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+          '@type': 'EntryPoint',
+          urlTemplate: 'https://prereqpilot.com/browse-programs?q={search_term_string}',
+        },
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://prereqpilot.com/#organization',
+      name: 'PrereqPilot',
+      url: 'https://prereqpilot.com',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://prereqpilot.com/primary_logo.png',
+      },
+      sameAs: [],
+      contactPoint: {
+        '@type': 'ContactPoint',
+        email: 'support@prereqpilot.com',
+        contactType: 'customer support',
+      },
+    },
+    {
+      '@type': 'SoftwareApplication',
+      '@id': 'https://prereqpilot.com/#app',
+      name: 'PrereqPilot',
+      url: 'https://prereqpilot.com',
+      applicationCategory: 'EducationalApplication',
+      operatingSystem: 'Web',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+      description:
+        'PrereqPilot is a free academic planning platform for college students. Check grad school GPA and prerequisite requirements, build a course roadmap, simulate academic scenarios, and discover programs you qualify for.',
+      featureList: [
+        'Graduate school eligibility checker',
+        'Prerequisite course tracker',
+        'GPA calculator and projector',
+        'Academic roadmap builder',
+        'Scenario simulator for what-if planning',
+        'Multi-institution program browser',
+      ],
+      audience: {
+        '@type': 'EducationalAudience',
+        educationalRole: 'student',
+      },
+    },
+  ],
 };
 
 export default async function Home() {
@@ -18,8 +92,13 @@ export default async function Home() {
   } = await supabase.auth.getUser();
 
   return (
-    <div className={styles.container}>
-      <PublicHeader user={user} />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <div className={styles.container}>
+        <PublicHeader user={user} />
       
       {/* Hero Section */}
       <section className={styles.hero}>
@@ -186,5 +265,6 @@ export default async function Home() {
       {/* Footer */}
       <PublicFooter />
     </div>
+    </>
   );
 }

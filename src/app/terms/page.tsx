@@ -5,8 +5,9 @@ import PublicHeader from '@/components/PublicHeader';
 import PublicFooter from '@/components/PublicFooter';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - PrereqPilot',
-  description: 'PrereqPilot Terms of Service - Review the terms and conditions for using our platform.',
+  title: 'Terms of Service',
+  description: 'PrereqPilot Terms of Service — Review the terms and conditions for using our academic planning platform.',
+  alternates: { canonical: 'https://prereqpilot.com/terms' },
 };
 
 export default function TermsPage() {
