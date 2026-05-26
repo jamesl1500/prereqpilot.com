@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
@@ -89,22 +88,28 @@ export default function AddHypotheticalCourseModal({
       const gradeData = GRADE_OPTIONS.find(g => g.value === grade);
       
       if (editingCourse) {
-        // Update existing hypothetical course
-        await axios.put(`/api/scenarios/${scenarioId}/courses/${editingCourse.id}`, {
-          simulatedCourseTitle: courseTitle.trim(),
-          simulatedCredits: creditsNum,
-          simulatedGrade: grade,
-          simulatedGradeValue: gradeData?.points || 0,
+        await fetch(`/api/scenarios/${scenarioId}/courses/${editingCourse.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            simulatedCourseTitle: courseTitle.trim(),
+            simulatedCredits: creditsNum,
+            simulatedGrade: grade,
+            simulatedGradeValue: gradeData?.points || 0,
+          }),
         });
         showToast('Hypothetical course updated successfully', 'success');
       } else {
-        // Create new hypothetical course
-        await axios.post(`/api/scenarios/${scenarioId}/courses`, {
-          takenCourseId: null,
-          simulatedCourseTitle: courseTitle.trim(),
-          simulatedCredits: creditsNum,
-          simulatedGrade: grade,
-          simulatedGradeValue: gradeData?.points || 0,
+        await fetch(`/api/scenarios/${scenarioId}/courses`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            takenCourseId: null,
+            simulatedCourseTitle: courseTitle.trim(),
+            simulatedCredits: creditsNum,
+            simulatedGrade: grade,
+            simulatedGradeValue: gradeData?.points || 0,
+          }),
         });
         showToast('Hypothetical course added successfully', 'success');
       }

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import styles from '@/styles/modules/onboarding/OnboardingModal.module.scss';
 
 interface OnboardingStep {
@@ -86,9 +85,10 @@ export default function OnboardingModal({ isOpen, currentStep, onComplete }: Onb
   const updateOnboardingProgress = async (nextStepId: string, completed: string[]) => {
     setIsUpdating(true);
     try {
-      await axios.put('/api/onboarding', {
-        step: nextStepId,
-        steps_completed: completed
+      await fetch('/api/onboarding', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ step: nextStepId, steps_completed: completed }),
       });
     } catch (error) {
       console.error('Failed to update onboarding progress:', error);
@@ -100,8 +100,10 @@ export default function OnboardingModal({ isOpen, currentStep, onComplete }: Onb
   const completeOnboarding = async () => {
     setIsUpdating(true);
     try {
-      await axios.put('/api/onboarding', {
-        complete: true
+      await fetch('/api/onboarding', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ complete: true }),
       });
       onComplete();
     } catch (error) {

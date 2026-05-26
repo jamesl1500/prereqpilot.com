@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { BookOpen, Plus, Edit2, Trash2, GraduationCap, Search } from 'lucide-react';
@@ -64,9 +63,10 @@ export default function CoursesPage({ institution, courses: initialCourses }: Co
 
   const refreshCourses = async () => {
     try {
-      const response = await axios.get(`/api/institution/courses`);
-      if (response.data.success) {
-        setCourses(response.data.data);
+      const response = await fetch('/api/institution/courses');
+      if (response.ok) {
+        const json = await response.json();
+        setCourses(json.data);
       }
     } catch (err) {
       console.error('Error refreshing courses:', err);
@@ -78,22 +78,25 @@ export default function CoursesPage({ institution, courses: initialCourses }: Co
     setError(null);
 
     try {
-      if (editingCourse) {
-        await axios.put(`/api/institution/courses/${editingCourse.id}`, data);
-      } else {
-        await axios.post(`/api/institution/courses`, data);
+      const url = editingCourse
+        ? `/api/institution/courses/${editingCourse.id}`
+        : '/api/institution/courses';
+      const method = editingCourse ? 'PUT' : 'POST';
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to save course');
       }
-      
       await refreshCourses();
       setShowForm(false);
       setEditingCourse(null);
       reset();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to save course');
-      } else {
-        setError('An error occurred');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setIsSubmitting(false);
     }
@@ -116,13 +119,15 @@ export default function CoursesPage({ institution, courses: initialCourses }: Co
     }
 
     try {
-      await axios.delete(`/api/institution/courses/${courseId}`);
+      const response = await fetch(`/api/institution/courses/${courseId}`, { method: 'DELETE' });
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to delete course');
+      }
       showToast('Course deleted successfully', 'success');
       await refreshCourses();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        showToast(err.response?.data?.error || 'Failed to delete course', 'error');
-      }
+      showToast(err instanceof Error ? err.message : 'Failed to delete course', 'error');
     }
   };
 

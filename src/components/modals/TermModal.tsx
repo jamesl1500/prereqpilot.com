@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 
 import type { TermModalProps } from '@/types/modal';
 import { useToast } from '@/components/shared/Toast';
@@ -79,10 +78,20 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
       };
 
       if (term) {
-        await axios.put(`/api/terms/${term.id}`, termData);
+        const res = await fetch(`/api/terms/${term.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(termData),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'An error occurred');
         showToast('Term updated successfully', 'success');
       } else {
-        await axios.post('/api/terms', termData);
+        const res = await fetch('/api/terms', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(termData),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'An error occurred');
         showToast('Term created successfully', 'success');
       }
 
@@ -90,13 +99,9 @@ export default function TermModal({ isOpen, onClose, term }: TermModalProps) {
       router.refresh();
       onClose();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'An error occurred');
-        showToast(err.response?.data?.error || 'Failed to save term', 'error');
-      } else {
-        setError('An error occurred');
-        showToast('An error occurred', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred';
+      setError(msg);
+      showToast(msg === 'An error occurred' ? 'Failed to save term' : msg, 'error');
     } finally {
       setIsSubmitting(false);
     }

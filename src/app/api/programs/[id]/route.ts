@@ -42,7 +42,7 @@ export async function GET(
         );
       }
 
-      return NextResponse.json(result.data);
+      return NextResponse.json({ data: result.data });
     }
 
     // Default to program (existing functionality can be added here if needed)
@@ -96,7 +96,7 @@ export async function PUT(
           { status: result.error === 'Unauthorized' ? 401 : 400 }
         );
       }
-      return NextResponse.json(result.data);
+      return NextResponse.json({ success: true, data: result.data });
     }
 
     // Default to program
@@ -117,7 +117,7 @@ export async function PUT(
       );
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, data: result.data });
   } catch (error) {
     await logApiError({
       request,

@@ -30,7 +30,7 @@ export async function PUT(
         payloadReceived: result,
       });
       return NextResponse.json(
-        { success: false, error: result.error },
+        { error: result.error },
         { status: result.error === 'Unauthorized' ? 401 : 400 }
       );
     }
@@ -43,7 +43,7 @@ export async function PUT(
       functionName: 'PUT',
     });
     return NextResponse.json(
-      { success: false, error: 'Invalid request body' },
+      { error: 'Invalid request body' },
       { status: 400 }
     );
   }
@@ -65,7 +65,7 @@ export async function DELETE(
         payloadReceived: result,
       });
       return NextResponse.json(
-        { success: false, error: result.error },
+        { error: result.error },
         { status: result.error === 'Unauthorized' ? 401 : 400 }
       );
     }

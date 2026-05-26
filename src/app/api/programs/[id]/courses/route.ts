@@ -27,7 +27,7 @@ export async function GET(
         payloadReceived: result,
       });
       return NextResponse.json(
-        { success: false, error: result.error },
+        { error: result.error },
         { status: result.error === 'Unauthorized' ? 401 : 400 }
       );
     }
@@ -69,7 +69,7 @@ export async function POST(
         payloadReceived: result,
       });
       return NextResponse.json(
-        { success: false, error: errorMessage },
+        { error: errorMessage },
         { status: errorMessage === 'Unauthorized' ? 401 : 400 }
       );
     }

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import axios from 'axios';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
 
@@ -77,11 +76,15 @@ export default function SimulateRetakeModal({
 
           const gradeData = GRADE_OPTIONS.find(g => g.value === simulatedGrade);
           
-          return axios.post(`/api/scenarios/${scenarioId}/courses`, {
-            takenCourseId: course.id,
-            simulatedGrade,
-            simulatedGradeValue: gradeData?.points || 0,
-            isRepeat: markAsRepeats.has(course.id),
+          return fetch(`/api/scenarios/${scenarioId}/courses`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              takenCourseId: course.id,
+              simulatedGrade,
+              simulatedGradeValue: gradeData?.points || 0,
+              isRepeat: markAsRepeats.has(course.id),
+            }),
           });
         })
       );

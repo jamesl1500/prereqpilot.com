@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Upload, FileText, Loader, CheckCircle, AlertCircle, X } from 'lucide-react';
-import axios from 'axios';
 import styles from '@/styles/modules/components/transcript-upload.module.scss';
 
 interface TranscriptUploadProps {
@@ -78,32 +77,25 @@ export default function TranscriptUpload({ onImportComplete }: TranscriptUploadP
 
       // Upload and process
       setProgress('Analyzing document with AI...');
-      const response = await axios.post('/api/transcripts/parse', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const response = await fetch('/api/transcripts/parse', {
+        method: 'POST',
+        body: formData,
       });
-
-      if (response.data.success) {
-        setProgress('Importing data to your account...');
-        setResult(response.data.result);
-        setProgress('Import complete!');
-        
-        // Refresh the page after a delay
-        setTimeout(() => {
-          onImportComplete();
-        }, 2000);
-      } else {
-        setError(response.data.error || 'Failed to process transcript');
-        setProgress('');
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to upload transcript');
       }
+      const json = await response.json();
+
+      setProgress('Importing data to your account...');
+      setResult(json.result);
+      setProgress('Import complete!');
+      setTimeout(() => {
+        onImportComplete();
+      }, 2000);
     } catch (err) {
       console.error('Upload error:', err);
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to upload transcript');
-      } else {
-        setError('An unexpected error occurred');
-      }
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
       setProgress('');
     } finally {
       setIsProcessing(false);

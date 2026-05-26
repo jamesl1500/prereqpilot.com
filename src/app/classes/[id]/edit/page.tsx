@@ -8,7 +8,7 @@ export default async function EditCoursePage({ params }: { params: Promise<{ id:
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/auth/login');
+    redirect('/login');
   }
 
   // Fetch course and verify ownership

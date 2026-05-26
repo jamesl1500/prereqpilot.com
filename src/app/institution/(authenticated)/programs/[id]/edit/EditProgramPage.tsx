@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { ArrowLeft, Save, GraduationCap, Plus, Trash2, Edit2 } from 'lucide-react';
@@ -122,26 +121,27 @@ export default function EditProgramPage({ institution, program, requiredCourses,
     setError(null);
 
     try {
-      const response = await axios.put(`/api/programs/${program.id}`, {
-        name: data.name,
-        description: data.description || null,
-        requirements_text: data.requirements_text || null,
-        min_prereq_gpa: data.min_prereq_gpa || null,
-        min_overall_gpa: data.min_overall_gpa || null,
-        is_official: true,
-        is_published: true,
+      const response = await fetch(`/api/programs/${program.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          description: data.description || null,
+          requirements_text: data.requirements_text || null,
+          min_prereq_gpa: data.min_prereq_gpa || null,
+          min_overall_gpa: data.min_overall_gpa || null,
+          is_official: true,
+          is_published: true,
+        }),
       });
-
-      if (response.data.success) {
-        router.push(`/institution/programs/${program.id}`);
-        router.refresh();
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to update program');
       }
+      router.push(`/institution/programs/${program.id}`);
+      router.refresh();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to update program');
-      } else {
-        setError('An error occurred while updating the program');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred while updating the program');
     } finally {
       setIsSubmitting(false);
     }
@@ -149,9 +149,10 @@ export default function EditProgramPage({ institution, program, requiredCourses,
 
   const refreshCourses = async () => {
     try {
-      const response = await axios.get(`/api/programs/${program.id}/courses`);
-      if (response.data.success && response.data.data) {
-        setCourses(response.data.data);
+      const response = await fetch(`/api/programs/${program.id}/courses`);
+      if (response.ok) {
+        const json = await response.json();
+        if (json.data) setCourses(json.data);
       }
     } catch (err) {
       console.error('Error refreshing courses:', err);
@@ -161,9 +162,12 @@ export default function EditProgramPage({ institution, program, requiredCourses,
   const onSubmitCourse = async (data: CourseFormData) => {
     try {
       if (editingCourse) {
-        // Update existing course
-        const response = await axios.put(`/api/programs/${program.id}/courses/${editingCourse.id}`, data);
-        if (response.data.success) {
+        const response = await fetch(`/api/programs/${program.id}/courses/${editingCourse.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (response.ok) {
           await refreshCourses();
           setEditingCourse(null);
           setShowCourseForm(false);
@@ -171,13 +175,16 @@ export default function EditProgramPage({ institution, program, requiredCourses,
           resetCourse();
         }
       } else {
-        // Add new course
-        const response = await axios.post(`/api/programs/${program.id}/courses`, {
-          ...data,
-          display_order: courses.length,
-          course_id: selectedCatalogCourse || null,
+        const response = await fetch(`/api/programs/${program.id}/courses`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...data,
+            display_order: courses.length,
+            course_id: selectedCatalogCourse || null,
+          }),
         });
-        if (response.data.success) {
+        if (response.ok) {
           await refreshCourses();
           setShowCourseForm(false);
           setSelectedCatalogCourse('');
@@ -194,8 +201,8 @@ export default function EditProgramPage({ institution, program, requiredCourses,
     if (!confirm('Are you sure you want to delete this course?')) return;
 
     try {
-      const response = await axios.delete(`/api/programs/${program.id}/courses/${courseId}`);
-      if (response.data.success) {
+      const response = await fetch(`/api/programs/${program.id}/courses/${courseId}`, { method: 'DELETE' });
+      if (response.ok) {
         setCourses(courses.filter(c => c.id !== courseId));
       }
     } catch (err) {
@@ -356,16 +363,20 @@ export default function EditProgramPage({ institution, program, requiredCourses,
                         type="button"
                         onClick={async () => {
                           try {
-                            await axios.post(`/api/programs/${program.id}/courses`, {
-                              course_title: course.title,
-                              course_code: course.code,
-                              credits: course.credits,
-                              description: course.description,
-                              min_grade: '',
-                              category: '',
-                              is_required: true,
-                              display_order: courses.length,
-                              course_id: course.id,
+                            await fetch(`/api/programs/${program.id}/courses`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({
+                                course_title: course.title,
+                                course_code: course.code,
+                                credits: course.credits,
+                                description: course.description,
+                                min_grade: '',
+                                category: '',
+                                is_required: true,
+                                display_order: courses.length,
+                                course_id: course.id,
+                              }),
                             });
                             await refreshCourses();
                           } catch (err) {

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lightbulb } from 'lucide-react';
-import axios from 'axios';
 import styles from '@/styles/modules/onboarding/TutorialTooltip.module.scss';
 
 interface TutorialTooltipProps {
@@ -34,8 +33,8 @@ export default function TutorialTooltip({
 
   const checkTutorialStatus = useCallback(async () => {
     try {
-      const response = await axios.get('/api/onboarding/tutorials');
-      const tutorials: Array<{ tutorial_type?: string | null }> = response.data.data || [];
+      const response = await fetch('/api/onboarding/tutorials');
+      const tutorials: Array<{ tutorial_type?: string | null }> = response.ok ? (await response.json()).data || [] : [];
 
       // Check if this tutorial has been completed or skipped
       const tutorialProgress = tutorials.find(
@@ -62,9 +61,10 @@ export default function TutorialTooltip({
   const handleDismiss = async (skipped: boolean) => {
     try {
       // Mark tutorial as complete/skipped
-      await axios.post('/api/onboarding/tutorials', {
-        tutorial_type: tutorialType,
-        skipped
+      await fetch('/api/onboarding/tutorials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tutorial_type: tutorialType, skipped }),
       });
       
       setIsVisible(false);
@@ -74,8 +74,8 @@ export default function TutorialTooltip({
         const stepInfo = STEP_MAPPING[tutorialType];
         if (stepInfo) {
           // Get current onboarding status
-          const onboardingResponse = await axios.get('/api/onboarding');
-          const currentSteps = onboardingResponse.data.data?.steps_completed || [];
+          const onboardingResponse = await fetch('/api/onboarding');
+          const currentSteps = onboardingResponse.ok ? (await onboardingResponse.json()).data?.steps_completed || [] : [];
           
           // Add current step to completed steps
           const updatedSteps = [...currentSteps, stepInfo.step];
@@ -92,19 +92,19 @@ export default function TutorialTooltip({
           
           // If scenarios step is complete, mark entire onboarding as complete
           if (nextStep === 'complete') {
-            await axios.put('/api/onboarding', {
-              complete: true
+            await fetch('/api/onboarding', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ complete: true }),
             });
             router.push('/dashboard');
             router.refresh();
           } else {
-            // Update onboarding progress
-            await axios.put('/api/onboarding', {
-              step: nextStep,
-              steps_completed: updatedSteps
+            await fetch('/api/onboarding', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ step: nextStep, steps_completed: updatedSteps }),
             });
-            
-            // Navigate to next page if available
             if (stepInfo.nextPath) {
               router.push(stepInfo.nextPath);
               router.refresh();

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { User } from '@supabase/supabase-js';
 import type { Institution } from '@/types/institution';
 import { Building2, Mail, Globe, MapPin, FileText, Check, AlertCircle } from 'lucide-react';
@@ -71,37 +70,38 @@ export default function InstitutionProfilePage({ user, institution, stats }: Ins
     setSuccessMessage(null);
 
     try {
-      const response = await axios.put(`/api/institutions/${institution.id}`, {
-        name: data.name,
-        short_code: data.short_code,
-        description: data.description || null,
-        website_url: data.website_url || null,
-        contact_email: data.contact_email || null,
-        domain: data.domain || null,
-        address: {
-          street: data.street || null,
-          city: data.city || null,
-          state: data.state || null,
-          zip: data.zip || null,
-          country: data.country || null,
-        },
+      const response = await fetch(`/api/institutions/${institution.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          short_code: data.short_code,
+          description: data.description || null,
+          website_url: data.website_url || null,
+          contact_email: data.contact_email || null,
+          domain: data.domain || null,
+          address: {
+            street: data.street || null,
+            city: data.city || null,
+            state: data.state || null,
+            zip: data.zip || null,
+            country: data.country || null,
+          },
+        }),
       });
-
-      if (response.data.success) {
-        setSuccessMessage('Profile updated successfully!');
-        showToast('Profile updated successfully!', 'success');
-        setTimeout(() => {
-          router.refresh();
-        }, 1500);
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to update profile');
       }
+      setSuccessMessage('Profile updated successfully!');
+      showToast('Profile updated successfully!', 'success');
+      setTimeout(() => {
+        router.refresh();
+      }, 1500);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to update profile');
-        showToast(err.response?.data?.error || 'Failed to update profile', 'error');
-      } else {
-        setError('An error occurred while updating the profile');
-        showToast('An error occurred while updating the profile', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred while updating the profile';
+      setError(msg);
+      showToast(msg, 'error');
     } finally {
       setIsSubmitting(false);
     }

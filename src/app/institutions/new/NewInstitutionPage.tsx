@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import { ArrowLeft, Building2, Globe } from 'lucide-react';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { User } from '@supabase/supabase-js';
@@ -49,11 +48,19 @@ export default function NewInstitutionPage({ user }: NewInstitutionPageProps) {
         website: data.website || null,
       };
 
-      await axios.post('/api/institutions', institutionData);
+      const postRes = await fetch('/api/institutions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(institutionData),
+      });
+      if (!postRes.ok) {
+        const json = await postRes.json();
+        throw new Error(json.error || 'Failed to create institution');
+      }
 
       try {
-        const onboardingResponse = await axios.get('/api/onboarding');
-        const onboarding = onboardingResponse.data?.data;
+        const onboardingResponse = await fetch('/api/onboarding');
+        const onboarding = onboardingResponse.ok ? (await onboardingResponse.json())?.data : null;
 
         if (
           onboarding &&
@@ -62,9 +69,10 @@ export default function NewInstitutionPage({ user }: NewInstitutionPageProps) {
           !onboarding.steps_completed?.includes('institutions')
         ) {
           const updatedSteps = [...(onboarding.steps_completed || []), 'institutions'];
-          await axios.put('/api/onboarding', {
-            step: 'courses',
-            steps_completed: updatedSteps,
+          await fetch('/api/onboarding', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ step: 'courses', steps_completed: updatedSteps }),
           });
 
           router.push('/classes');
@@ -79,11 +87,7 @@ export default function NewInstitutionPage({ user }: NewInstitutionPageProps) {
       router.push('/institutions');
       router.refresh();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'An error occurred while creating the institution');
-      } else {
-        setError('An error occurred while creating the institution');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred while creating the institution');
     } finally {
       setIsSubmitting(false);
     }

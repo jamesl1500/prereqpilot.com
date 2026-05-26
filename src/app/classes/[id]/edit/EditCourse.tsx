@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import type { Course } from '@/types/course';
 import type { User } from '@supabase/supabase-js';
@@ -54,18 +53,22 @@ export default function EditCourse({ user, course, institutions }: EditCoursePro
     setError(null);
     setSuccessMessage(null);
     try {
-      await axios.put(`/api/courses/${course.id}`, data);
+      const response = await fetch(`/api/courses/${course.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'An error occurred while updating the course');
+      }
       setSuccessMessage('Course updated successfully!');
       setTimeout(() => {
         router.push(`/classes/${course.id}`);
         router.refresh();
       }, 1500);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'An error occurred while updating the course');
-      } else {
-        setError('An error occurred while updating the course');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred while updating the course');
     } finally {
       setIsSubmitting(false);
     }

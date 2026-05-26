@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import { ArrowLeft, Save, BookOpen } from 'lucide-react';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-course-form.module.scss';
@@ -69,31 +68,32 @@ export default function EditCoursePage({ course }: EditCoursePageProps) {
     setError(null);
 
     try {
-      const response = await axios.put(`/api/institution/courses/${course.id}`, {
-        course_code: data.code,
-        course_title: data.title,
-        code: data.code,
-        title: data.title,
-        credits: data.credits,
-        description: data.description || null,
-        department: data.department || null,
-        level: data.level || null,
-        prerequisites: data.prerequisites || null,
+      const response = await fetch(`/api/institution/courses/${course.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          course_code: data.code,
+          course_title: data.title,
+          code: data.code,
+          title: data.title,
+          credits: data.credits,
+          description: data.description || null,
+          department: data.department || null,
+          level: data.level || null,
+          prerequisites: data.prerequisites || null,
+        }),
       });
-
-      if (response.data.success) {
-        showToast('Course updated successfully!', 'success');
-        router.push(`/institution/courses/${course.id}`);
-        router.refresh();
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to update course');
       }
+      showToast('Course updated successfully!', 'success');
+      router.push(`/institution/courses/${course.id}`);
+      router.refresh();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to update course');
-        showToast(err.response?.data?.error || 'Failed to update course', 'error');
-      } else {
-        setError('An error occurred while updating the course');
-        showToast('An error occurred while updating the course', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred while updating the course';
+      setError(msg);
+      showToast(msg, 'error');
     } finally {
       setIsSubmitting(false);
     }

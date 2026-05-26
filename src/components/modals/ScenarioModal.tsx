@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { ScenarioModalProps } from '@/types/modal';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
@@ -45,14 +44,14 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
     if (isOpen) {
       (async () => {
         try {
-          const userRes = await axios.get('/api/programs?filter=user');
-          setUserPrograms(userRes.data.data || []);
+          const userRes = await fetch('/api/programs?filter=user');
+          setUserPrograms(userRes.ok ? (await userRes.json()).data || [] : []);
         } catch {
           setUserPrograms([]);
         }
         try {
-          const officialRes = await axios.get('/api/programs?filter=official');
-          setOfficialPrograms(officialRes.data.data || []);
+          const officialRes = await fetch('/api/programs?filter=official');
+          setOfficialPrograms(officialRes.ok ? (await officialRes.json()).data || [] : []);
         } catch {
           setOfficialPrograms([]);
         }
@@ -82,15 +81,15 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
     try {
       if (!scenario) {
         const [coursesResponse, institutionsResponse, programsResponse] = await Promise.all([
-          axios.get('/api/courses'),
-          axios.get('/api/institutions'),
-          axios.get('/api/programs?filter=user'),
+          fetch('/api/courses'),
+          fetch('/api/institutions'),
+          fetch('/api/programs?filter=user'),
         ]);
 
-        const courses = coursesResponse.data?.data || [];
-        const institutions = institutionsResponse.data?.data || [];
+        const courses = coursesResponse.ok ? (await coursesResponse.json()).data || [] : [];
+        const institutions = institutionsResponse.ok ? (await institutionsResponse.json()).data || [] : [];
         const userInstitutions = institutions.filter((inst: { user_id?: string | null }) => Boolean(inst.user_id));
-        const programs = programsResponse.data?.data || [];
+        const programs = programsResponse.ok ? (await programsResponse.json()).data || [] : [];
 
         if (courses.length === 0 || userInstitutions.length === 0 || programs.length === 0) {
           const message = 'Please add at least one institution, one course, and one program before creating a scenario.';
@@ -107,10 +106,20 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
       };
 
       if (scenario) {
-        await axios.put(`/api/scenarios/${scenario.id}`, scenarioData);
+        const res = await fetch(`/api/scenarios/${scenario.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(scenarioData),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'An error occurred');
         showToast('Scenario updated successfully', 'success');
       } else {
-        await axios.post('/api/scenarios', scenarioData);
+        const res = await fetch('/api/scenarios', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(scenarioData),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'An error occurred');
         showToast('Scenario created successfully', 'success');
       }
 
@@ -118,13 +127,9 @@ export default function ScenarioModal({ isOpen, onClose, scenario }: ScenarioMod
       router.refresh();
       onClose();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'An error occurred');
-        showToast(err.response?.data?.error || 'An error occurred', 'error');
-      } else {
-        setError('An error occurred');
-        showToast('An error occurred', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred';
+      setError(msg);
+      showToast(msg === 'An error occurred' ? 'An error occurred' : msg, 'error');
     } finally {
       setIsSubmitting(false);
     }

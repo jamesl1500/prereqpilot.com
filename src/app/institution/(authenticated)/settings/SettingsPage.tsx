@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { User } from '@supabase/supabase-js';
 import { Settings, User as UserIcon, Lock, Mail, Check, AlertCircle } from 'lucide-react';
 import styles from '@/styles/modules/pages/institution-settings.module.scss';
@@ -80,23 +79,21 @@ export default function SettingsPage({ user }: SettingsPageProps) {
     setSuccessMessage(null);
 
     try {
-      const response = await axios.put('/api/settings/profile', {
-        name: data.name,
-        email: data.email,
+      const response = await fetch('/api/settings/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: data.name, email: data.email }),
       });
-
-      if (response.data.success) {
-        setSuccessMessage('Profile updated successfully!');
-        setTimeout(() => {
-          router.refresh();
-        }, 1500);
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to update profile');
       }
+      setSuccessMessage('Profile updated successfully!');
+      setTimeout(() => {
+        router.refresh();
+      }, 1500);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to update profile');
-      } else {
-        setError('An error occurred while updating profile');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred while updating profile');
     } finally {
       setIsSubmitting(false);
     }
@@ -108,21 +105,19 @@ export default function SettingsPage({ user }: SettingsPageProps) {
     setSuccessMessage(null);
 
     try {
-      const response = await axios.put('/api/settings/password', {
-        currentPassword: data.currentPassword,
-        newPassword: data.newPassword,
+      const response = await fetch('/api/settings/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: data.currentPassword, newPassword: data.newPassword }),
       });
-
-      if (response.data.success) {
-        setSuccessMessage('Password updated successfully!');
-        resetPassword();
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to update password');
       }
+      setSuccessMessage('Password updated successfully!');
+      resetPassword();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to update password');
-      } else {
-        setError('An error occurred while updating password');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred while updating password');
     } finally {
       setIsSubmitting(false);
     }

@@ -8,7 +8,6 @@ import { Institution } from '@/types';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/view-institution.module.scss';
 import { useState } from 'react';
-import axios from 'axios';
 
 interface Course {
   id: string;
@@ -82,7 +81,8 @@ export default function ViewInstitutionPage({
 
     setIsDeleting(true);
     try {
-      await axios.delete(`/api/institutions/${institution.id}`);
+      const response = await fetch(`/api/institutions/${institution.id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete institution');
       showToast('Institution deleted successfully', 'success');
       router.push('/institutions');
       router.refresh();

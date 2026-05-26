@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
           { status: result.error === 'Unauthorized' ? 401 : 500 }
         );
       }
-      return NextResponse.json(result.data);
+      return NextResponse.json({ data: result.data });
     }
 
     // Default to programs
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
           { status: result.error === 'Unauthorized' ? 401 : 400 }
         );
       }
-      return NextResponse.json(result.data, { status: 201 });
+      return NextResponse.json({ success: true, data: result.data }, { status: 201 });
     }
 
     // Default to program
@@ -124,7 +124,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true }, { status: 201 });
+    return NextResponse.json({ success: true, data: result.data }, { status: 201 });
   } catch (error) {
     await logApiError({
       request,

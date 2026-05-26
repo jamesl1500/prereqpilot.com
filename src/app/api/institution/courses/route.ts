@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
         payloadReceived: result,
       });
       return NextResponse.json(
-        { success: false, error: result.error },
+        { error: result.error },
         { status: result.error === 'Unauthorized' ? 401 : 400 }
       );
     }
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
         payloadReceived: result,
       });
       return NextResponse.json(
-        { success: false, error: result.error },
+        { error: result.error },
         { status: result.error === 'Unauthorized' ? 401 : 400 }
       );
     }
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
       functionName: 'POST',
     });
     return NextResponse.json(
-      { success: false, error: 'Invalid request body' },
+      { error: 'Invalid request body' },
       { status: 400 }
     );
   }

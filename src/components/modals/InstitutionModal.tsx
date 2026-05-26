@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { InstitutionModalProps } from '@/types/modal';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
@@ -53,27 +52,35 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
       };
 
       if (institution) {
-        await axios.put(`/api/institutions/${institution.id}`, institutionData);
+        const res = await fetch(`/api/institutions/${institution.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(institutionData),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'An error occurred');
         showToast('Institution updated successfully', 'success');
         reset();
         router.refresh();
         onClose();
       } else {
-        await axios.post('/api/institutions', institutionData);
+        const res = await fetch('/api/institutions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(institutionData),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'An error occurred');
         
-        // Check if user is in onboarding and advance to next step
         try {
-          const onboardingResponse = await axios.get('/api/onboarding');
-          const onboarding = onboardingResponse.data.data;
+          const onboardingResponse = await fetch('/api/onboarding');
+          const onboarding = onboardingResponse.ok ? (await onboardingResponse.json()).data : null;
           
           if (onboarding && !onboarding.onboarding_completed && onboarding.current_step === 'institutions') {
-            // Mark institutions step as complete and advance to courses
             const updatedSteps = [...(onboarding.steps_completed || []), 'institutions'];
-            await axios.put('/api/onboarding', {
-              step: 'courses',
-              steps_completed: updatedSteps
+            await fetch('/api/onboarding', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ step: 'courses', steps_completed: updatedSteps }),
             });
-            
             showToast('Institution added successfully', 'success');
             reset();
             onClose();
@@ -81,7 +88,6 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
             return;
           }
         } catch (onboardingErr) {
-          // If onboarding check fails, just continue normally
           console.error('Onboarding check failed:', onboardingErr);
         }
         
@@ -91,13 +97,9 @@ export default function InstitutionModal({ isOpen, onClose, institution }: Insti
         onClose();
       }
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'An error occurred');
-        showToast(err.response?.data?.error || 'Failed to save institution', 'error');
-      } else {
-        setError('An error occurred');
-        showToast('An error occurred', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred';
+      setError(msg);
+      showToast(msg === 'An error occurred' ? 'Failed to save institution' : msg, 'error');
     } finally {
       setIsSubmitting(false);
     }

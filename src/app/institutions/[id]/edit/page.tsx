@@ -10,7 +10,7 @@ export default async function EditInstitution({params}: {params: Promise<{ id: s
 
     if(!user)
     {
-        redirect('/auth/login')
+        redirect('/login')
     }
 
     // Fetch institution with ownership verification

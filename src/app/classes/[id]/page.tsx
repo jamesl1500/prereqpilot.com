@@ -9,7 +9,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
   const { data: { user } } = await supabase.auth.getUser();
   
   if (!user) {
-    redirect('/auth/login');
+    redirect('/login');
   }
 
   // Fetch the course with related data

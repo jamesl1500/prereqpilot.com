@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import { Users, UserPlus, Mail, Shield, Calendar, Trash2, AlertCircle, Check } from 'lucide-react';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-staff.module.scss';
@@ -69,30 +68,31 @@ export function StaffPage({ institution, staffMembers: initialStaffMembers }: St
     setSuccessMessage(null);
 
     try {
-      const response = await axios.post('/api/institution/staff', {
-        email: data.email,
-        name: data.name,
-        role: data.role,
-        institution_id: institution.id,
+      const response = await fetch('/api/institution/staff', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: data.email,
+          name: data.name,
+          role: data.role,
+          institution_id: institution.id,
+        }),
       });
-
-      if (response.data.success) {
-        setSuccessMessage('Staff member invited successfully!');
-        showToast('Staff member invited successfully!', 'success');
-        reset();
-        setIsAddingStaff(false);
-        setTimeout(() => {
-          refreshStaff();
-        }, 1000);
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to invite staff member');
       }
+      setSuccessMessage('Staff member invited successfully!');
+      showToast('Staff member invited successfully!', 'success');
+      reset();
+      setIsAddingStaff(false);
+      setTimeout(() => {
+        refreshStaff();
+      }, 1000);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to invite staff member');
-        showToast(err.response?.data?.error || 'Failed to invite staff member', 'error');
-      } else {
-        setError('An error occurred while inviting staff member');
-        showToast('An error occurred while inviting staff member', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred while inviting staff member';
+      setError(msg);
+      showToast(msg, 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -107,23 +107,20 @@ export function StaffPage({ institution, staffMembers: initialStaffMembers }: St
     setSuccessMessage(null);
 
     try {
-      const response = await axios.delete(`/api/institution/staff/${staffId}`);
-
-      if (response.data.success) {
-        setSuccessMessage('Staff member removed successfully');
-        showToast('Staff member removed successfully', 'success');
-        setTimeout(() => {
-          refreshStaff();
-        }, 1000);
+      const response = await fetch(`/api/institution/staff/${staffId}`, { method: 'DELETE' });
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to remove staff member');
       }
+      setSuccessMessage('Staff member removed successfully');
+      showToast('Staff member removed successfully', 'success');
+      setTimeout(() => {
+        refreshStaff();
+      }, 1000);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to remove staff member');
-        showToast(err.response?.data?.error || 'Failed to remove staff member', 'error');
-      } else {
-        setError('An error occurred while removing staff member');
-        showToast('An error occurred while removing staff member', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred while removing staff member';
+      setError(msg);
+      showToast(msg, 'error');
     }
   };
 

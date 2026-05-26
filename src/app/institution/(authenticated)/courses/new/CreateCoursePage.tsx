@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { Institution } from '@/types/institution';
 import { ArrowLeft, Save, BookOpen } from 'lucide-react';
 import { useToast } from '@/components/shared/Toast';
@@ -55,31 +54,32 @@ export default function CreateCoursePage({ institution }: CreateCoursePageProps)
     setError(null);
 
     try {
-      const response = await axios.post('/api/institution/courses', {
-        course_code: data.code,
-        course_title: data.title,
-        code: data.code,
-        title: data.title,
-        credits: data.credits,
-        description: data.description || null,
-        department: data.department || null,
-        level: data.level || null,
-        prerequisites: data.prerequisites || null,
+      const response = await fetch('/api/institution/courses', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          course_code: data.code,
+          course_title: data.title,
+          code: data.code,
+          title: data.title,
+          credits: data.credits,
+          description: data.description || null,
+          department: data.department || null,
+          level: data.level || null,
+          prerequisites: data.prerequisites || null,
+        }),
       });
-
-      if (response.data.success) {
-        showToast('Course created successfully!', 'success');
-        router.push('/institution/courses');
-        router.refresh();
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to create course');
       }
+      showToast('Course created successfully!', 'success');
+      router.push('/institution/courses');
+      router.refresh();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to create course');
-        showToast(err.response?.data?.error || 'Failed to create course', 'error');
-      } else {
-        setError('An error occurred while creating the course');
-        showToast('An error occurred while creating the course', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred while creating the course';
+      setError(msg);
+      showToast(msg, 'error');
     } finally {
       setIsSubmitting(false);
     }

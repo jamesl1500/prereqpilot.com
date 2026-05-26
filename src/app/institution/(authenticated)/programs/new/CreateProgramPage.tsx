@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { Institution } from '@/types/institution';
 import { ArrowLeft, Save, GraduationCap } from 'lucide-react';
 import styles from '@/styles/modules/pages/institution-program-form.module.scss';
@@ -49,28 +48,29 @@ export default function CreateProgramPage({ institution }: CreateProgramPageProp
     setError(null);
 
     try {
-      const response = await axios.post('/api/programs', {
-        name: data.name,
-        description: data.description || null,
-        requirements_text: data.requirements_text || null,
-        institution: institution.name,
-        institution_id: institution.id,
-        min_prereq_gpa: data.min_prereq_gpa || null,
-        min_overall_gpa: data.min_overall_gpa || null,
-        is_official: true,
-        is_published: true,
+      const response = await fetch('/api/programs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: data.name,
+          description: data.description || null,
+          requirements_text: data.requirements_text || null,
+          institution: institution.name,
+          institution_id: institution.id,
+          min_prereq_gpa: data.min_prereq_gpa || null,
+          min_overall_gpa: data.min_overall_gpa || null,
+          is_official: true,
+          is_published: true,
+        }),
       });
-
-      if (response.data.success) {
-        router.push('/institution/programs');
-        router.refresh();
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to create program');
       }
+      router.push('/institution/programs');
+      router.refresh();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to create program');
-      } else {
-        setError('An error occurred while creating the program');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred while creating the program');
     } finally {
       setIsSubmitting(false);
     }

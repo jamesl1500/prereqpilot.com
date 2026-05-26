@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import type { ProgramModalProps } from '@/types/modal';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/modals/CourseModal.module.scss';
@@ -106,8 +105,14 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
         website: data.website || null,
       };
 
-      const response = await axios.post('/api/institutions', institutionData);
-      const newInstitutionId = response.data.id;
+      const institutionRes = await fetch('/api/institutions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(institutionData),
+      });
+      if (!institutionRes.ok) throw new Error((await institutionRes.json()).error || 'Failed to create institution');
+      const institutionJson = await institutionRes.json();
+      const newInstitutionId = institutionJson.data.id;
       const newInstitution: Institution = {
         id: newInstitutionId,
         name: institutionData.name,
@@ -139,13 +144,9 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
       setShowCustomInstitution(false);
       resetCustomInst();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to create institution');
-        showToast(err.response?.data?.error || 'Failed to create institution', 'error');
-      } else {
-        setError('An error occurred');
-        showToast('An error occurred', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred';
+      setError(msg);
+      showToast(msg === 'An error occurred' ? 'Failed to create institution' : msg, 'error');
     } finally {
       setIsCreatingInstitution(false);
     }
@@ -164,15 +165,25 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
       };
 
       if (program) {
-        await axios.put(`/api/programs/${program.id}`, programData);
+        const res = await fetch(`/api/programs/${program.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(programData),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'An error occurred');
         showToast('Program updated successfully', 'success');
       } else {
-        await axios.post('/api/programs', programData);
+        const res = await fetch('/api/programs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(programData),
+        });
+        if (!res.ok) throw new Error((await res.json()).error || 'An error occurred');
         showToast('Program created successfully', 'success');
 
         try {
-          const onboardingResponse = await axios.get('/api/onboarding');
-          const onboarding = onboardingResponse.data?.data;
+          const onboardingResponse = await fetch('/api/onboarding');
+          const onboarding = onboardingResponse.ok ? (await onboardingResponse.json())?.data : null;
 
           if (
             onboarding &&
@@ -181,9 +192,10 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
             !onboarding.steps_completed?.includes('programs')
           ) {
             const updatedSteps = [...(onboarding.steps_completed || []), 'programs'];
-            await axios.put('/api/onboarding', {
-              step: 'scenarios',
-              steps_completed: updatedSteps,
+            await fetch('/api/onboarding', {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ step: 'scenarios', steps_completed: updatedSteps }),
             });
 
             reset();
@@ -201,13 +213,9 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
       router.refresh();
       onClose();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'An error occurred');
-        showToast(err.response?.data?.error || 'Failed to save program', 'error');
-      } else {
-        setError('An error occurred');
-        showToast('An error occurred', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'An error occurred';
+      setError(msg);
+      showToast(msg === 'An error occurred' ? 'Failed to save program' : msg, 'error');
     } finally {
       setIsSubmitting(false);
     }
@@ -223,12 +231,15 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
     setError(null);
 
     try {
-      const response = await axios.post('/api/programs/import', {
-        url: importUrl.trim(),
+      const res = await fetch('/api/programs/import', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: importUrl.trim() }),
       });
-
+      if (!res.ok) throw new Error((await res.json()).error || 'Failed to import program');
+      const json = await res.json();
       showToast(
-        `Imported program "${response.data?.programName || 'Program'}" successfully`,
+        `Imported program "${json?.data?.programName || 'Program'}" successfully`,
         'success'
       );
       setImportUrl('');
@@ -236,13 +247,9 @@ export default function ProgramModal({ isOpen, onClose, program, userInstitution
       router.refresh();
       onClose();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'Failed to import program');
-        showToast(err.response?.data?.error || 'Failed to import program', 'error');
-      } else {
-        setError('Failed to import program');
-        showToast('Failed to import program', 'error');
-      }
+      const msg = err instanceof Error ? err.message : 'Failed to import program';
+      setError(msg);
+      showToast(msg, 'error');
     } finally {
       setIsImporting(false);
     }

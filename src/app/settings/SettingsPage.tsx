@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { User as UserIcon, Mail, Lock, Trash2, AlertCircle, CheckCircle } from 'lucide-react';
-import axios from 'axios';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/settings.module.scss';
 
@@ -39,10 +38,11 @@ export default function SettingsPage() {
 
   const loadProfile = async () => {
     try {
-      const response = await axios.get('/api/settings/profile');
-      if (response.data.success) {
-        setName(response.data.data.name || '');
-        setEmail(response.data.data.email || '');
+      const response = await fetch('/api/settings/profile');
+      if (response.ok) {
+        const json = await response.json();
+        setName(json.data?.name || '');
+        setEmail(json.data?.email || '');
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -56,19 +56,23 @@ export default function SettingsPage() {
     setProfileSuccess('');
 
     try {
-      await axios.put('/api/settings/profile', {
-        name,
-        email,
+      const response = await fetch('/api/settings/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email }),
       });
-
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to update profile');
+      }
       setProfileSuccess('Profile updated successfully!');
       showToast('Profile updated successfully!', 'success');
       setTimeout(() => setProfileSuccess(''), 3000);
       router.refresh();
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { error?: string } } };
-      setProfileError(err.response?.data?.error || 'Failed to update profile');
-      showToast(err.response?.data?.error || 'Failed to update profile', 'error');
+      const msg = error instanceof Error ? error.message : 'Failed to update profile';
+      setProfileError(msg);
+      showToast(msg, 'error');
     } finally {
       setProfileLoading(false);
     }
@@ -93,11 +97,15 @@ export default function SettingsPage() {
     }
 
     try {
-      await axios.put('/api/settings/password', {
-        currentPassword,
-        newPassword,
+      const response = await fetch('/api/settings/password', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword, newPassword }),
       });
-
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to update password');
+      }
       setPasswordSuccess('Password updated successfully!');
       showToast('Password updated successfully!', 'success');
       setCurrentPassword('');
@@ -105,9 +113,9 @@ export default function SettingsPage() {
       setConfirmPassword('');
       setTimeout(() => setPasswordSuccess(''), 3000);
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { error?: string } } };
-      setPasswordError(err.response?.data?.error || 'Failed to update password');
-      showToast(err.response?.data?.error || 'Failed to update password', 'error');
+      const msg = error instanceof Error ? error.message : 'Failed to update password';
+      setPasswordError(msg);
+      showToast(msg, 'error');
     } finally {
       setPasswordLoading(false);
     }
@@ -123,12 +131,15 @@ export default function SettingsPage() {
     setDeleteError('');
 
     try {
-      await axios.delete('/api/settings/account');
-      // Redirect to login after successful deletion
+      const response = await fetch('/api/settings/account', { method: 'DELETE' });
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to delete account');
+      }
       router.push('/login');
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { error?: string } } };
-      setDeleteError(err.response?.data?.error || 'Failed to delete account');
+      const msg = error instanceof Error ? error.message : 'Failed to delete account';
+      setDeleteError(msg);
       setDeleteLoading(false);
     }
   };

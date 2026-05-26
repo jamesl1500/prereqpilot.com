@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
       html,
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true }, { status: 201 });
   } catch {
     return NextResponse.json(
       { error: 'Unable to send message right now. Please try again later.' },

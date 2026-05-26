@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import axios from 'axios';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import { Institution } from '@/types';
 import { User } from '@supabase/supabase-js';
@@ -59,21 +58,22 @@ export default function EditInstitutionPage({ user, institution }: EditInstituti
         website: data.website || null,
       };
 
-      await axios.put(`/api/institutions/${institution.id}`, institutionData);
-      
+      const response = await fetch(`/api/institutions/${institution.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(institutionData),
+      });
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'An error occurred while updating the institution');
+      }
       setSuccessMessage('Institution updated successfully!');
-      
-      // Redirect after a short delay
       setTimeout(() => {
         router.push(`/institutions/${institution.id}`);
         router.refresh();
       }, 1500);
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.error || 'An error occurred while updating the institution');
-      } else {
-        setError('An error occurred while updating the institution');
-      }
+      setError(err instanceof Error ? err.message : 'An error occurred while updating the institution');
     } finally {
       setIsSubmitting(false);
     }

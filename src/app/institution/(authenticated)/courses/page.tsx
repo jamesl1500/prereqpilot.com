@@ -14,7 +14,7 @@ export default async function Page() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/auth/login');
+    redirect('/login');
   }
 
   // Get user's institution

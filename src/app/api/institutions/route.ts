@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true, id: result.id }, { status: 201 });
+    return NextResponse.json({ success: true, data: { id: result.id } }, { status: 201 });
   } catch (error) {
     await logApiError({
       request,

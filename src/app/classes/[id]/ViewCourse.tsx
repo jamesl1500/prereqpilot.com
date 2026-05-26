@@ -10,7 +10,7 @@ import type { InstitutionData } from '@/types/institution';
 import type { TermData } from '@/types/term';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/view-course.module.scss';
-import axios from 'axios';
+
 
 type CourseWithDetails = Course & {
   course?: CourseData;
@@ -36,7 +36,8 @@ export default function ViewCourse({ user, course }: ViewCourseProps) {
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await axios.delete(`/api/courses/${course.id}`);
+      const response = await fetch(`/api/courses/${course.id}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete course');
       showToast('Course deleted successfully', 'success');
       router.push('/classes');
       router.refresh();

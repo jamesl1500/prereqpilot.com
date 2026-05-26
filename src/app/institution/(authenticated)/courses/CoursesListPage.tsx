@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import type { Institution } from '@/types/institution';
 import { BookOpen, Plus, Edit2, Trash2, Eye, Search, Filter, GraduationCap } from 'lucide-react';
-import axios from 'axios';
 import { useToast } from '@/components/shared/Toast';
 import styles from '@/styles/modules/pages/institution-courses-list.module.scss';
 
@@ -102,13 +101,15 @@ export default function CoursesListPage({ institution, courses: initialCourses, 
     }
 
     try {
-      await axios.delete(`/api/institution/courses/${courseId}`);
+      const response = await fetch(`/api/institution/courses/${courseId}`, { method: 'DELETE' });
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to delete course');
+      }
       setCourses(prev => prev.filter(c => c.id !== courseId));
       showToast('Course deleted successfully', 'success');
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        showToast(err.response?.data?.error || 'Failed to delete course', 'error');
-      }
+      showToast(err instanceof Error ? err.message : 'Failed to delete course', 'error');
     }
   };
 

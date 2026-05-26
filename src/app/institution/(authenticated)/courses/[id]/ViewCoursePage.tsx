@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import axios from 'axios';
 import type { Institution } from '@/types/institution';
 import { ArrowLeft, Edit, BookOpen, Trash2, GraduationCap, AlertCircle } from 'lucide-react';
 import { useToast } from '@/components/shared/Toast';
@@ -50,14 +49,16 @@ export default function ViewCoursePage({ institution, course, programUsages }: V
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await axios.delete(`/api/institution/courses/${course.id}`);
+      const response = await fetch(`/api/institution/courses/${course.id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        const json = await response.json();
+        throw new Error(json.error || 'Failed to delete course');
+      }
       showToast('Course deleted successfully', 'success');
       router.push('/institution/courses');
       router.refresh();
     } catch (err) {
-      if (axios.isAxiosError(err)) {
-        showToast(err.response?.data?.error || 'Failed to delete course', 'error');
-      }
+      showToast(err instanceof Error ? err.message : 'Failed to delete course', 'error');
       setIsDeleting(false);
       setShowDeleteConfirm(false);
     }
