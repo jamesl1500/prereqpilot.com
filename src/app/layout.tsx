@@ -16,7 +16,7 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://prereqpilot.com"),
+  metadataBase: new URL("https://www.prereqpilot.com"),
   title: {
     default: "PrereqPilot — Plan Your Path to Grad School & College Programs",
     template: "%s | PrereqPilot",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   description:
     "PrereqPilot helps college students check graduate school eligibility, track course prerequisites, calculate GPA requirements, and build a personalized academic roadmap to their dream program.",
   applicationName: "PrereqPilot",
-  authors: [{ name: "James Latten", url: "https://jameslatten.com" }],
+  authors: [{ name: "James Latten", url: "https://www.jameslatten.com" }],
   creator: "James Latten",
   publisher: "James Latten",
   keywords: [
@@ -56,11 +56,11 @@ export const metadata: Metadata = {
     title: "PrereqPilot — Plan Your Path to Grad School & College Programs",
     description:
       "Check graduate school eligibility, track prerequisites, and build your academic roadmap — all in one free tool built for college students.",
-    url: "https://prereqpilot.com",
+    url: "https://www.prereqpilot.com",
     siteName: "PrereqPilot",
     images: [
       {
-        url: "https://prereqpilot.com/opengraph-image.png",
+        url: "https://www.prereqpilot.com/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "PrereqPilot — Academic Planning Tool for Graduate School",
@@ -74,13 +74,13 @@ export const metadata: Metadata = {
     title: "PrereqPilot — Plan Your Path to Grad School & College Programs",
     description:
       "Check grad school eligibility, track prerequisites, and build your academic roadmap — free for college students.",
-    images: ["https://prereqpilot.com/opengraph-image.png"],
+    images: ["https://www.prereqpilot.com/opengraph-image.png"],
   },
   icons: {
     icon: "/favicon.ico",
   },
   alternates: {
-    canonical: "https://prereqpilot.com",
+    canonical: "https://www.prereqpilot.com",
   },
 };
 

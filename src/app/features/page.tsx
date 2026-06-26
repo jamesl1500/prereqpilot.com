@@ -10,12 +10,12 @@ export const metadata: Metadata = {
   title: 'Features — Graduate School & Program Planning Tools',
   description:
     'Explore PrereqPilot\'s free tools for college students: grad school eligibility checker, GPA calculator, prerequisite tracker, academic plan builder, and scenario simulator.',
-  alternates: { canonical: 'https://prereqpilot.com/features' },
+  alternates: { canonical: 'https://www.prereqpilot.com/features' },
   openGraph: {
     title: 'Features — Graduate School & Program Planning Tools | PrereqPilot',
     description:
       'Everything you need to plan your path to grad school: check GPA requirements, track prerequisites, simulate academic scenarios, and build your roadmap.',
-    url: 'https://prereqpilot.com/features',
+    url: 'https://www.prereqpilot.com/features',
     type: 'website',
   },
 };

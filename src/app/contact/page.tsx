@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'Contact Us',
   description:
     'Get in touch with the PrereqPilot team. We help college students with grad school planning questions, institutional partnerships, and platform support.',
-  alternates: { canonical: 'https://prereqpilot.com/contact' },
+  alternates: { canonical: 'https://www.prereqpilot.com/contact' },
 };
 
 export default function ContactPage() {

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: 'Help Center — How to Plan Your Grad School Path',
   description:
     'Get answers to common questions about using PrereqPilot to check grad school eligibility, track prerequisites, calculate GPA requirements, and plan your academic journey.',
-  alternates: { canonical: 'https://prereqpilot.com/help' },
+  alternates: { canonical: 'https://www.prereqpilot.com/help' },
 };
 
 export default function HelpPage() {

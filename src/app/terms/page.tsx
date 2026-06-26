@@ -7,7 +7,7 @@ import PublicFooter from '@/components/PublicFooter';
 export const metadata: Metadata = {
   title: 'Terms of Service',
   description: 'PrereqPilot Terms of Service — Review the terms and conditions for using our academic planning platform.',
-  alternates: { canonical: 'https://prereqpilot.com/terms' },
+  alternates: { canonical: 'https://www.prereqpilot.com/terms' },
 };
 
 export default function TermsPage() {

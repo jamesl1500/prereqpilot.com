@@ -9,12 +9,12 @@ export const metadata: Metadata = {
   title: 'Plan Your Path to Grad School & College Programs — Free Tool for Students',
   description:
     'PrereqPilot helps college students check graduate school eligibility, track prerequisite courses, and build a personalized roadmap to their dream program. Free to use.',
-  alternates: { canonical: 'https://prereqpilot.com' },
+  alternates: { canonical: 'https://www.prereqpilot.com' },
   openGraph: {
     title: 'Plan Your Path to Grad School — PrereqPilot',
     description:
       'Check grad school eligibility, track prerequisite requirements, and map out every course you need. Built for college students planning their next chapter.',
-    url: 'https://prereqpilot.com',
+    url: 'https://www.prereqpilot.com',
     type: 'website',
   },
 };
@@ -24,8 +24,8 @@ const jsonLd = {
   '@graph': [
     {
       '@type': 'WebSite',
-      '@id': 'https://prereqpilot.com/#website',
-      url: 'https://prereqpilot.com',
+      '@id': 'https://www.prereqpilot.com/#website',
+      url: 'https://www.prereqpilot.com',
       name: 'PrereqPilot',
       description:
         'Free academic planning tool that helps college students check graduate school eligibility, track prerequisite courses, and build a personalized path to their dream program.',
@@ -33,19 +33,19 @@ const jsonLd = {
         '@type': 'SearchAction',
         target: {
           '@type': 'EntryPoint',
-          urlTemplate: 'https://prereqpilot.com/browse-programs?q={search_term_string}',
+          urlTemplate: 'https://www.prereqpilot.com/browse-programs?q={search_term_string}',
         },
         'query-input': 'required name=search_term_string',
       },
     },
     {
       '@type': 'Organization',
-      '@id': 'https://prereqpilot.com/#organization',
+      '@id': 'https://www.prereqpilot.com/#organization',
       name: 'PrereqPilot',
-      url: 'https://prereqpilot.com',
+      url: 'https://www.prereqpilot.com',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://prereqpilot.com/primary_logo.png',
+        url: 'https://www.prereqpilot.com/primary_logo.png',
       },
       sameAs: [],
       contactPoint: {
@@ -56,9 +56,9 @@ const jsonLd = {
     },
     {
       '@type': 'SoftwareApplication',
-      '@id': 'https://prereqpilot.com/#app',
+      '@id': 'https://www.prereqpilot.com/#app',
       name: 'PrereqPilot',
-      url: 'https://prereqpilot.com',
+      url: 'https://www.prereqpilot.com',
       applicationCategory: 'EducationalApplication',
       operatingSystem: 'Web',
       offers: {
